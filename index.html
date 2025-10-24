@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT Based Health Monitoring System</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fb;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #0078D7;
+      color: white;
+      padding: 20px;
+      font-size: 1.5em;
+    }
+
+    section {
+      margin: 20px auto;
+      width: 90%;
+      max-width: 1000px;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin: 20px 0;
+      padding: 20px;
+    }
+
+    iframe {
+      width: 90%;
+      height: 300px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    footer {
+      background-color: #0078D7;
+      color: white;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .reading {
+      font-size: 1.3em;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>IoT Based Health Monitoring System</header>
+
+  <section>
+    <div class="card">
+      <h2>Pulse Rate (BPM)</h2>
+      <iframe src="https://thingspeak.com/channels/3128115/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&title=Pulse+Rate+(BPM)"></iframe>
+    </div>
+
+    <div class="card">
+      <h2>Temperature (°C)</h2>
+      <iframe src="https://thingspeak.com/channels/3128115/charts/2?bgcolor=%23ffffff&color=%2300aaff&dynamic=true&results=60&type=line&title=Temperature+(°C)"></iframe>
+    </div>
+  </section>
+
+  <footer>
+    Developed by Thapelo Mokoa © 2025
+  </footer>
+
+</body>
+</html>
