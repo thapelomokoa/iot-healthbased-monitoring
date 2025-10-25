@@ -1,140 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IoT Health Monitoring Dashboard</title>
-<style>
-    body {
-        margin: 0;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f7f9;
-        color: #333;
-    }
-    header {
-        background-color: #0077cc;
-        color: #fff;
-        text-align: center;
-        padding: 20px 0;
-    }
-    header h1 {
-        margin: 0;
-        font-size: 28px;
-    }
-    header p {
-        margin: 5px 0 0 0;
-        font-size: 16px;
-    }
-    .container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-        padding: 20px;
-    }
-    .card {
-        background-color: #fff;
-        border-radius: 12px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-        width: 320px;
-        padding: 20px;
-        text-align: center;
-        transition: transform 0.3s ease;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-    }
-    .card h2 {
-        margin: 10px 0;
-        font-size: 20px;
-        color: #0077cc;
-    }
-    .value {
-        font-size: 32px;
-        font-weight: bold;
-        margin: 10px 0;
-        padding: 10px;
-        border-radius: 8px;
-        color: #fff;
-    }
-    .normal { background-color: #28a745; } /* Green */
-    .warning { background-color: #ffc107; } /* Yellow */
-    .critical { background-color: #dc3545; } /* Red */
-    iframe {
-        width: 100%;
-        height: 300px;
-        border: none;
-        border-radius: 10px;
-    }
-</style>
-</head>
-<body>
-
-<header>
-    <h1>IoT Health Monitoring Dashboard</h1>
-    <p>Live data from Arduino + ESP8266 sensors</p>
-</header>
-
-<div class="container">
-    <div class="card">
-        <h2>Pulse Rate</h2>
-        <div class="value normal" id="pulseValue">-- BPM</div>
-        <iframe src="https://thingspeak.com/channels/3128115/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line"></iframe>
-    </div>
-
-    <div class="card">
-        <h2>Temperature</h2>
-        <div class="value normal" id="tempValue">-- °C</div>
-        <iframe src="https://thingspeak.com/channels/3128115/charts/2?bgcolor=%23ffffff&color=%2300aaff&dynamic=true&results=60&type=line"></iframe>
-    </div>
-</div>
-
 <script>
-const channelID = "3128115";
-const pulseElement = document.getElementById("pulseValue");
-const tempElement = document.getElementById("tempValue");
+  const channelID = "3128115";       // Your ThingSpeak Channel ID
+  const readAPIKey = "KAUQ35X9SMMOAML8";  // Your ThingSpeak Read API Key
 
-// Define thresholds for alerts
-const pulseThresholds = { normal: [60, 100], warning: [101, 120], critical: [0, 59, 121, Infinity] };
-const tempThresholds = { normal: [36, 37.5], warning: [37.6, 38.5], critical: [0, 35.9, 38.6, Infinity] };
-
-// Function to determine alert class
-function getAlertClass(value, thresholds) {
-    if(value >= thresholds.normal[0] && value <= thresholds.normal[1]) return "normal";
-    if(value >= thresholds.warning[0] && value <= thresholds.warning[1]) return "warning";
-    return "critical";
-}
-
-// Fetch latest Thingspeak data
-async function fetchLatestData() {
+  async function fetchData() {
+    const url = https://api.thingspeak.com/channels/3128115/feeds/last.json?api_key=KAUQ35X9SMMOAML8
     try {
-        // Pulse
-        const pulseResp = await fetch(`https://api.thingspeak.com/channels/${channelID}/fields/1/last.json`);
-        const pulseData = await pulseResp.json();
-        const pulseValue = parseFloat(pulseData.field1 || 0);
-        pulseElement.textContent = ` ${pulseValue} BPM`;
-        pulseElement.className = `value ${getAlertClass(pulseValue, pulseThresholds)}`;
-
-        // Temperature
-        const tempResp = await fetch(`https://api.thingspeak.com/channels/${channelID}/fields/2/last.json`);
-        const tempData = await tempResp.json();
-        const tempValue = parseFloat(tempData.field2 || 0);
-        tempElement.textContent = ` ${tempValue} °C`;
-        tempElement.className = `value ${getAlertClass(tempValue, tempThresholds)}`;
-
-    } catch (err) {
-        pulseElement.textContent = "-- BPM";
-        tempElement.textContent = "-- °C";
-        pulseElement.className = "value normal";
-        tempElement.className = "value normal";
-        console.error("Error fetching Thingspeak data:", err);
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      document.getElementById("temp").innerText = data.field1 || "--";
+      document.getElementById("hum").innerText = data.field2 || "--";
+      document.getElementById("bpm").innerText = data.field3 || "--";
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-}
+  }
 
-// Update every 15 seconds
-fetchLatestData();
-setInterval(fetchLatestData, 15000);
+  // Fetch immediately and every 10 seconds
+  fetchData();
+  setInterval(fetchData, 5000);
 </script>
-
-</body>
-</html>
