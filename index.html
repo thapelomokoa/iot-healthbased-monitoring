@@ -1,224 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IoT Health Monitoring Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gaugeJS/dist/gauge.min.js"></script>
-  <style>
-    body.dark {
-      background-color: #1e293b;
-      color: #f8fafc;
-    }
-    body.dark header, body.dark footer {
-      background-color: #0f172a;
-    }
-    body.dark .card {
-      background-color: #334155;
-      color: #f1f5f9;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IoT Health Monitoring Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gaugeJS/dist/gauge.min.js"></script>
+<style>
+body { font-family: Arial, sans-serif; background: #f0f2f5; margin:0; padding:0; }
+header { background:#4caf50; color:white; text-align:center; padding:1em; }
+section { display:flex; flex-wrap:wrap; justify-content:space-around; margin:1em; }
+.card { background:white; padding:1em; margin:1em; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1); flex:1 1 300px; }
+h3 { margin-top:0; }
+canvas { max-width:100%; height:300px; }
+#gauges { display:flex; justify-content:space-around; flex-wrap:wrap; }
+.gauge-card { flex:1 1 200px; text-align:center; margin:1em; }
+button { background:#4caf50; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; margin-top:10px; }
+button:hover { background:#45a049; }
+</style>
 </head>
-<body class="bg-gray-100 text-gray-900 transition-colors duration-500">
+<body>
+<header>
+<h1>IoT Health Monitoring Dashboard</h1>
+<p id="lastUpdate">Last Update: --:--:--</p>
+</header>
 
-  <header class="bg-blue-600 text-white py-5 shadow-lg text-center">
-    <h1 class="text-3xl font-bold">IoT Health Monitoring Dashboard</h1>
-    <p class="text-sm">Real-Time Monitoring via ThingSpeak</p>
-  </header>
+<section id="gauges">
+<div class="gauge-card">
+<h3>Temperature</h3>
+<canvas id="tempGauge" width="150" height="150"></canvas>
+<p id="tempValue">-- °C</p>
+</div>
+<div class="gauge-card">
+<h3>Heart Rate</h3>
+<canvas id="bpmGauge" width="150" height="150"></canvas>
+<p id="bpmValue">-- BPM</p>
+</div>
+<div class="gauge-card">
+<h3>Humidity</h3>
+<canvas id="humidityGauge" width="150" height="150"></canvas>
+<p id="humidityValue">-- %</p>
+</div>
+</section>
 
-  <div class="flex justify-center mt-4">
-    <button id="themeToggle" class="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition">
-      🌙 Toggle Dark/Light Mode
-    </button>
-  </div>
+<section class="card">
+<h3>Live Readings (Last 20)</h3>
+<canvas id="liveChart"></canvas>
+</section>
 
-  <!-- Gauges Section -->
-  <main class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="card shadow-lg rounded-2xl p-4 text-center transform hover:scale-105 transition duration-300">
-      <h2 class="text-xl font-semibold mb-2">Body Temperature (°C)</h2>
-      <canvas id="tempGauge" width="200" height="200"></canvas>
-      <p id="tempValue" class="text-lg font-bold mt-2 text-blue-700">-- °C</p>
-    </div>
-    <div class="card shadow-lg rounded-2xl p-4 text-center transform hover:scale-105 transition duration-300">
-      <h2 class="text-xl font-semibold mb-2">Heart Rate (BPM)</h2>
-      <canvas id="pulseGauge" width="200" height="200"></canvas>
-      <p id="pulseValue" class="text-lg font-bold mt-2 text-red-700">-- BPM</p>
-    </div>
-    <div class="card shadow-lg rounded-2xl p-4 text-center transform hover:scale-105 transition duration-300">
-      <h2 class="text-xl font-semibold mb-2">Humidity (%)</h2>
-      <canvas id="humidityGauge" width="200" height="200"></canvas>
-      <p id="humidityValue" class="text-lg font-bold mt-2 text-green-700">-- %</p>
-    </div>
-  </main>
+<section class="card">
+<h3>Last 24h History</h3>
+<canvas id="historyChart"></canvas>
+<button id="downloadCSV">Download CSV</button>
+</section>
 
-  <!-- Combined 24-Hour Trend Chart -->
-  <section class="mx-6 mb-6 p-6">
-    <div class="card p-4 rounded-2xl shadow-lg">
-      <h2 class="text-2xl font-semibold mb-3 text-center">Last 24 Hours - Temperature, Heart Rate & Humidity</h2>
-      <canvas id="combinedChart"></canvas>
-    </div>
-  </section>
+<script>
+// --- Gauges ---
+function createGauge(id, max, startAngle=-Math.PI/2, endAngle=Math.PI/2) {
+  const opts = { angle:endAngle-startAngle, lineWidth:0.3, radiusScale:0.9, pointer:{length:0.6,strokeWidth:0.03,color:'#000'}, limitMax:false, limitMin:false, highDpiSupport:true, staticZones:[], staticLabels:[] };
+  const g = new Gauge(document.getElementById(id)).setOptions(opts);
+  g.maxValue = max; g.setMinValue(0); g.animationSpeed=32; g.set(0);
+  return g;
+}
 
-  <!-- CSV Download -->
-  <div class="text-center pb-8">
-    <button id="downloadBtn" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-      Download Data (CSV)
-    </button>
-  </div>
+const tempGauge=createGauge("tempGauge",50);
+const bpmGauge=createGauge("bpmGauge",180);
+const humidityGauge=createGauge("humidityGauge",100);
 
-  <footer class="bg-gray-900 text-white text-center py-4">
-    <p>© 2025 Thapelo Mokoa | IoT Health Monitoring Project</p>
-  </footer>
+function setGaugeColor(gauge,value,thresholds){
+  let color=value<thresholds.low?thresholds.lowColor:value>thresholds.high?thresholds.highColor:thresholds.normalColor;
+  gauge.options.pointer.color=color; gauge.options.colorStart=color; gauge.options.colorStop=color; gauge.set(value);
+}
 
-  <script>
-    const channelID = 3128115;
-    const apiKey = "KAUQ35X9SMMOAML8";
-    const readURL = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=800`;
+// --- Charts ---
+const liveCtx=document.getElementById('liveChart').getContext('2d');
+const liveChart=new Chart(liveCtx,{type:'line',data:{labels:[],datasets:[
+  {label:'Temperature (°C)', data:[], borderColor:'#ff9800', fill:false, tension:0.4},
+  {label:'Heart Rate (BPM)', data:[], borderColor:'#f44336', fill:false, tension:0.4},
+  {label:'Humidity (%)', data:[], borderColor:'#03a9f4', fill:false, tension:0.4}
+]}, options:{responsive:true, scales:{y:{beginAtZero:true}}, plugins:{tooltip:{callbacks:{afterBody:function(context){let last5=context[0].dataset.data.slice(-5);return 'Last 5: '+last5.join(', ');}}}}, elements:{point:{radius:4, hoverRadius:6, pointStyle:'circle'}}}});
 
-    let tempGauge, pulseGauge, humidityGauge;
-    let combinedChart;
+const histCtx=document.getElementById('historyChart').getContext('2d');
+const historyChart=new Chart(histCtx,{type:'line',data:{labels:[],datasets:[
+  {label:'Temperature (°C)', data:[], borderColor:'#ff9800', fill:false, tension:0.4},
+  {label:'Heart Rate (BPM)', data:[], borderColor:'#f44336', fill:false, tension:0.4},
+  {label:'Humidity (%)', data:[], borderColor:'#03a9f4', fill:false, tension:0.4}
+]}, options:{responsive:true, scales:{y:{beginAtZero:true}}, plugins:{tooltip:{callbacks:{afterBody:function(context){let last5=context[0].dataset.data.slice(-5);return 'Last 5: '+last5.join(', ');}}}}}});
 
-    function createGauge(id, color, min, max, isPulse=false){
-      const opts = { 
-        angle:0, lineWidth:0.3, radiusScale:1, 
-        pointer:{length:0.6, strokeWidth:0.035, color:'#000'}, 
-        limitMax:false, limitMin:false, colorStart:color, colorStop:color, strokeColor:'#eee', generateGradient:true, highDpiSupport:true, animationSpeed:32 
-      };
-      const g = new Gauge(document.getElementById(id)).setOptions(opts);
-      g.maxValue = max; g.setMinValue(min); g.set(0); 
+// --- Live GET Data ---
+let lastLiveTimestamp=null;
+const channelID=3128115;
+const apiKey="KAUQ35X9SMMOAML8";
+const thingspeakURL=`https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=100`;
 
-      if(isPulse){
-        let scale = 1, up=true;
-        setInterval(()=>{
-          const canvas = document.getElementById(id);
-          canvas.style.transform = `scale(${scale})`;
-          if(up){ scale += 0.01; if(scale>=1.08) up=false; }
-          else{ scale -= 0.01; if(scale<=1) up=true; }
-        }, 30);
-      }
+function updateLastUpdate(){document.getElementById('lastUpdate').textContent="Last Update: "+new Date().toLocaleTimeString();}
+function getQueryParams(){const params=new URLSearchParams(window.location.search);return {temp:params.get('temp')?parseFloat(params.get('temp')):null,hum:params.get('hum')?parseFloat(params.get('hum')):null,bpm:params.get('bpm')?parseFloat(params.get('bpm')):null,time:new Date().toLocaleTimeString()};}
 
-      return g;
-    }
+function updateLiveFromGET(){
+  const {temp,bpm,hum,time}=getQueryParams();
+  if(!temp&&!bpm&&!hum)return;
+  if(lastLiveTimestamp===time)return;
+  lastLiveTimestamp=time;
 
-    function setupCombinedChart(){
-      const ctx = document.getElementById('combinedChart').getContext('2d');
-      combinedChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: [],
-          datasets: [
-            { label:'Temperature (°C)', data:[], borderColor:'blue', fill:false, yAxisID:'yTemp' },
-            { label:'Heart Rate (BPM)', data:[], borderColor:'red', fill:false, yAxisID:'yBPM' },
-            { label:'Humidity (%)', data:[], borderColor:'green', fill:false, yAxisID:'yHum' }
-          ]
-        },
-        options: {
-          responsive: true,
-          animation: { duration: 0 },
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            tooltip: {
-              enabled: true,
-              mode: 'index',
-              intersect: false,
-              callbacks: {
-                label: function(context){
-                  let label = context.dataset.label || '';
-                  let value = context.parsed.y !== null ? context.parsed.y : '--';
-                  return label + ': ' + value.toFixed(1);
-                }
-              }
-            }
-          },
-          scales:{
-            yTemp: { type:'linear', position:'left', beginAtZero:true, title:{display:true,text:'Temperature (°C)'} },
-            yBPM: { type:'linear', position:'right', beginAtZero:true, title:{display:true,text:'Heart Rate (BPM)'} },
-            yHum: { type:'linear', position:'right', beginAtZero:true, grid:{drawOnChartArea:false}, title:{display:true,text:'Humidity (%)'} }
-          }
-        }
-      });
-    }
+  if(temp!==null){ setGaugeColor(tempGauge,temp,{low:36,high:37.5,lowColor:'#2196f3',normalColor:'#4caf50',highColor:'#f44336'}); document.getElementById('tempValue').textContent=temp+" °C"; liveChart.data.datasets[0].data.push(temp);}
+  if(bpm!==null){ setGaugeColor(bpmGauge,bpm,{low:60,high:100,lowColor:'#2196f3',normalColor:'#4caf50',highColor:'#f44336'}); document.getElementById('bpmValue').textContent=bpm+" BPM"; liveChart.data.datasets[1].data.push(bpm);}
+  if(hum!==null){ setGaugeColor(humidityGauge,hum,{low:30,high:60,lowColor:'#ff9800',normalColor:'#4caf50',highColor:'#03a9f4'}); document.getElementById('humidityValue').textContent=hum+" %"; liveChart.data.datasets[2].data.push(hum);}
 
-    async function fetchData(){
-      try{
-        const res = await fetch(readURL);
-        const data = await res.json();
-        const feeds = data.feeds;
+  liveChart.data.labels.push(time);
+  if(liveChart.data.labels.length>20){liveChart.data.labels.shift(); liveChart.data.datasets.forEach(ds=>{ds.data.shift();});}
+  liveChart.update();
+  updateLastUpdate();
+}
 
-        if(feeds.length>0){
-          const now = new Date();
-          const twentyFourHoursAgo = new Date(now.getTime() - 24*60*60*1000);
+async function fetchHistory(){
+  try{
+    const res=await fetch(thingspeakURL);
+    const data=await res.json();
+    if(!data.feeds||data.feeds.length===0)return;
+    const labels=data.feeds.map(f=>new Date(f.created_at).toLocaleTimeString());
+    const tempData=data.feeds.map(f=>parseFloat(f.field1));
+    const bpmData=data.feeds.map(f=>parseFloat(f.field3));
+    const humData=data.feeds.map(f=>parseFloat(f.field2));
 
-          const last24Feeds = feeds.filter(f => new Date(f.created_at) >= twentyFourHoursAgo);
+    historyChart.data.datasets[0].borderColor=tempData.map(v=>v>37.5?'#f44336':'#ff9800');
+    historyChart.data.datasets[1].borderColor=bpmData.map(v=>v<60||v>100?'#f44336':'#f44336');
+    historyChart.data.datasets[2].borderColor=humData.map(v=>v<30||v>60?'#f44336':'#03a9f4');
 
-          if(last24Feeds.length>0){
-            const latest = last24Feeds[last24Feeds.length-1];
-            const temp = parseFloat(latest.field1)||0;
-            const pulse = parseFloat(latest.field2)||0;
-            const hum = parseFloat(latest.field3)||0;
+    historyChart.data.labels=labels;
+    historyChart.data.datasets[0].data=tempData;
+    historyChart.data.datasets[1].data=bpmData;
+    historyChart.data.datasets[2].data=humData;
+    historyChart.update();
+  }catch(e){console.error("Error fetching ThingSpeak data:",e);}
+}
 
-            document.getElementById('tempValue').textContent = `${temp.toFixed(1)} °C`;
-            document.getElementById('pulseValue').textContent = `${pulse.toFixed(0)} BPM`;
-            document.getElementById('humidityValue').textContent = `${hum.toFixed(1)} %`;
+// --- CSV Download ---
+document.getElementById("downloadCSV").addEventListener("click",async()=>{
+  try{
+    const res=await fetch(thingspeakURL);
+    const data=await res.json();
+    if(!data.feeds)return;
+    const rows=data.feeds.map(f=>`${f.created_at},${f.field1},${f.field2},${f.field3}`);
+    const csvContent="Date,Temperature,Humidity,BPM\n"+rows.join("\n");
+    const blob=new Blob([csvContent],{type:'text/csv'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a"); a.href=url; a.download="health_data.csv"; a.click();
+    URL.revokeObjectURL(url);
+  }catch(e){console.error("CSV download error:",e);}
+});
 
-            const tempValues = last24Feeds.map(f=>parseFloat(f.field1)||0);
-            const pulseValues = last24Feeds.map(f=>parseFloat(f.field2)||0);
-            const humValues = last24Feeds.map(f=>parseFloat(f.field3)||0);
-
-            const tempMax = Math.max(...tempValues, 50);
-            const tempMin = Math.min(...tempValues, 0);
-            tempGauge.maxValue = tempMax; tempGauge.setMinValue(tempMin);
-            tempGauge.set(temp);
-
-            const pulseMax = Math.max(...pulseValues, 180);
-            const pulseMin = Math.min(...pulseValues, 40);
-            pulseGauge.maxValue = pulseMax; pulseGauge.setMinValue(pulseMin);
-            pulseGauge.set(pulse);
-
-            const humMax = Math.max(...humValues, 100);
-            const humMin = Math.min(...humValues, 0);
-            humidityGauge.maxValue = humMax; humidityGauge.setMinValue(humMin);
-            humidityGauge.set(hum);
-
-            combinedChart.data.labels = last24Feeds.map(f => new Date(f.created_at).toLocaleTimeString());
-            combinedChart.data.datasets[0].data = tempValues;
-            combinedChart.data.datasets[1].data = pulseValues;
-            combinedChart.data.datasets[2].data = humValues;
-            combinedChart.update();
-          }
-        }
-      } catch(e){ console.error(e); }
-    }
-
-    function downloadCSV(){
-      fetch(readURL)
-      .then(res => res.json())
-      .then(data => {
-        const feeds = data.feeds;
-        const rows = feeds.map(f=>[f.created_at,f.field1,f.field2,f.field3]);
-        let csv = 'Time,Temperature (°C),BPM,Humidity (%)\n'+rows.map(r=>r.join(',')).join('\n');
-        const blob = new Blob([csv],{type:'text/csv'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = 'health_data.csv'; a.click();
-      });
-    }
-
-    document.getElementById('downloadBtn').addEventListener('click', downloadCSV);
-    document.getElementById('themeToggle').addEventListener('click', ()=>document.body.classList.toggle('dark'));
-
-    // Initialize gauges and chart
-    tempGauge = createGauge('tempGauge','#ff9800',0,50);
-    pulseGauge = createGauge('pulseGauge','#f44336',40,180,true);
-    humidityGauge = createGauge('humidityGauge','#03a9f4',0,100);
-    setupCombinedChart();
-
-    // Fetch every 15 seconds
-    fetchData();
-    setInterval(fetchData,15000);
-  </script>
-
+setInterval(updateLiveFromGET,5000);
+setInterval(fetchHistory,15000);
+</script>
 </body>
 </html>
