@@ -1,90 +1,544 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Consultation — IoT Health Monitoring</title>
-  <style>
-    body{font-family:Inter, system-ui, Arial;background:#f4f8fb;margin:0;color:#052934}
-    header{padding:12px 20px;background:linear-gradient(90deg,#0b7dd1,#055278);color:#fff}
-    .container{max-width:900px;margin:18px auto;padding:16px}
-    .card{background:#fff;padding:16px;border-radius:12px;box-shadow:0 8px 26px rgba(10,20,40,0.06)}
-    .chat{height:360px;overflow:auto;padding:12px;border-radius:8px;background:#f7fbfe}
-    .msg{margin:8px 0;display:flex;gap:8px;align-items:flex-start}
-    .msg.you{flex-direction:row-reverse}
-    .bubble{padding:10px 12px;border-radius:10px;max-width:80%}
-    .bubble.you{background:#0b7dd1;color:#fff}
-    .bubble.them{background:#eef2f6;color:#052934}
-    .controls{display:flex;gap:8px;margin-top:10px}
-    .input{flex:1;padding:10px;border-radius:8px;border:1px solid #d7e7f2}
-    .btn{background:#0b7dd1;color:#fff;padding:10px 12px;border-radius:8px}
-    .small{font-size:13px;color:#6b7280;margin-top:8px}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>IoT Health Monitoring — Single Page App</title>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- jsPDF for PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+  :root{
+    --bg:#f4f8fb; --card:#fff; --accent:#0b7dd1; --accent-dark:#055278; --muted:#6b7280;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg); color:#052934}
+  header{background:linear-gradient(90deg,var(--accent),var(--accent-dark)); color:white;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  header .brand{display:flex;align-items:center;gap:12px}
+  header img{width:44px;height:44px;border-radius:8px;object-fit:cover}
+  header h2{margin:0;font-size:18px}
+  main{max-width:1200px;margin:20px auto;padding:16px}
+  .hero{display:flex;gap:22px;align-items:center;padding:18px;background:linear-gradient(180deg,#ffffff,#f7fbff);border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.06);margin-bottom:18px}
+  .hero .left{flex:1}
+  .tag{display:inline-block;background:var(--accent);color:#fff;padding:6px 10px;border-radius:8px;font-weight:700;margin-bottom:10px}
+  h1{margin:6px 0 8px}
+  p.lead{margin:0;color:var(--muted)}
+  .hero .right{width:420px;border-radius:10px;overflow:hidden}
+  .hero img{width:100%;height:240px;object-fit:cover;display:block}
+  .controls{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+  .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+  .btn.ghost{background:transparent;border:2px solid rgba(255,255,255,0.15)}
+  .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 8px 26px rgba(10,20,40,0.04);margin-bottom:14px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+  .gauge{height:160px}
+  .lineChartWrap{margin-top:8px}
+  .small{font-size:13px;color:var(--muted)}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .col{flex:1}
+  .patient-list{max-height:220px;overflow:auto;padding:6px;border-radius:8px;border:1px solid #e6eef7}
+  .patient-item{padding:8px;border-radius:8px;margin-bottom:6px;cursor:pointer}
+  .patient-item.selected{background:linear-gradient(90deg,#e9f6ff,#f7fbff);border:1px solid #d6ebff}
+  .alerts{margin-bottom:12px}
+  .alert{padding:10px;border-radius:8px;margin-bottom:8px}
+  .alert.warn{background:#fff4e5;color:#7a4a00}
+  .alert.danger{background:#ffecec;color:#7d0b0b}
+  .flex-between{display:flex;justify-content:space-between;align-items:center}
+  footer{text-align:center;color:var(--muted);margin:18px}
+  @media (max-width:980px){ .grid{grid-template-columns:1fr} .hero{flex-direction:column} .hero .right{width:100%} }
+</style>
 </head>
 <body>
-  <header><strong>Online Consultation</strong></header>
-  <main class="container">
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <h3 id="consTitle">Consultation with Patient</h3>
-          <div class="small">Simulated chat for demonstration</div>
-        </div>
-        <div>
-          <a href="dashboard.html" style="text-decoration:none" class="btn">Back to Dashboard</a>
-        </div>
-      </div>
 
-      <div id="chat" class="chat" aria-live="polite"></div>
+<header>
+  <div class="brand">
+    <img src="https://images.unsplash.com/photo-1580281657528-889c0f578a66?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=8b7a6d4b4d6df5e6c9f3a1da5a5d0a6f" alt="logo">
+    <div>
+      <h2>IoT Health Monitoring System</h2>
+      <div class="small">Live vitals via ThingSpeak — Doctor / Patient / Trainer</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;align-items:center;">
+    <div id="roleBadge" class="small" style="background:#fff;padding:6px 10px;border-radius:999px;color:var(--accent)"></div>
+    <div style="text-align:right">
+      <div id="userLabel" style="font-weight:700">User</div>
+      <div class="small" id="timeNow"></div>
+    </div>
+    <button class="btn" id="openLoginBtn">Change Account</button>
+    <button class="btn" id="logoutBtn">Logout</button>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="left">
+      <div class="tag">IoT Health-Based Monitoring</div>
+      <h1>Remote patient monitoring and live consultations</h1>
+      <p class="lead">Doctors can monitor patients at home in real time. Trainers can monitor gym members. Data flows from your hardware → ThingSpeak → this dashboard.</p>
 
       <div class="controls">
-        <input id="chatInput" class="input" placeholder="Type message (e.g., 'Are you okay?')">
-        <button id="sendBtn" class="btn">Send</button>
+        <select id="patientSelect" style="padding:8px;border-radius:8px">
+          <!-- filled in JS -->
+        </select>
+        <button class="btn" id="openDashboardBtn">Open Dashboard</button>
+        <button class="btn" id="openConsultBtn">Consult (Chat)</button>
+        <button class="btn" id="openGymBtn">Gym Mode</button>
       </div>
 
-      <div class="small">Pro tip: Add actual telehealth integration (Google Meet or Zoom) for live video consultations.</div>
+      <div style="margin-top:10px" class="small">Polling interval: <strong id="pollIntervalLabel">13s</strong> • Fields: <strong>1→BPM, 2→Temp, 3→Hum</strong></div>
     </div>
-  </main>
+
+    <div class="right">
+      <img src="https://images.unsplash.com/photo-1580281657528-889c0f578a66?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=8b7a6d4b4d6df5e6c9f3a1da5a5d0a6f" alt="doctor monitoring">
+    </div>
+  </section>
+
+  <!-- ALERTS -->
+  <div id="alerts" class="alerts"></div>
+
+  <!-- GAUGES -->
+  <section class="card">
+    <div class="flex-between">
+      <h3 style="margin:0">Live Vitals</h3>
+      <div class="small">Channel <span id="channelLabel">3128115</span></div>
+    </div>
+
+    <div class="grid" style="margin-top:12px">
+      <div class="card">
+        <h4>BPM (field1)</h4>
+        <canvas id="bpmGauge" class="gauge"></canvas>
+        <div class="lineChartWrap small">Latest bpm: <span id="bpmLatest">--</span></div>
+      </div>
+
+      <div class="card">
+        <h4>Temperature °C (field2)</h4>
+        <canvas id="tempGauge" class="gauge"></canvas>
+        <div class="lineChartWrap small">Latest temp: <span id="tempLatest">--</span> °C</div>
+      </div>
+
+      <div class="card">
+        <h4>Humidity % (field3)</h4>
+        <canvas id="humGauge" class="gauge"></canvas>
+        <div class="lineChartWrap small">Latest humidity: <span id="humLatest">--</span> %</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMBINED CHART -->
+  <section class="card">
+    <h4 style="margin:0 0 8px 0">Combined recent readings (line)</h4>
+    <canvas id="combinedChart" style="height:260px"></canvas>
+    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" id="downloadCSV">Download CSV</button>
+      <button class="btn" id="downloadPDF">Export PDF</button>
+      <button class="btn" id="toggle24">Show 24h / 7d analytics</button>
+    </div>
+  </section>
+
+  <!-- ANALYTICS -->
+  <section id="analyticsSection" class="card" style="display:none">
+    <div class="row">
+      <div class="col">
+        <h4>Hourly averages — last 24 hours</h4>
+        <canvas id="hourlyChart" style="height:220px"></canvas>
+      </div>
+      <div class="col">
+        <h4>Daily averages — last 7 days</h4>
+        <canvas id="dailyChart" style="height:220px"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- PATIENT LIST & QUICK ACTIONS -->
+  <section class="card">
+    <div class="row">
+      <div style="flex:1">
+        <h4 style="margin-top:0">Patient channels (demo)</h4>
+        <div id="patientList" class="patient-list"></div>
+      </div>
+
+      <div style="width:320px">
+        <h4 style="margin-top:0">Selected patient</h4>
+        <div class="card" style="background:#f7fbff">
+          <div><strong id="selectedLabel">-</strong></div>
+          <div class="small" id="selectedLatest">Latest: -</div>
+          <div style="margin-top:8px">
+            <button class="btn" id="openThingSpeak">Open ThingSpeak channel</button>
+            <button class="btn" id="markStable">Mark Stable</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2025 Thapelo Mokoa — IoT Health Monitoring System</footer>
+</main>
+
+<!-- Login modal (demo auth) -->
+<div id="loginModal" style="position:fixed;inset:0;background:rgba(2,6,23,0.45);display:none;align-items:center;justify-content:center;z-index:9999">
+  <div style="background:#fff;padding:18px;border-radius:12px;width:360px;box-shadow:0 20px 60px rgba(2,6,23,0.25)">
+    <h3 style="margin:0 0 8px 0">Sign in (demo)</h3>
+    <p class="small">Demo accounts: <strong>doctor:pass123</strong>, <strong>patient:pass123</strong>, <strong>trainer:pass123</strong></p>
+    <label class="small">Role</label>
+    <select id="loginRole" style="width:100%;padding:8px;border-radius:8px;margin-bottom:8px">
+      <option value="doctor">Doctor</option>
+      <option value="patient">Patient</option>
+      <option value="trainer">Trainer</option>
+    </select>
+    <label class="small">Username</label>
+    <input id="loginUser" style="width:100%;padding:8px;border-radius:8px;margin-bottom:8px" placeholder="username">
+    <label class="small">Password</label>
+    <input id="loginPass" type="password" style="width:100%;padding:8px;border-radius:8px;margin-bottom:12px" placeholder="password">
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" id="doLogin">Sign in</button>
+      <button class="btn" id="closeLogin" style="background:#eef6ff;color:var(--accent)">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Consultation modal -->
+<div id="consultModal" style="position:fixed;inset:0;background:rgba(2,6,23,0.45);display:none;align-items:center;justify-content:center;z-index:9998">
+  <div style="background:#fff;padding:12px;border-radius:12px;width:720px;max-width:96%;box-shadow:0 20px 60px rgba(2,6,23,0.25)">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="margin:0">Online Consultation (Simulated)</h3>
+      <button class="btn" id="closeConsult">Close</button>
+    </div>
+    <div id="chatWindow" style="height:340px;overflow:auto;background:#f7fbfe;padding:12px;border-radius:8px;margin-top:8px"></div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <input id="chatInput" style="flex:1;padding:10px;border-radius:8px;border:1px solid #d7e7f2" placeholder="Type message...">
+      <button class="btn" id="sendChat">Send</button>
+    </div>
+  </div>
+</div>
 
 <script>
-const chat = document.getElementById('chat');
-const input = document.getElementById('chatInput');
+/* =========================
+   CONFIG
+   ========================= */
+const POLL_MS = 13000; // 13 seconds
+document.getElementById('pollIntervalLabel').innerText = (POLL_MS/1000) + 's';
 
-function addMessage(text, who='them'){
-  const row = document.createElement('div');
-  row.className = 'msg ' + (who==='you' ? 'you' : '');
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble ' + (who==='you' ? 'you' : 'them');
-  bubble.innerText = text;
-  row.appendChild(bubble);
-  chat.appendChild(row);
-  chat.scrollTop = chat.scrollHeight;
-}
+// Put ThingSpeak patient channels here (id, label, readKey). Add more channels as needed.
+const PATIENT_CHANNELS = [
+  { id: '3128115', label: 'Patient A (3128115)', readKey: 'KAUQ35X9SMMOAML8' },
+  // Example: { id:'123456', label:'Patient B', readKey:'' }
+];
 
-document.getElementById('sendBtn').addEventListener('click', ()=>{
-  const txt = input.value.trim();
-  if(!txt) return;
-  addMessage(txt,'you');
-  input.value='';
-  // simulated reply
-  setTimeout(()=> {
-    const reply = generateReply(txt);
-    addMessage(reply,'them');
-  }, 900 + Math.random()*900);
+// Demo users (no backend)
+const DEMO_USERS = {
+  doctor: { username:'doctor', password:'pass123', display:'Dr. Mokoa' },
+  patient: { username:'patient', password:'pass123', display:'Patient' },
+  trainer: { username:'trainer', password:'pass123', display:'Trainer' }
+};
+
+/* =========================
+   STATE & UI refs
+   ========================= */
+let currentRole = localStorage.getItem('iot_role') || 'doctor';
+let currentUser = localStorage.getItem('iot_user') || DEMO_USERS[currentRole].display;
+let selectedChannel = PATIENT_CHANNELS[0].id;
+let lastFeeds = [];
+
+/* UI init */
+document.getElementById('roleBadge').innerText = currentRole.toUpperCase();
+document.getElementById('userLabel').innerText = currentUser;
+document.getElementById('channelLabel').innerText = selectedChannel;
+document.getElementById('pollIntervalLabel').innerText = (POLL_MS/1000) + 's';
+
+/* time display */
+function updateTime(){ document.getElementById('timeNow').innerText = new Date().toLocaleString(); }
+updateTime(); setInterval(updateTime,1000);
+
+/* populate patient select and list */
+const patientSelect = document.getElementById('patientSelect');
+const patientListDiv = document.getElementById('patientList');
+PATIENT_CHANNELS.forEach((c,i)=> {
+  const opt = document.createElement('option'); opt.value = c.id; opt.textContent = c.label; patientSelect.appendChild(opt);
+  const item = document.createElement('div'); item.className = 'patient-item' + (i===0?' selected':''); item.dataset.cid = c.id;
+  item.innerHTML = `<strong>${c.label}</strong><div class="small">channel ${c.id}</div>`;
+  item.addEventListener('click', ()=> { selectChannel(c.id); });
+  patientListDiv.appendChild(item);
+});
+patientSelect.value = selectedChannel;
+
+/* login modal controls */
+document.getElementById('openLoginBtn').addEventListener('click', ()=> document.getElementById('loginModal').style.display='flex');
+document.getElementById('closeLogin').addEventListener('click', ()=> document.getElementById('loginModal').style.display='none');
+document.getElementById('logoutBtn').addEventListener('click', ()=> { localStorage.removeItem('iot_role'); localStorage.removeItem('iot_user'); location.reload(); });
+
+/* do demo login */
+document.getElementById('doLogin').addEventListener('click', ()=> {
+  const role = document.getElementById('loginRole').value;
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const demo = DEMO_USERS[role];
+  if(user === demo.username && pass === demo.password){
+    localStorage.setItem('iot_role', role);
+    localStorage.setItem('iot_user', demo.display);
+    location.reload();
+  } else {
+    alert('Invalid demo credentials. Use sample accounts.');
+  }
 });
 
-function generateReply(userMsg){
-  const lower = userMsg.toLowerCase();
-  if(lower.includes('pain') || lower.includes('hurt')) return "I'm sorry to hear that. Please rest and monitor your vitals. If BPM > 120, seek immediate help.";
-  if(lower.includes('ok') || lower.includes('fine')) return "Glad to hear. Keep monitoring and stay hydrated.";
-  if(lower.includes('temperature') || lower.includes('fever')) return "If temperature is above 38°C, consider taking paracetamol and consult a doctor.";
-  return "Thanks for the update. Please describe any symptoms and I will advise.";
+/* consultation modal */
+document.getElementById('openConsultBtn').addEventListener('click', ()=> { openConsult(); });
+document.getElementById('openGymBtn').addEventListener('click', ()=> { localStorage.setItem('iot_role','trainer'); location.reload(); });
+document.getElementById('openDashboardBtn').addEventListener('click', ()=> { window.scrollTo({top:0,behavior:'smooth'}); });
+
+/* chat modal handlers */
+document.getElementById('closeConsult').addEventListener('click', ()=> document.getElementById('consultModal').style.display='none');
+document.getElementById('sendChat').addEventListener('click', sendChatMsg);
+document.getElementById('chatInput').addEventListener('keydown', (e)=> { if(e.key==='Enter') sendChatMsg(); });
+
+function openConsult(){
+  document.getElementById('consultModal').style.display='flex';
+  const cw = document.getElementById('chatWindow'); cw.innerHTML='';
+  addChat('them', "Hello — I'm Dr. Mokoa. How can I help?");
+}
+function addChat(who, text){
+  const cw = document.getElementById('chatWindow');
+  const m = document.createElement('div'); m.style.margin='8px 0'; m.style.display='flex'; m.style.justifyContent = who==='you'?'flex-end':'flex-start';
+  const b = document.createElement('div'); b.style.padding='8px 12px'; b.style.borderRadius='10px'; b.style.maxWidth='80%';
+  b.style.background = who==='you' ? 'linear-gradient(90deg,var(--accent),var(--accent-dark))' : '#eef2f6';
+  b.style.color = who==='you' ? '#fff' : '#052934';
+  b.innerText = text;
+  m.appendChild(b); cw.appendChild(m); cw.scrollTop = cw.scrollHeight;
+}
+function sendChatMsg(){
+  const t = document.getElementById('chatInput'); const v = t.value.trim(); if(!v) return; addChat('you', v); t.value='';
+  setTimeout(()=> addChat('them', generateReply(v)), 800 + Math.random()*800);
+}
+function generateReply(msg){
+  const m = msg.toLowerCase();
+  if(m.includes('pain')||m.includes('hurt')) return "Please rest and monitor. If BPM > 120, seek immediate help.";
+  if(m.includes('temp')||m.includes('fever')) return "If temp > 38°C take paracetamol and consult.";
+  return "Thanks — please describe symptoms or check your dashboard readings.";
 }
 
-/* Welcome messages */
-addMessage("Hello — I'm Dr. Mokoa. How can I help today?", 'them');
-addMessage("Hi Doctor, my BPM seems high.", 'you');
-setTimeout(()=> addMessage("Please sit down, breathe slowly and let me check your recent readings on the dashboard.", 'them'), 900);
+/* =========================
+   CHARTS (Chart.js)
+   ========================= */
+function makeGauge(ctx, max, color){
+  return new Chart(ctx, { type:'doughnut', data:{ labels:['value','rest'], datasets:[{ data:[0,max], backgroundColor:[color,'#eee'], borderWidth:0 }] }, options:{ rotation: Math.PI, circumference: Math.PI, cutout:'70%', plugins:{legend:{display:false}}, responsive:true } });
+}
+const bpmGauge = makeGauge(document.getElementById('bpmGauge').getContext('2d'), 200, '#ff4d4d');
+const tempGauge = makeGauge(document.getElementById('tempGauge').getContext('2d'), 50, '#ff9800');
+const humGauge = makeGauge(document.getElementById('humGauge').getContext('2d'), 100, '#03a9f4');
+
+const combinedChart = new Chart(document.getElementById('combinedChart').getContext('2d'), {
+  type:'line',
+  data:{ labels:[], datasets:[
+    {label:'BPM', data:[], borderColor:'#ff4d4d', fill:false},
+    {label:'Temp °C', data:[], borderColor:'#ff9800', fill:false},
+    {label:'Hum %', data:[], borderColor:'#03a9f4', fill:false}
+  ]},
+  options:{responsive:true,plugins:{legend:{position:'top'}}}
+});
+
+const hourlyChart = new Chart(document.getElementById('hourlyChart').getContext('2d'), { type:'line', data:{ labels:[], datasets:[ {label:'BPM avg', data:[], borderColor:'#ff4d4d', fill:false}, {label:'Temp avg', data:[], borderColor:'#ff9800', fill:false} ]}, options:{responsive:true} });
+
+const dailyChart = new Chart(document.getElementById('dailyChart').getContext('2d'), { type:'line', data:{ labels:[], datasets:[ {label:'BPM avg', data:[], borderColor:'#ff4d4d', fill:false}, {label:'Temp avg', data:[], borderColor:'#ff9800', fill:false} ]}, options:{responsive:true} });
+
+/* =========================
+   ThingSpeak fetch & mapping
+   Field mapping: field1 -> BPM, field2 -> Temp, field3 -> Humidity
+   ========================= */
+async function fetchFeeds(channelId, readKey='', results=50){
+  const keyParam = readKey ? `&api_key=${readKey}` : '';
+  const url = `https://api.thingspeak.com/channels/${channelId}/feeds.json?results=${results}${keyParam}`;
+  try{
+    const res = await fetch(url);
+    const j = await res.json();
+    return j.feeds || [];
+  }catch(e){
+    console.error('fetchFeeds error', e);
+    return [];
+  }
+}
+
+/* =========================
+   UI update / logic
+   ========================= */
+function pushAlert(msg, type='warn'){
+  const a = document.createElement('div'); a.className = 'alert ' + (type==='danger'?'danger':'warn'); a.innerText = msg;
+  const container = document.getElementById('alerts'); container.prepend(a);
+  setTimeout(()=> { if(a.parentNode) a.remove(); }, 11000);
+}
+
+function selectChannel(cid){
+  selectedChannel = cid;
+  document.getElementById('channelLabel').innerText = cid;
+  document.querySelectorAll('.patient-item').forEach(it => it.classList.toggle('selected', it.dataset.cid === cid));
+  refreshOnce(); // immediate refresh for new selection
+}
+
+document.getElementById('patientSelect').addEventListener('change', (e)=> selectChannel(e.target.value));
+
+document.getElementById('openThingSpeak').addEventListener('click', ()=> window.open(`https://thingspeak.com/channels/${selectedChannel}`));
+document.getElementById('markStable').addEventListener('click', ()=> pushAlert('Patient marked stable (simulated)','warn'));
+
+/* CSV & PDF exports */
+document.getElementById('downloadCSV').addEventListener('click', ()=> downloadCSV(lastFeeds));
+function downloadCSV(feeds){
+  if(!feeds || !feeds.length){ pushAlert('No data to download','warn'); return; }
+  let csv = 'time,BPM,Temperature,Humidity\n';
+  feeds.forEach(f => csv += `"${f.created_at}",${f.field1||''},${f.field2||''},${f.field3||''}\n`);
+  const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `channel_${selectedChannel}_data.csv`; a.click(); URL.revokeObjectURL(url);
+}
+
+document.getElementById('downloadPDF').addEventListener('click', ()=> downloadPDF(lastFeeds));
+async function downloadPDF(feeds){
+  if(!feeds || !feeds.length){ pushAlert('No data for PDF','warn'); return; }
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+  pdf.setFontSize(14); pdf.text(`Patient Channel ${selectedChannel}`, 14, 18);
+  pdf.setFontSize(10); pdf.text(`Generated: ${new Date().toLocaleString()}`, 14, 26);
+  pdf.setFontSize(9);
+  let y = 34;
+  for(let i=Math.max(0, feeds.length-40); i<feeds.length; i++){
+    const f = feeds[i];
+    pdf.text(`${f.created_at} | BPM:${f.field1||''} | T:${f.field2||''} | H:${f.field3||''}`, 14, y);
+    y += 6; if(y>280){ pdf.addPage(); y=20; }
+  }
+  pdf.save(`patient_${selectedChannel}.pdf`);
+}
+
+/* analytics toggle */
+document.getElementById('toggle24').addEventListener('click', ()=>{
+  const s = document.getElementById('analyticsSection');
+  s.style.display = s.style.display === 'none' ? 'block' : 'none';
+});
+
+/* =========================
+   Data flow: polling
+   ========================= */
+async function refreshOnce(){
+  const chObj = PATIENT_CHANNELS.find(c=>c.id===selectedChannel) || PATIENT_CHANNELS[0];
+  const feeds = await fetchFeeds(chObj.id, chObj.readKey, 50);
+  if(!feeds.length){ pushAlert('No data returned from ThingSpeak for channel '+chObj.id,'danger'); return; }
+  lastFeeds = feeds;
+  updateUIWithFeeds(feeds);
+  updateAnalytics(feeds); // hourly/daily
+  // update selected patient UI area
+  document.getElementById('selectedLabel').innerText = chObj.label;
+  const last = feeds.at(-1);
+  document.getElementById('selectedLatest').innerText = last ? `Latest: ${last.created_at} | BPM:${last.field1||'-'} T:${last.field2||'-'} H:${last.field3||'-'}` : 'Latest: -';
+}
+
+function updateUIWithFeeds(feeds){
+  const labels = feeds.map(f=> new Date(f.created_at).toLocaleTimeString());
+  const bpm = feeds.map(f=> Number(f.field1 || 0));
+  const temp = feeds.map(f=> Number(f.field2 || 0));
+  const hum = feeds.map(f=> Number(f.field3 || 0));
+
+  // update gauges (last value)
+  const lastB = bpm.at(-1) || 0, lastT = temp.at(-1) || 0, lastH = hum.at(-1) || 0;
+  bpmGauge.data.datasets[0].data[0] = lastB; bpmGauge.data.datasets[0].data[1] = Math.max(0,200-lastB); bpmGauge.update();
+  tempGauge.data.datasets[0].data[0] = lastT; tempGauge.data.datasets[0].data[1] = Math.max(0,50-lastT); tempGauge.update();
+  humGauge.data.datasets[0].data[0] = lastH; humGauge.data.datasets[0].data[1] = Math.max(0,100-lastH); humGauge.update();
+
+  document.getElementById('bpmLatest').innerText = lastB;
+  document.getElementById('tempLatest').innerText = lastT;
+  document.getElementById('humLatest').innerText = lastH;
+
+  combinedChart.data.labels = labels;
+  combinedChart.data.datasets[0].data = bpm;
+  combinedChart.data.datasets[1].data = temp;
+  combinedChart.data.datasets[2].data = hum;
+  combinedChart.update();
+
+  // alerts for doctor/trainer
+  if(currentRole === 'doctor' || currentRole === 'trainer'){
+    if(lastB > 100) pushAlert(`High BPM detected: ${lastB} bpm`, 'danger');
+    if(lastT > 38) pushAlert(`High temperature: ${lastT}°C`, 'warn');
+    if(lastH < 30) pushAlert(`Low humidity: ${lastH}%`, 'warn');
+  }
+}
+
+/* analytics helpers */
+function updateAnalytics(feeds){
+  // hourly aggregation (bucket by hour)
+  const buckets = {};
+  feeds.forEach(f=>{
+    const d = new Date(f.created_at);
+    const hourKey = d.toISOString().slice(0,13); // YYYY-MM-DDTHH
+    if(!buckets[hourKey]) buckets[hourKey] = { bpm:[], temp:[] };
+    if(f.field1) buckets[hourKey].bpm.push(Number(f.field1));
+    if(f.field2) buckets[hourKey].temp.push(Number(f.field2));
+  });
+  const hourKeys = Object.keys(buckets).sort().slice(-24);
+  const hLabels = hourKeys.map(k => k.slice(11)+':00');
+  const hBpm = hourKeys.map(k => avg(buckets[k].bpm));
+  const hTemp = hourKeys.map(k => avg(buckets[k].temp));
+  hourlyChart.data.labels = hLabels; hourlyChart.data.datasets[0].data = hBpm; hourlyChart.data.datasets[1].data = hTemp; hourlyChart.update();
+
+  // daily aggregation
+  const dbuckets = {};
+  feeds.forEach(f=>{
+    const d = new Date(f.created_at); const dayKey = d.toISOString().slice(0,10);
+    if(!dbuckets[dayKey]) dbuckets[dayKey] = { bpm:[], temp:[] };
+    if(f.field1) dbuckets[dayKey].bpm.push(Number(f.field1));
+    if(f.field2) dbuckets[dayKey].temp.push(Number(f.field2));
+  });
+  const dayKeys = Object.keys(dbuckets).sort().slice(-7);
+  const dLabels = dayKeys;
+  const dBpm = dayKeys.map(k => avg(dbuckets[k].bpm));
+  const dTemp = dayKeys.map(k => avg(dbuckets[k].temp));
+  dailyChart.data.labels = dLabels; dailyChart.data.datasets[0].data = dBpm; dailyChart.data.datasets[1].data = dTemp; dailyChart.update();
+}
+function avg(arr){ if(!arr || !arr.length) return 0; return Math.round((arr.reduce((a,b)=>a+b,0)/arr.length)*10)/10; }
+
+/* start polling */
+async function pollLoop(){
+  await refreshOnce();
+  setInterval(refreshOnce, POLL_MS);
+}
+pollLoop();
+
+/* populate patient list select highlight UI */
+function initialUI(){
+  // highlight first
+  document.querySelectorAll('.patient-item').forEach(it => it.classList.toggle('selected', it.dataset.cid === selectedChannel));
+  document.getElementById('patientSelect').value = selectedChannel;
+}
+initialUI();
+
+/* =========================
+   Small UX: mark selected when clicked in list
+   ========================= */
+document.querySelectorAll('.patient-item').forEach(it=>{
+  it.addEventListener('click', ()=> {
+    selectChannel(it.dataset.cid);
+    document.querySelectorAll('.patient-item').forEach(el=>el.classList.toggle('selected', el===it));
+  });
+});
+
+/* =========================
+   Final: small helpers for initial state
+   ========================= */
+(function init(){
+  // set role if stored
+  currentRole = localStorage.getItem('iot_role') || currentRole;
+  currentUser = localStorage.getItem('iot_user') || currentUser;
+  document.getElementById('roleBadge').innerText = currentRole.toUpperCase();
+  document.getElementById('userLabel').innerText = currentUser;
+
+  // show patient items
+  const plist = document.getElementById('patientList');
+  if(!plist.children.length){
+    PATIENT_CHANNELS.forEach(c=>{
+      // already added earlier; but ensure selected label is set
+      document.getElementById('selectedLabel').innerText = PATIENT_CHANNELS[0].label;
+    });
+  }
+
+})();
 </script>
 </body>
 </html>
