@@ -1,174 +1,90 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Patient Health Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Consultation — IoT Health Monitoring</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-      text-align: center;
-      padding: 20px;
-    }
-    h1 { margin-bottom: 10px; }
-    .gauge-container, .chart-container {
-      display: inline-block;
-      margin: 20px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    }
-    canvas { background: #f9f9f9; border-radius: 10px; }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      background-color: #3399ff;
-      color: white;
-      border-radius: 5px;
-    }
+    body{font-family:Inter, system-ui, Arial;background:#f4f8fb;margin:0;color:#052934}
+    header{padding:12px 20px;background:linear-gradient(90deg,#0b7dd1,#055278);color:#fff}
+    .container{max-width:900px;margin:18px auto;padding:16px}
+    .card{background:#fff;padding:16px;border-radius:12px;box-shadow:0 8px 26px rgba(10,20,40,0.06)}
+    .chat{height:360px;overflow:auto;padding:12px;border-radius:8px;background:#f7fbfe}
+    .msg{margin:8px 0;display:flex;gap:8px;align-items:flex-start}
+    .msg.you{flex-direction:row-reverse}
+    .bubble{padding:10px 12px;border-radius:10px;max-width:80%}
+    .bubble.you{background:#0b7dd1;color:#fff}
+    .bubble.them{background:#eef2f6;color:#052934}
+    .controls{display:flex;gap:8px;margin-top:10px}
+    .input{flex:1;padding:10px;border-radius:8px;border:1px solid #d7e7f2}
+    .btn{background:#0b7dd1;color:#fff;padding:10px 12px;border-radius:8px}
+    .small{font-size:13px;color:#6b7280;margin-top:8px}
   </style>
 </head>
 <body>
+  <header><strong>Online Consultation</strong></header>
+  <main class="container">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h3 id="consTitle">Consultation with Patient</h3>
+          <div class="small">Simulated chat for demonstration</div>
+        </div>
+        <div>
+          <a href="dashboard.html" style="text-decoration:none" class="btn">Back to Dashboard</a>
+        </div>
+      </div>
 
-  <h1>Patient Health Dashboard</h1>
+      <div id="chat" class="chat" aria-live="polite"></div>
 
-  <div class="gauge-container">
-    <h3>BPM</h3>
-    <canvas id="bpmGauge" width="200" height="200"></canvas>
-    <p id="bpmValue">--</p>
-  </div>
+      <div class="controls">
+        <input id="chatInput" class="input" placeholder="Type message (e.g., 'Are you okay?')">
+        <button id="sendBtn" class="btn">Send</button>
+      </div>
 
-  <div class="gauge-container">
-    <h3>Temperature (°C)</h3>
-    <canvas id="tempGauge" width="200" height="200"></canvas>
-    <p id="tempValue">--</p>
-  </div>
-
-  <div class="gauge-container">
-    <h3>Humidity (%)</h3>
-    <canvas id="humGauge" width="200" height="200"></canvas>
-    <p id="humValue">--</p>
-  </div>
-
-  <div class="chart-container" style="width:90%; margin-top:50px;">
-    <h3>Last 10 Readings</h3>
-    <canvas id="lineChart"></canvas>
-  </div>
-
-  <button id="downloadCSV">Download CSV</button>
+      <div class="small">Pro tip: Add actual telehealth integration (Google Meet or Zoom) for live video consultations.</div>
+    </div>
+  </main>
 
 <script>
-const apiKey = 'KAUQ35X9SMMOAML8'; // ThingSpeak API Key
-const channelId = '3128115'; // Replace with your Channel ID
-let bpmData = [];
-let tempData = [];
-let humData = [];
-let labels = [];
+const chat = document.getElementById('chat');
+const input = document.getElementById('chatInput');
 
-// --- Gauges ---
-const bpmGauge = new Chart(document.getElementById('bpmGauge'), {
-  type: 'doughnut',
-  data: { labels: ['BPM', ''], datasets: [{ data: [0, 200], backgroundColor: ['#ff4d4d', '#ddd'], borderWidth: 0 }] },
-  options: { rotation: 1*Math.PI, circumference: 1*Math.PI, cutout: '70%', plugins: { legend: { display: false } } }
-});
-
-const tempGauge = new Chart(document.getElementById('tempGauge'), {
-  type: 'doughnut',
-  data: { labels: ['Temp', ''], datasets: [{ data: [0, 50], backgroundColor: ['#ffa500', '#ddd'], borderWidth: 0 }] },
-  options: { rotation: 1*Math.PI, circumference: 1*Math.PI, cutout: '70%', plugins: { legend: { display: false } } }
-});
-
-const humGauge = new Chart(document.getElementById('humGauge'), {
-  type: 'doughnut',
-  data: { labels: ['Hum', ''], datasets: [{ data: [0, 100], backgroundColor: ['#3399ff', '#ddd'], borderWidth: 0 }] },
-  options: { rotation: 1*Math.PI, circumference: 1*Math.PI, cutout: '70%', plugins: { legend: { display: false } } }
-});
-
-// --- Line chart ---
-const lineChart = new Chart(document.getElementById('lineChart'), {
-  type: 'line',
-  data: { labels: labels, datasets: [
-    { label: 'BPM', data: bpmData, borderColor: '#ff4d4d', fill: false },
-    { label: 'Temp (°C)', data: tempData, borderColor: '#ffa500', fill: false },
-    { label: 'Humidity (%)', data: humData, borderColor: '#3399ff', fill: false }
-  ]},
-  options: { responsive: true, plugins: { legend: { position: 'top' } } }
-});
-
-// --- Fetch ThingSpeak Data ---
-async function fetchData() {
-  try {
-    const response = await fetch(`https://api.thingspeak.com/channels/${channelId}/feeds.json?api_key=${apiKey}&results=10`);
-    const data = await response.json();
-    const feeds = data.feeds;
-
-    bpmData = [];
-    tempData = [];
-    humData = [];
-    labels = [];
-
-    feeds.forEach((feed, i) => {
-      bpmData.push(Number(feed.field1));
-      tempData.push(Number(feed.field2));
-      humData.push(Number(feed.field3));
-      labels.push(i+1);
-    });
-
-    // Update gauges
-    bpmGauge.data.datasets[0].data[0] = bpmData[bpmData.length-1] || 0;
-    bpmGauge.data.datasets[0].data[1] = 200 - bpmGauge.data.datasets[0].data[0];
-    bpmGauge.update();
-    document.getElementById('bpmValue').innerText = bpmData[bpmData.length-1] || '--';
-
-    tempGauge.data.datasets[0].data[0] = tempData[tempData.length-1] || 0;
-    tempGauge.data.datasets[0].data[1] = 50 - tempGauge.data.datasets[0].data[0];
-    tempGauge.update();
-    document.getElementById('tempValue').innerText = tempData[tempData.length-1] || '--';
-
-    humGauge.data.datasets[0].data[0] = humData[humData.length-1] || 0;
-    humGauge.data.datasets[0].data[1] = 100 - humGauge.data.datasets[0].data[0];
-    humGauge.update();
-    document.getElementById('humValue').innerText = humData[humData.length-1] || '--';
-
-    // Update line chart
-    lineChart.data.labels = labels;
-    lineChart.data.datasets[0].data = bpmData;
-    lineChart.data.datasets[1].data = tempData;
-    lineChart.data.datasets[2].data = humData;
-    lineChart.update();
-
-  } catch (error) {
-    console.error('Error fetching ThingSpeak data:', error);
-  }
+function addMessage(text, who='them'){
+  const row = document.createElement('div');
+  row.className = 'msg ' + (who==='you' ? 'you' : '');
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble ' + (who==='you' ? 'you' : 'them');
+  bubble.innerText = text;
+  row.appendChild(bubble);
+  chat.appendChild(row);
+  chat.scrollTop = chat.scrollHeight;
 }
 
-// --- CSV Download ---
-function downloadCSV() {
-  let csv = 'BPM,Temperature,Humidity\n';
-  for (let i = 0; i < bpmData.length; i++) {
-    csv += `${bpmData[i]},${tempData[i]},${humData[i]}\n`;
-  }
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'patient_data.csv';
-  a.click();
-  URL.revokeObjectURL(url);
+document.getElementById('sendBtn').addEventListener('click', ()=>{
+  const txt = input.value.trim();
+  if(!txt) return;
+  addMessage(txt,'you');
+  input.value='';
+  // simulated reply
+  setTimeout(()=> {
+    const reply = generateReply(txt);
+    addMessage(reply,'them');
+  }, 900 + Math.random()*900);
+});
+
+function generateReply(userMsg){
+  const lower = userMsg.toLowerCase();
+  if(lower.includes('pain') || lower.includes('hurt')) return "I'm sorry to hear that. Please rest and monitor your vitals. If BPM > 120, seek immediate help.";
+  if(lower.includes('ok') || lower.includes('fine')) return "Glad to hear. Keep monitoring and stay hydrated.";
+  if(lower.includes('temperature') || lower.includes('fever')) return "If temperature is above 38°C, consider taking paracetamol and consult a doctor.";
+  return "Thanks for the update. Please describe any symptoms and I will advise.";
 }
 
-document.getElementById('downloadCSV').addEventListener('click', downloadCSV);
-
-// --- Refresh every 15 seconds ---
-fetchData();
-setInterval(fetchData, 15000);
-
+/* Welcome messages */
+addMessage("Hello — I'm Dr. Mokoa. How can I help today?", 'them');
+addMessage("Hi Doctor, my BPM seems high.", 'you');
+setTimeout(()=> addMessage("Please sit down, breathe slowly and let me check your recent readings on the dashboard.", 'them'), 900);
 </script>
 </body>
 </html>
