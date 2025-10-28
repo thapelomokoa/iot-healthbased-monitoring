@@ -1,430 +1,627 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>IoT-Based Health Monitoring System — Live Dashboard</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Smart Health Dashboard — IoT Health Monitor</title>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- html2canvas + jsPDF for PDF export -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-<!-- Minimal CSS: modern dark theme with neon accents -->
-<style>
-  :root{
-    --bg:#07121a;
-    --card:#0f2933;
-    --muted:#9fb3bd;
-    --accent:#00d1b2;
-    --accent-2:#ff6b6b;
-    --glass: rgba(255,255,255,0.04);
-    --glass-2: rgba(255,255,255,0.02);
-    --glass-border: rgba(255,255,255,0.04);
-  }
-  *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
-  body{margin:0;background:linear-gradient(180deg,#041018 0%, #07222b 100%);color:#e6f7f5;min-height:100vh}
-  header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:transparent}
-  .brand{display:flex;gap:12px;align-items:center}
-  .brand img{width:52px;height:52px;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,0.06)}
-  .brand h1{margin:0;font-size:18px;letter-spacing:0.2px}
-  .brand p{margin:0;font-size:12px;color:var(--muted)}
-  nav{display:flex;gap:8px;align-items:center}
-  a.btn{padding:8px 12px;border-radius:8px;text-decoration:none;color:inherit;border:1px solid var(--glass-border);background:var(--glass);font-size:13px}
-  a.btn.primary{background:linear-gradient(90deg,var(--accent),#00a88f);box-shadow:0 6px 20px rgba(0,209,178,0.12);border:none;color:#042422}
-  main{max-width:1200px;margin:16px auto;padding:0 16px}
-  .hero{display:grid;grid-template-columns:1fr 420px;gap:20px;align-items:center;padding:22px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03)}
-  .hero h2{margin:0 0 8px 0}
-  .hero p{color:var(--muted);margin:0 0 14px 0}
-  .hero .cta{display:flex;gap:10px}
-  .card{background:var(--card);border-radius:12px;padding:12px;border:1px solid var(--glass-border)}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
-  .gaugeCanvas{height:160px}
-  .gaugeValue{font-weight:700;font-size:20px;margin-top:8px}
-  #combinedChart{height:320px}
-  .controls{display:flex;gap:8px;align-items:center;margin-top:12px}
-  .small{font-size:13px;color:var(--muted)}
-  footer{text-align:center;color:var(--muted);margin:28px 0;font-size:13px}
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- html2canvas + jsPDF for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  /* heartbeat animation */
-  .heartWrap{display:flex;align-items:center;gap:12px;justify-content:center;flex-direction:column}
-  .heart{
-    width:110px;height:110px;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 8px 30px rgba(0,0,0,0.4);
-    border:1px solid rgba(255,255,255,0.03)
-  }
-  .heart .beat{
-    width:36px;height:36px;background:linear-gradient(180deg,var(--accent-2),#ff3b5c);border-radius:8px;transform:rotate(20deg);
-    box-shadow:0 10px 30px rgba(255,107,107,0.16), inset 0 -6px 14px rgba(255,20,20,0.05)
-  }
-  /* responsive */
-  @media (max-width:980px){
-    .hero{grid-template-columns:1fr; padding:16px}
-    .grid{grid-template-columns:1fr}
-  }
-</style>
+  <style>
+    /* ----------------- THEME & LAYOUT ----------------- */
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --text:#102a43;
+      --muted:#6b7a83;
+      --blue:#1e88e5;   /* primary (trust/health) */
+      --green:#2e7d32;  /* safe/normal */
+      --red:#d32f2f;    /* alarm/warn */
+      --radius:12px;
+      --shadow: 0 8px 24px rgba(16,42,67,0.06);
+      --glass: rgba(16,42,67,0.03);
+      --accent-gradient: linear-gradient(90deg,var(--blue),#3ec5ff);
+    }
+    *{box-sizing:border-box;font-family:'Poppins',system-ui,Arial;scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    a{color:inherit}
+    header{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;background:white;border-bottom:1px solid var(--glass);position:sticky;top:0;z-index:50}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:48px;height:48px;border-radius:10px;object-fit:cover;box-shadow:var(--shadow)}
+    .sitename{font-weight:700;font-size:16px}
+    .tag{font-size:12px;color:var(--muted)}
+    nav{display:flex;gap:8px;align-items:center}
+    .navlink{padding:8px 12px;border-radius:10px;background:transparent;border:none;font-size:14px;color:var(--muted)}
+    .btn{padding:8px 12px;border-radius:10px;border:1px solid var(--glass);background:var(--card);cursor:pointer}
+    .btn.primary{background:var(--blue);color:white;border:none;box-shadow:0 8px 18px rgba(30,136,229,0.12)}
+    .container{max-width:1200px;margin:22px auto;padding:0 18px}
+    .grid{display:grid;gap:18px}
+    /* responsive grid layout */
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-2{grid-template-columns:repeat(2,1fr)}
+    .card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);border:1px solid var(--glass)}
+    h2,h3{margin:0 0 8px 0}
+    p.small{margin:0;color:var(--muted);font-size:13px}
+
+    /* Gauges / charts area */
+    .gauges{display:flex;gap:14px;align-items:stretch}
+    .gauge{flex:1; text-align:center; padding:16px}
+    .gauge canvas{width:100%;max-height:140px}
+    .gauge .val{font-weight:700;font-size:20px;margin-top:6px}
+
+    /* Alerts */
+    .alerts{padding:12px;border-radius:12px}
+    .alert.ok{background:#e9fbe9;color:var(--green);border:1px solid rgba(46,125,50,0.12)}
+    .alert.warn{background:#fff8e1;color:#9a7a00;border:1px solid rgba(218,165,32,0.12)}
+    .alert.crit{background:#ffebee;color:var(--red);border:1px solid rgba(211,47,47,0.12)}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:600}
+
+    /* Table */
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--glass)}
+    th{font-weight:700;color:var(--muted);font-size:13px}
+    tbody tr:hover{background:linear-gradient(90deg, rgba(30,136,229,0.03), transparent)}
+
+    /* small utilities */
+    .right{margin-left:auto}
+    .muted{color:var(--muted)}
+    .controls{display:flex;gap:8px;align-items:center}
+    .chip{padding:6px 10px;border-radius:999px;background:var(--glass);font-weight:600;color:var(--muted)}
+
+    /* light animations */
+    .fade-in{animation:fadeIn .5s ease both}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+    /* mobile */
+    @media (max-width:980px){
+      .grid-3{grid-template-columns:1fr}
+      .gauges{flex-direction:column}
+      nav{display:none}
+      header{padding:12px}
+      .top-actions{display:flex;gap:8px}
+    }
+  </style>
 </head>
 <body>
 
 <header>
   <div class="brand">
-    <img src="https://images.unsplash.com/photo-1580281657528-889c0f578a66?q=80&w=800&auto=format&fit=crop&s=8b7a6d4b4d6df5e6c9f3a1da5a5d0a6f" alt="doctor">
+    <img class="logo" src="https://images.unsplash.com/photo-1580281657528-889c0f578a66?q=80&w=800&auto=format&fit=crop&s=8b7a6d4b4d6df5e6c9f3a1da5a5d0a6f" alt="logo">
     <div>
-      <h1>IoT-Based Health Monitoring System</h1>
-      <p class="small">Real-time vitals | ThingSpeak live dashboard</p>
+      <div class="sitename">Smart Health Dashboard</div>
+      <div class="tag">IoT Health Monitor — Thapelo Mokoa</div>
     </div>
   </div>
 
-  <nav>
-    <div id="statusDot" class="small" style="padding:6px 10px;border-radius:8px;background:rgba(0,0,0,0.15)">Status: <span id="deviceStatus" style="font-weight:700;color:var(--muted)">Checking...</span></div>
-    <a class="btn" href="#dashboard">Dashboard</a>
-    <a class="btn primary" href="#consult">Consult Doctor</a>
+  <nav aria-label="Main navigation">
+    <button class="navlink" onclick="scrollToSection('home')">Home</button>
+    <button class="navlink" onclick="scrollToSection('dashboard')">Data Dashboard</button>
+    <button class="navlink" onclick="scrollToSection('reports')">Reports</button>
+    <button class="navlink" onclick="scrollToSection('about')">About</button>
+    <button class="navlink" onclick="scrollToSection('contact')">Contact</button>
   </nav>
+
+  <div class="top-actions">
+    <button id="modeToggle" class="btn" title="Toggle dark/light">Light</button>
+  </div>
 </header>
 
-<main>
-  <!-- HERO -->
-  <section class="hero">
-    <div>
-      <div style="display:flex;gap:8px;align-items:center"><span style="background:linear-gradient(90deg,var(--accent),#008e7e);padding:6px 10px;border-radius:8px;font-weight:700;font-size:12px">Student Project</span><span class="small">IoT · Arduino · ESP8266 · ThingSpeak</span></div>
-      <h2>Monitor patients remotely — live heart rate, temperature & humidity</h2>
-      <p class="small">This dashboard reads your ThingSpeak channel in real-time and displays interactive visualisations. Perfect for remote monitoring, gym dashboards, and demonstrations for your project report.</p>
+<main class="container">
 
-      <div class="cta" style="margin-top:12px">
-        <a class="btn primary" href="#dashboard">Open Live Dashboard</a>
-        <a class="btn" href="#about">About & Hardware</a>
-      </div>
-
-      <div style="margin-top:16px" class="small">
-        <strong>ThingSpeak Channel:</strong> <span id="channelIdLabel">3128115</span> • Poll: <span id="pollLabel">13s</span> • Fields: BPM (1), Temp (2), Hum (3)
+  <!-- HOME / INTRO -->
+  <section id="home" class="card fade-in" style="display:flex;gap:18px;align-items:center">
+    <div style="flex:1">
+      <h2>IoT-Based Health Monitoring</h2>
+      <p class="small">Live patient vitals from your Arduino + ESP8266 sent to ThingSpeak and visualized here. Professional layout, responsive charts, reports and alerts — ideal for demo and submission.</p>
+      <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+        <button class="btn primary" onclick="scrollToSection('dashboard')">Open Dashboard</button>
+        <button class="btn" onclick="scrollToSection('reports')">Generate Report</button>
+        <span class="muted" style="margin-left:8px">Channel: <strong id="channelLabel">3128115</strong></span>
       </div>
     </div>
-
-    <div style="display:flex;flex-direction:column;gap:12px;align-items:center">
-      <div class="card" style="width:100%;text-align:center;padding:16px">
-        <div class="small">Doctor monitoring preview</div>
-        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1200&auto=format&fit=crop&s=5e9b3f7f45c9b2f3e2f6f5e7b6dd7a34" style="width:100%;height:200px;object-fit:cover;border-radius:8px;margin-top:8px">
-      </div>
-
-      <div class="card" style="width:100%;padding:14px;display:flex;flex-direction:column;align-items:center">
-        <div class="small">Use cases</div>
-        <ul class="small" style="text-align:left;margin:8px 0">
-          <li>Remote doctor monitoring</li>
-          <li>Gym heart-rate dashboards</li>
-          <li>Demonstration for final year project</li>
-        </ul>
-      </div>
+    <div style="width:320px">
+      <img src="https://images.unsplash.com/photo-1600180758890-8c6b1fa8f2c6?q=80&w=800&auto=format&fit=crop&s=0e2dec9f5a1f5a7b7b1db9b5a9c8e3d9" alt="monitoring" style="width:100%;border-radius:10px;object-fit:cover">
     </div>
   </section>
 
   <!-- DASHBOARD -->
-  <section id="dashboard" class="card" style="margin-top:18px;padding:14px">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <h3 style="margin:0">Live Dashboard</h3>
-      <div class="small">Channel: <strong id="channelLabel">3128115</strong></div>
+  <section id="dashboard" style="margin-top:18px">
+    <div class="grid grid-3">
+      <!-- User Info panel -->
+      <div class="card fade-in" style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="flex:1">
+            <h3>Patient / Device Status</h3>
+            <p class="small">Displays last update time and overall system health</p>
+          </div>
+          <div class="right">
+            <div id="statusBadge" class="badge chip">Checking…</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="flex:1">
+            <div class="muted">Last update</div>
+            <div id="lastUpdate" style="font-weight:700">--</div>
+          </div>
+          <div style="flex:1">
+            <div class="muted">Overall</div>
+            <div id="overallText" style="font-weight:700;color:var(--green)">All readings normal ✅</div>
+          </div>
+        </div>
+
+        <div style="margin-top:8px">
+          <div class="muted">Connection</div>
+          <div id="connInfo">Checking device status…</div>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="card fade-in">
+        <h3>Alerts</h3>
+        <div id="alertsContainer" style="margin-top:8px">
+          <div class="alerts alert.ok">No alerts right now — readings in normal range.</div>
+        </div>
+      </div>
+
+      <!-- Health Tips -->
+      <div class="card fade-in">
+        <h3>Health Insights</h3>
+        <div id="insights" style="margin-top:8px" class="small">Insights and suggestions will appear here based on recent readings.</div>
+      </div>
     </div>
 
-    <div class="grid" style="margin-top:14px">
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div class="small">Heart Rate</div>
-            <div class="gaugeValue" id="bpmVal">-- BPM</div>
-          </div>
-          <div class="heartWrap" style="width:120px">
-            <div class="heart" id="heartAnim"><div class="beat"></div></div>
-            <div class="small">Live BPM</div>
+    <!-- Gauges -->
+    <div style="margin-top:16px" class="card fade-in">
+      <h3 style="margin-bottom:12px">Sensor Gauges</h3>
+      <div class="gauges">
+        <div class="gauge card" aria-live="polite">
+          <div class="muted">Heart Rate (BPM)</div>
+          <canvas id="gaugeBPM"></canvas>
+          <div class="val" id="bpmValue">-- BPM</div>
+        </div>
+        <div class="gauge card">
+          <div class="muted">Temperature (°C)</div>
+          <canvas id="gaugeTemp"></canvas>
+          <div class="val" id="tempValue">-- °C</div>
+        </div>
+        <div class="gauge card">
+          <div class="muted">Humidity (%)</div>
+          <canvas id="gaugeHum"></canvas>
+          <div class="val" id="humValue">-- %</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- trend charts and table -->
+    <div class="grid grid-2" style="margin-top:16px">
+      <div class="card fade-in">
+        <h3>Trends (recent)</h3>
+        <canvas id="trendChart" style="height:300px"></canvas>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+          <div class="small">Hover data points for time & value</div>
+          <div class="controls">
+            <button class="btn" id="btnCSV">Download CSV</button>
+            <button class="btn primary" id="btnPDF">Export PDF</button>
           </div>
         </div>
       </div>
 
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div class="small">Temperature</div>
-            <div class="gaugeValue" id="tempVal">-- °C</div>
-          </div>
-          <div style="width:120px">
-            <canvas id="tempMini"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div class="small">Humidity</div>
-            <div class="gaugeValue" id="humVal">-- %</div>
-          </div>
-          <div style="width:120px">
-            <canvas id="humMini"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:14px;padding:12px">
-      <h5 style="margin:0 0 10px 0">Combined recent (last readings)</h5>
-      <canvas id="combinedChart"></canvas>
-      <div class="controls">
-        <button id="downloadCSV" class="btn">Download CSV</button>
-        <button id="exportPDF" class="btn primary">Export PDF</button>
-        <div style="flex:1"></div>
-        <div class="small">Last update: <span id="lastUpdate">-</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT / HARDWARE -->
-  <section id="about" class="card" style="margin-top:18px;padding:14px">
-    <h3>About & Hardware</h3>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
-      <div>
-        <h5>Hardware used</h5>
-        <ul class="small">
-          <li>Arduino UNO — reads DHT22 and Pulse Sensor</li>
-          <li>NodeMCU (ESP8266) — forwards data to ThingSpeak</li>
-          <li>DHT22 — Temperature & Humidity</li>
-          <li>Pulse sensor — Heart rate (analog)</li>
-          <li>LCD 16x2 and LED — local display & heartbeat blink</li>
-        </ul>
-        <p class="small">Wiring summary: DHT22 data → Arduino D8 (with 10k pull-up to VCC). Pulse sensor signal → A0. Arduino TX/RX → NodeMCU RX/TX (common ground). NodeMCU uploads to ThingSpeak.</p>
-      </div>
-      <div>
-        <img src="https://images.unsplash.com/photo-1581093588401-8a3c3b48b6a3?q=80&w=1200&auto=format&fit=crop&s=89f6ab8b9b3f7e1a2d7f0b6f2c4c9a6e" style="width:100%;height:220px;object-fit:cover;border-radius:8px">
-      </div>
-    </div>
-  </section>
-
-  <!-- CONSULT FORM -->
-  <section id="consult" class="card" style="margin-top:18px;padding:14px">
-    <h3>Consult Doctor</h3>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px">
-      <div style="flex:1;min-width:320px">
-        <form id="consultForm">
-          <div style="display:flex;gap:8px;margin-bottom:8px">
-            <input id="cf_name" placeholder="Full name" class="card" style="flex:1;padding:10px;border-radius:8px;border:0"/>
-            <input id="cf_email" type="email" placeholder="Email" class="card" style="width:220px;padding:10px;border-radius:8px;border:0"/>
-          </div>
-          <textarea id="cf_message" placeholder="Describe symptoms / notes" class="card" style="width:100%;height:120px;padding:10px;border-radius:8px;border:0"></textarea>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <input id="cf_channel" placeholder="ThingSpeak Channel (optional)" class="card" style="padding:10px;border-radius:8px;border:0"/>
-            <button type="submit" class="btn primary">Send Request</button>
-            <div id="consultStatus" class="small" style="align-self:center"></div>
-          </div>
-        </form>
-      </div>
-      <div style="width:320px">
-        <div class="card" style="padding:12px">
-          <h6>How it works</h6>
-          <ol class="small">
-            <li>Arduino reads sensors and computes BPM.</li>
-            <li>NodeMCU uploads to ThingSpeak (write key stored on NodeMCU only).</li>
-            <li>This website reads ThingSpeak read API and visualises data.</li>
-          </ol>
+      <div class="card fade-in">
+        <h3>Recent Readings</h3>
+        <div style="max-height:300px;overflow:auto;margin-top:8px">
+          <table aria-describedby="recent readings">
+            <thead><tr><th>Time</th><th>BPM</th><th>Temp (°C)</th><th>Hum (%)</th></tr></thead>
+            <tbody id="recentTable">
+              <tr><td colspan="4" class="muted">No data yet</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </section>
 
-  <footer>© 2025 Thapelo Mokoa — IoT-Based Health Monitoring System</footer>
+  <!-- Reports -->
+  <section id="reports" style="margin-top:18px">
+    <div class="card fade-in">
+      <h3>Reports & Summary</h3>
+      <p class="small">Export daily or weekly reports with summary statistics.</p>
+
+      <div style="display:flex;gap:12px;align-items:center;margin-top:12px">
+        <label class="muted">Rows:</label>
+        <select id="rowsSelect" class="btn">
+          <option value="20">Last 20</option>
+          <option value="50">Last 50</option>
+          <option value="100">Last 100</option>
+          <option value="300">Last 300</option>
+        </select>
+        <button class="btn primary" id="genSummary">Generate Summary</button>
+        <div class="right muted" id="summaryInfo"></div>
+      </div>
+
+      <div id="summaryBox" style="margin-top:12px;display:none" class="card">
+        <h4>Summary Statistics</h4>
+        <div id="summaryContent" class="small">—</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About & Contact -->
+  <section id="about" style="margin-top:18px" class="card fade-in">
+    <h3>About this Project</h3>
+    <p class="small">Developed by <strong>Thapelo Mokoa</strong> — IoT health monitoring using Arduino, ESP8266, DHT22 and a pulse sensor. Data is forwarded to ThingSpeak and visualized here for demonstration.</p>
+    <h4 style="margin-top:12px">Hardware wiring (summary)</h4>
+    <ul class="small">
+      <li>DHT22: VCC→5V, DATA→D8 (with 10kΩ pull-up to VCC), GND→GND</li>
+      <li>Pulse sensor: Signal→A0, VCC→5V, GND→GND</li>
+      <li>Arduino TX/RX ↔ NodeMCU RX/TX (common ground). NodeMCU uploads to ThingSpeak (write key stored on NodeMCU)</li>
+    </ul>
+  </section>
+
+  <section id="contact" style="margin-top:18px" class="card fade-in">
+    <h3>Contact & Credits</h3>
+    <p class="small">Developed by <strong>Thapelo Mokoa</strong> — 2025. For sources and code see your GitHub repo.</p>
+    <p class="small">Email: <a href="mailto:thapelo@example.com">thapelo@example.com</a> (replace with your real email)</p>
+  </section>
+
+  <footer style="margin-top:18px;text-align:center;color:var(--muted);font-size:13px">© 2025 Thapelo Mokoa — IoT Health Monitoring System</footer>
 </main>
 
-<!-- ========== SCRIPTS ========== -->
 <script>
-/* ================= CONFIG =================
-   Don't store ThingSpeak WRITE keys here. This file reads only (readKey).
-   Channel and readKey provided by you:
-*/
-const CHANNEL_ID = '3128115';
-const READ_KEY = 'K72OYJMYOJZN240T';
-const POLL_MS = 13000; // 13 seconds
-const FIELD_BPM = 'field1';    // BPM
-const FIELD_TEMP = 'field2';   // Temperature
-const FIELD_HUM = 'field3';    // Humidity
+/* ----------------- CONFIG ----------------- */
+/* ThingSpeak settings (read only) */
+const THINGSPEAK_CHANNEL = '3128115';
+const THINGSPEAK_READ_KEY = 'K72OYJMYOJZN240T'; // read key
+const POLL_INTERVAL_MS = 15000; // 15 seconds (ThingSpeak write limit)
 
-document.getElementById('channelLabel').innerText = CHANNEL_ID;
-document.getElementById('channelIdLabel').innerText = CHANNEL_ID;
-document.getElementById('pollLabel').innerText = (POLL_MS/1000) + 's';
+/* Field mapping */
+const F_BPM = 'field1';   // BPM
+const F_TEMP = 'field2';  // Temperature (°C)
+const F_HUM = 'field3';   // Humidity (%)
 
-/* ========== Chart & UI setup ========== */
-const combinedCtx = document.getElementById('combinedChart').getContext('2d');
-const combinedChart = new Chart(combinedCtx, {
-  type: 'line',
-  data: { labels: [], datasets: [
-    { label: 'BPM', data: [], borderColor: '#ff6b6b', tension:0.2, pointRadius:2 },
-    { label: 'Temperature (°C)', data: [], borderColor: '#ffb86b', tension:0.2, pointRadius:2 },
-    { label: 'Humidity (%)', data: [], borderColor: '#6bd1ff', tension:0.2, pointRadius:2 },
-  ]},
-  options: { responsive:true, interaction:{mode:'index',intersect:false}, scales:{y:{beginAtZero:false}} }
-});
+/* UI elements */
+const statusBadge = document.getElementById('statusBadge');
+const lastUpdateEl = document.getElementById('lastUpdate');
+const overallText = document.getElementById('overallText');
+const connInfo = document.getElementById('connInfo');
+const alertsContainer = document.getElementById('alertsContainer');
+const insightsEl = document.getElementById('insights');
+const recentTable = document.getElementById('recentTable');
+const channelLabel = document.getElementById('channelLabel');
+channelLabel.textContent = THINGSPEAK_CHANNEL;
 
-// small mini charts
-const tempMini = new Chart(document.getElementById('tempMini').getContext('2d'), { type:'doughnut', data:{datasets:[{data:[0,50],backgroundColor:['#ffb86b','#12292c']}]}, options:{rotation:Math.PI,circumference:Math.PI,cutout:'70%',plugins:{legend:{display:false}}} });
-const humMini = new Chart(document.getElementById('humMini').getContext('2d'), { type:'doughnut', data:{datasets:[{data:[0,100],backgroundColor:['#6bd1ff','#07121a']}]}, options:{rotation:Math.PI,circumference:Math.PI,cutout:'70%',plugins:{legend:{display:false}}} });
-
-/* heartbeat element */
-const heartBeatEl = document.querySelector('#heartAnim .beat');
+/* internal state */
 let lastFeeds = [];
+let trendChart = null;
 
-/* Fetch from ThingSpeak */
-async function fetchFeeds(limit=60) {
-  const keyParam = READ_KEY ? `&api_key=${READ_KEY}` : '';
-  const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?results=${limit}${keyParam}`;
-  const r = await fetch(url);
-  if(!r.ok) throw new Error('ThingSpeak error ' + r.status);
-  const j = await r.json();
-  return j;
+/* ----------------- HELPERS ----------------- */
+function thingSpeakUrl(results=50) {
+  const keyPart = THINGSPEAK_READ_KEY ? `&api_key=${THINGSPEAK_READ_KEY}` : '';
+  return `https://api.thingspeak.com/channels/${THINGSPEAK_CHANNEL}/feeds.json?results=${results}${keyPart}`;
+}
+
+function formatDate(iso) {
+  try { const d = new Date(iso); return d.toLocaleString(); } catch (e) { return iso; }
+}
+
+/* ----------------- CHARTS ----------------- */
+function createTrendChart(ctx) {
+  return new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        { label: 'BPM', data: [], borderColor: getComputedStyle(document.documentElement).getPropertyValue('--red') || '#d32f2f', tension:0.3, pointRadius:2 },
+        { label: 'Temp (°C)', data: [], borderColor: getComputedStyle(document.documentElement).getPropertyValue('--blue') || '#1e88e5', tension:0.3, pointRadius:2 },
+        { label: 'Hum (%)', data: [], borderColor: getComputedStyle(document.documentElement).getPropertyValue('--green') || '#2e7d32', tension:0.3, pointRadius:2 }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: { x: { display: true }, y: { beginAtZero: false } },
+      plugins: { tooltip: { enabled: true, mode: 'index', intersect: false } }
+    }
+  });
+}
+
+function createMiniGauge(canvas, maxValue=100, color='#1e88e5') {
+  // simple doughnut gauge using Chart.js
+  return new Chart(canvas.getContext('2d'), {
+    type: 'doughnut',
+    data: { labels:['value','rest'], datasets:[{ data:[0, maxValue], backgroundColor:[color,'#f1f4f8'], borderWidth:0 }] },
+    options: { rotation: -90 * Math.PI/180, circumference: 180 * Math.PI/180, cutout: '70%', plugins: { legend:{display:false} }, responsive:true }
+  });
+}
+
+/* create gauges */
+const gaugeBPM = createMiniGauge(document.getElementById('gaugeBPM'), 200, getComputedStyle(document.documentElement).getPropertyValue('--red') || '#d32f2f');
+const gaugeTemp = createMiniGauge(document.getElementById('gaugeTemp'), 50, getComputedStyle(document.documentElement).getPropertyValue('--blue') || '#1e88e5');
+const gaugeHum = createMiniGauge(document.getElementById('gaugeHum'), 100, getComputedStyle(document.documentElement).getPropertyValue('--green') || '#2e7d32');
+
+const trendCtx = document.getElementById('trendChart').getContext('2d');
+trendChart = createTrendChart(trendCtx);
+
+/* ----------------- FETCH & PROCESS ----------------- */
+async function fetchFeeds(rows=50) {
+  const url = thingSpeakUrl(rows);
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('ThingSpeak fetch failed: ' + res.status);
+  const json = await res.json();
+  return json;
 }
 
 function parseFeeds(json) {
   const feeds = json.feeds || [];
-  // arrays
-  const labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString());
-  const bpm = feeds.map(f => { const v = parseFloat(f[FIELD_BPM]); return isNaN(v) ? 0 : v; });
-  const temp = feeds.map(f => { const v = parseFloat(f[FIELD_TEMP]); return isNaN(v) ? 0 : v; });
-  const hum = feeds.map(f => { const v = parseFloat(f[FIELD_HUM]); return isNaN(v) ? 0 : v; });
+  // map to arrays
+  const labels = feeds.map(f => formatDate(f.created_at));
+  const bpm = feeds.map(f => { const v = parseFloat(f[F_BPM]); return isNaN(v) ? null : v; });
+  const temp = feeds.map(f => { const v = parseFloat(f[F_TEMP]); return isNaN(v) ? null : v; });
+  const hum = feeds.map(f => { const v = parseFloat(f[F_HUM]); return isNaN(v) ? null : v; });
   return { feeds, labels, bpm, temp, hum };
 }
 
+function computeSummary(arr) {
+  const nums = arr.filter(v => v !== null && v !== undefined);
+  if(nums.length === 0) return { avg:null, min:null, max:null };
+  const sum = nums.reduce((a,b)=>a+b,0);
+  return { avg:(sum/nums.length), min:Math.min(...nums), max:Math.max(...nums) };
+}
+
+function updateGauges(lastBPM, lastTemp, lastHum) {
+  // update gauge datasets and labels
+  gaugeBPM.data.datasets[0].data[0] = lastBPM || 0;
+  gaugeBPM.data.datasets[0].data[1] = Math.max(0, 200 - (lastBPM || 0));
+  gaugeBPM.update();
+
+  gaugeTemp.data.datasets[0].data[0] = lastTemp || 0;
+  gaugeTemp.data.datasets[0].data[1] = Math.max(0, 50 - (lastTemp || 0));
+  gaugeTemp.update();
+
+  gaugeHum.data.datasets[0].data[0] = lastHum || 0;
+  gaugeHum.data.datasets[0].data[1] = Math.max(0, 100 - (lastHum || 0));
+  gaugeHum.update();
+
+  document.getElementById('bpmValue').innerText = (lastBPM !== null ? Math.round(lastBPM) + ' BPM' : '--');
+  document.getElementById('tempValue').innerText = (lastTemp !== null ? lastTemp.toFixed(1) + ' °C' : '--');
+  document.getElementById('humValue').innerText = (lastHum !== null ? lastHum.toFixed(1) + ' %' : '--');
+}
+
+/* alerts logic */
+function evaluateAlerts(lastBPM, lastTemp, lastHum) {
+  // thresholds (example; adjust to what you want)
+  const alerts = [];
+  if(lastBPM !== null) {
+    if(lastBPM < 50) alerts.push({level:'warn', text:`Low BPM (${Math.round(lastBPM)}) — check sensor/blood pressure.`});
+    else if(lastBPM > 140) alerts.push({level:'crit', text:`High BPM (${Math.round(lastBPM)}) — possible tachycardia.`});
+  }
+  if(lastTemp !== null) {
+    if(lastTemp > 38) alerts.push({level:'crit', text:`High temperature (${lastTemp.toFixed(1)}°C) — fever alert.`});
+    else if(lastTemp > 37.2) alerts.push({level:'warn', text:`Slightly elevated temperature (${lastTemp.toFixed(1)}°C).`});
+  }
+  if(lastHum !== null) {
+    if(lastHum < 20) alerts.push({level:'warn', text:`Low humidity (${lastHum.toFixed(1)}%) — dry environment.`});
+    else if(lastHum > 80) alerts.push({level:'warn', text:`High humidity (${lastHum.toFixed(1)}%) — may affect comfort.`});
+  }
+  return alerts;
+}
+
+/* health insights (simple heuristics) */
+function generateInsight(avgBPM, avgTemp, avgHum) {
+  const hints = [];
+  if(avgBPM !== null) {
+    if(avgBPM < 60) hints.push('Your average heart rate is low — consult a physician if you feel unwell.');
+    else if(avgBPM <= 100) hints.push('Average heart rate is within normal range. Keep up the good work!');
+    else hints.push('Average heart rate is high — consider rest and medical checkup.');
+  }
+  if(avgTemp !== null) {
+    if(avgTemp >= 38) hints.push('Average temperature indicates fever — seek medical advice.');
+    else if(avgTemp >= 37.2) hints.push('Slightly elevated average temperature — monitor closely.');
+    else hints.push('Average temperature is normal.');
+  }
+  if(avgHum !== null) {
+    if(avgHum < 30) hints.push('Low humidity — stay hydrated.');
+    else if(avgHum > 70) hints.push('High humidity — ensure ventilation.');
+  }
+  return hints.join(' ');
+}
+
+/* render recent table */
+function renderTable(feeds) {
+  if(!feeds || feeds.length === 0) {
+    recentTable.innerHTML = `<tr><td colspan="4" class="muted">No data yet</td></tr>`;
+    return;
+  }
+  recentTable.innerHTML = '';
+  feeds.slice(0, 200).forEach(f => {
+    const tr = document.createElement('tr');
+    const tTime = document.createElement('td'); tTime.textContent = formatDate(f.created_at);
+    const tBpm = document.createElement('td'); tBpm.textContent = f[F_BPM] || '--';
+    const tTemp = document.createElement('td'); tTemp.textContent = f[F_TEMP] || '--';
+    const tHum = document.createElement('td'); tHum.textContent = f[F_HUM] || '--';
+    tr.append(tTime, tBpm, tTemp, tHum);
+    recentTable.appendChild(tr);
+  });
+}
+
+/* update UI from parsed data */
 function updateUI(parsed) {
   const { feeds, labels, bpm, temp, hum } = parsed;
   lastFeeds = feeds;
-  const lastBPM = bpm.at(-1) || 0;
-  const lastTemp = temp.at(-1) || 0;
-  const lastHum = hum.at(-1) || 0;
+  const lastBPM = bpm.slice().reverse().find(v => v !== null && v !== undefined) || null;
+  const lastTemp = temp.slice().reverse().find(v => v !== null && v !== undefined) || null;
+  const lastHum = hum.slice().reverse().find(v => v !== null && v !== undefined) || null;
 
-  document.getElementById('bpmVal').innerText = (lastBPM>0? lastBPM:'--') + ' BPM';
-  document.getElementById('tempVal').innerText = (lastTemp>0? lastTemp:'--') + ' °C';
-  document.getElementById('humVal').innerText = (lastHum>0? lastHum:'--') + ' %';
+  // update last update timestamp
+  const lastTime = feeds.length ? feeds[feeds.length-1].created_at : null;
+  lastUpdateEl.textContent = lastTime ? formatDate(lastTime) : '--';
 
-  // update mini charts
-  tempMini.data.datasets[0].data[0] = lastTemp; tempMini.data.datasets[0].data[1] = Math.max(0,50-lastTemp); tempMini.update();
-  humMini.data.datasets[0].data[0] = lastHum; humMini.data.datasets[0].data[1] = Math.max(0,100-lastHum); humMini.update();
-
-  // combined chart
-  combinedChart.data.labels = labels;
-  combinedChart.data.datasets[0].data = bpm;
-  combinedChart.data.datasets[1].data = temp;
-  combinedChart.data.datasets[2].data = hum;
-  combinedChart.update();
-
-  // last update time
-  const lastTime = feeds.at(-1) ? new Date(feeds.at(-1).created_at) : null;
-  document.getElementById('lastUpdate').innerText = lastTime ? lastTime.toLocaleString() : '-';
-
-  // heartbeat: scale the beat with BPM (convert to ms animation)
-  animateHeart(lastBPM);
-}
-
-/* heartbeat pulse animation */
-let heartInterval = null;
-function animateHeart(bpm) {
-  const beatEl = document.querySelector('#heartAnim .beat');
-  if(!beatEl) return;
-  if(!bpm || bpm <= 0) {
-    // gentle slow
-    beatEl.style.transform = 'scale(1) rotate(20deg)';
-    if(heartInterval){ clearInterval(heartInterval); heartInterval = null; }
-    return;
-  }
-  const msPerBeat = 60000 / bpm; // ms between beats
-  // small transform per beat
-  if(heartInterval) clearInterval(heartInterval);
-  (function beatOnce(){
-    beatEl.animate([{ transform:'scale(1) rotate(20deg)' }, { transform:'scale(1.35) rotate(20deg)' }, { transform:'scale(1) rotate(20deg)' }], { duration: Math.max(200, msPerBeat/1.8), iterations: 1 });
-  })();
-  heartInterval = setInterval(()=> {
-    beatEl.animate([{ transform:'scale(1) rotate(20deg)' }, { transform:'scale(1.35) rotate(20deg)' }, { transform:'scale(1) rotate(20deg)' }], { duration: Math.max(200, msPerBeat/1.8), iterations: 1 });
-  }, Math.max(300, msPerBeat));
-}
-
-/* offline detection + status */
-function updateStatus(feeds) {
-  const statusEl = document.getElementById('deviceStatus');
+  // connection info
   const now = Date.now();
-  const last = feeds.at(-1) ? new Date(feeds.at(-1).created_at).getTime() : 0;
-  if(!last) {
-    statusEl.innerText = 'No data';
-    statusEl.style.color = '#f0a500';
-    return;
-  }
-  const delta = (now - last) / 1000;
-  if(delta > 75) {
-    statusEl.innerText = 'Offline';
-    statusEl.style.color = '#ff6b6b';
+  const lastTimeMs = lastTime ? new Date(lastTime).getTime() : 0;
+  const deltaSec = lastTimeMs ? Math.round((now - lastTimeMs)/1000) : null;
+  if(deltaSec === null) {
+    connInfo.textContent = 'No data yet';
+    statusBadge.textContent = 'No data';
   } else {
-    statusEl.innerText = 'Online';
-    statusEl.style.color = '#6bffcf';
+    connInfo.textContent = `Last received ${deltaSec} s ago`;
+    statusBadge.textContent = deltaSec > 75 ? 'Offline' : 'Online';
+    statusBadge.style.background = deltaSec > 75 ? '#ffe9e9' : '#e9fff0';
+    statusBadge.style.color = deltaSec > 75 ? 'var(--red)' : 'var(--green)';
   }
+
+  // update gauges and trend chart
+  updateGauges(lastBPM, lastTemp, lastHum);
+  trendChart.data.labels = labels;
+  trendChart.data.datasets[0].data = bpm;
+  trendChart.data.datasets[1].data = temp;
+  trendChart.data.datasets[2].data = hum;
+  trendChart.update();
+
+  // table
+  renderTable(feeds.slice().reverse());
+
+  // alerts
+  const alerts = evaluateAlerts(lastBPM, lastTemp, lastHum);
+  if(alerts.length === 0) {
+    alertsContainer.innerHTML = `<div class="alerts alert.ok">No alerts right now — readings in normal range.</div>`;
+    overallText.textContent = 'All readings normal ✅';
+    overallText.style.color = 'var(--green)';
+  } else {
+    // highest severity first
+    alertsContainer.innerHTML = '';
+    alerts.forEach(a => {
+      const div = document.createElement('div');
+      div.className = `alerts ${a.level === 'crit' ? 'crit' : (a.level === 'warn' ? 'warn' : 'ok')}`;
+      div.textContent = a.text;
+      alertsContainer.appendChild(div);
+    });
+    const crit = alerts.find(a=>a.level==='crit');
+    overallText.textContent = crit ? 'Attention needed ⚠️' : 'Check cautions ⚠️';
+    overallText.style.color = crit ? 'var(--red)' : '#9a7a00';
+  }
+
+  // summary & insights
+  const sumBpm = computeSummary(bpm);
+  const sumTemp = computeSummary(temp);
+  const sumHum = computeSummary(hum);
+  const insight = generateInsight(sumBpm.avg, sumTemp.avg, sumHum.avg);
+  insightsEl.textContent = insight || 'No insights available yet.';
 }
 
-/* main refresh loop */
-async function refresh() {
-  try {
-    const json = await fetchFeeds(300);
-    const parsed = parseFeeds(json);
-    updateUI(parsed);
-    updateStatus(parsed.feeds);
-  } catch (err) {
-    console.error('refresh error', err);
-    document.getElementById('deviceStatus').innerText = 'Error';
-    document.getElementById('deviceStatus').style.color = '#ff6b6b';
-  }
-}
-
-refresh();
-setInterval(refresh, POLL_MS);
-
-/* CSV export */
-document.getElementById('downloadCSV').addEventListener('click', () => {
-  if(!lastFeeds || !lastFeeds.length){ alert('No data yet'); return; }
+/* ----------------- EXPORTS ----------------- */
+function downloadCSV(feeds) {
+  if(!feeds || !feeds.length) { alert('No data to export'); return; }
   let csv = 'time,BPM,Temperature,Humidity\n';
-  lastFeeds.forEach(f => {
-    csv += `"${f.created_at}",${f[FIELD_BPM]||''},${f[FIELD_TEMP]||''},${f[FIELD_HUM]||''}\n`;
+  feeds.forEach(f => {
+    csv += `"${f.created_at}",${f[F_BPM]||''},${f[F_TEMP]||''},${f[F_HUM]||''}\n`;
   });
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `thingspeak_channel_${CHANNEL_ID}.csv`; a.click();
-});
+  const blob = new Blob([csv], { type:'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `thingspeak_channel_${THINGSPEAK_CHANNEL}.csv`; a.click();
+}
 
-/* PDF export (capture dashboard area) */
-document.getElementById('exportPDF').addEventListener('click', async () => {
+async function exportPDF() {
   const el = document.querySelector('#dashboard');
   const canvas = await html2canvas(el, { scale:1.2 });
   const img = canvas.toDataURL('image/png');
   const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF('l','pt','a4');
-  const w = pdf.internal.pageSize.getWidth();
-  const h = pdf.internal.pageSize.getHeight();
-  pdf.addImage(img,'PNG',0,0,w,h);
-  pdf.save(`report_channel_${CHANNEL_ID}.pdf`);
-});
+  const pdf = new jsPDF('l', 'pt', 'a4');
+  const w = pdf.internal.pageSize.getWidth(), h = pdf.internal.pageSize.getHeight();
+  pdf.addImage(img, 'PNG', 0, 0, w, h);
+  pdf.save(`report_channel_${THINGSPEAK_CHANNEL}.pdf`);
+}
 
-/* Consult form: optional Google Apps Script integration
-   If you deploy a Google Apps Script and provide the WebApp URL, set SCRIPT_URL variable below
-*/
-const SCRIPT_URL = ''; // <-- paste deployed Apps Script Web App URL here (optional)
-
-document.getElementById('consultForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const name = document.getElementById('cf_name').value.trim();
-  const email = document.getElementById('cf_email').value.trim();
-  const msg = document.getElementById('cf_message').value.trim();
-  const channel = document.getElementById('cf_channel').value.trim() || CHANNEL_ID;
-  const status = document.getElementById('consultStatus');
-
-  if(!SCRIPT_URL) { status.innerText = 'Deploy Google Apps Script and set SCRIPT_URL to enable this feature.'; status.style.color = '#f0a500'; return; }
-  status.innerText = 'Sending...';
+/* ----------------- SUMMARY ----------------- */
+async function generateSummary(rows=50) {
   try {
-    const res = await fetch(SCRIPT_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name,email,channel,message:msg})});
-    if(res.ok) { status.innerText = 'Request sent.'; status.style.color = '#6bffcf'; document.getElementById('consultForm').reset(); }
-    else { status.innerText = 'Send failed'; status.style.color = '#ff6b6b'; }
-  } catch(err){ status.innerText = 'Error sending'; status.style.color = '#ff6b6b'; console.error(err); }
+    const json = await fetchFeeds(rows);
+    const parsed = parseFeeds(json);
+    const sumBpm = computeSummary(parsed.bpm);
+    const sumTemp = computeSummary(parsed.temp);
+    const sumHum = computeSummary(parsed.hum);
+    const content = `
+      <p>Rows analyzed: ${parsed.feeds.length}</p>
+      <ul>
+        <li><strong>BPM</strong> — avg: ${sumBpm.avg ? sumBpm.avg.toFixed(1) : '--'}, min: ${sumBpm.min||'--'}, max: ${sumBpm.max||'--'}</li>
+        <li><strong>Temp (°C)</strong> — avg: ${sumTemp.avg ? sumTemp.avg.toFixed(2) : '--'}, min: ${sumTemp.min||'--'}, max: ${sumTemp.max||'--'}</li>
+        <li><strong>Humidity (%)</strong> — avg: ${sumHum.avg ? sumHum.avg.toFixed(1) : '--'}, min: ${sumHum.min||'--'}, max: ${sumHum.max||'--'}</li>
+      </ul>
+    `;
+    document.getElementById('summaryContent').innerHTML = content;
+    document.getElementById('summaryBox').style.display = 'block';
+    document.getElementById('summaryInfo').textContent = `Generated summary for last ${rows} rows`;
+  } catch (err) {
+    alert('Failed to generate summary: ' + err);
+  }
+}
+
+/* ----------------- MAIN POLL LOOP ----------------- */
+async function refreshAll() {
+  try {
+    const json = await fetchFeeds(200);
+    const parsed = parseFeeds(json);
+    updateUI(parsed);
+  } catch (err) {
+    console.error('Refresh error', err);
+    connInfo.textContent = 'Error fetching ThingSpeak';
+    statusBadge.textContent = 'Error';
+    statusBadge.style.background = '#ffecec';
+    statusBadge.style.color = 'var(--red)';
+  }
+}
+
+/* initial load */
+refreshAll();
+setInterval(refreshAll, POLL_INTERVAL_MS);
+
+/* ----------------- UI bindings ----------------- */
+document.getElementById('btnCSV').addEventListener('click', ()=> downloadCSV(lastFeeds));
+document.getElementById('btnPDF').addEventListener('click', ()=> exportPDF());
+document.getElementById('btnCSV').addEventListener('keydown', e=> { if(e.key==='Enter') downloadCSV(lastFeeds); });
+document.getElementById('genSummary').addEventListener('click', ()=> {
+  const rows = parseInt(document.getElementById('rowsSelect').value,10) || 50;
+  generateSummary(rows);
+});
+document.getElementById('btnPDF').addEventListener('click', ()=> exportPDF());
+
+/* nav helper */
+function scrollToSection(id){
+  document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* light/dark mode (simple toggle) */
+const modeToggle = document.getElementById('modeToggle');
+let darkMode = false;
+modeToggle.addEventListener('click', ()=> {
+  darkMode = !darkMode;
+  if(darkMode) {
+    document.documentElement.style.setProperty('--bg','#04121a');
+    document.documentElement.style.setProperty('--card','#071827');
+    document.documentElement.style.setProperty('--text','#e6f7f5');
+    document.documentElement.style.setProperty('--muted','#9fb3bd');
+    document.body.style.background = 'linear-gradient(180deg,#021018,#05232b)';
+    modeToggle.innerText = 'Dark';
+  } else {
+    document.documentElement.style.setProperty('--bg','#f6f8fb');
+    document.documentElement.style.setProperty('--card','#ffffff');
+    document.documentElement.style.setProperty('--text','#102a43');
+    document.documentElement.style.setProperty('--muted','#6b7a83');
+    document.body.style.background = 'var(--bg)';
+    modeToggle.innerText = 'Light';
+  }
 });
 
-/* small helper: show console instructions */
-console.log('Dashboard loaded. ThingSpeak channel:', CHANNEL_ID, 'readKey:', '***hidden***');
+/* accessibility: keyboard focus outline */
+document.addEventListener('keyup', (e)=> {
+  if(e.key === 'Tab') document.body.classList.add('show-focus');
+});
+
 </script>
 </body>
 </html>
