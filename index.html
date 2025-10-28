@@ -1,42 +1,330 @@
-/**
- * Google Apps Script Web App to receive consult form submissions and append to a Google Sheet.
- * Save this in the Apps Script editor attached to the Google Sheet you want to use.
- */
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IoT based Health Monitoring System</title>
 
-function doPost(e) {
+  <!-- CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{--accent:#0b7dd1;--muted:#6b7280}
+    body{font-family:Inter,system-ui,Arial;background:#f6fbff;color:#042b36;margin:0}
+    header{background:linear-gradient(90deg,var(--accent),#055278);color:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    header .brand{display:flex;gap:12px;align-items:center}
+    header img.logo{width:46px;height:46px;border-radius:8px;object-fit:cover}
+    main{max-width:1150px;margin:18px auto;padding:12px}
+    .hero{display:flex;gap:18px;align-items:center;background:#fff;border-radius:12px;padding:18px;box-shadow:0 10px 30px rgba(2,6,23,0.06);flex-wrap:wrap}
+    .hero img{width:420px;height:260px;object-fit:cover;border-radius:8px}
+    .card{border-radius:12px}
+    .gaugeCanvas{height:150px}
+    .small{font-size:13px;color:var(--muted)}
+    footer{text-align:center;color:var(--muted);margin:20px 0}
+    @media(max-width:900px){ .hero{flex-direction:column} .hero img{width:100%;height:200px} }
+  </style>
+
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <img class="logo" src="https://images.unsplash.com/photo-1580281657528-889c0f578a66?q=80&w=400&auto=format&fit=crop&s=8b7a6d4b4d6df5e6c9f3a1da5a5d0a6f" alt="doctor image">
+    <div>
+      <div style="font-weight:800">IoT based Health Monitoring System</div>
+      <div class="small">Live vitals with ThingSpeak — field1:BPM · field2:Temp · field3:Hum</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;align-items:center;">
+    <div class="small" id="clock"></div>
+    <a class="btn btn-light" href="#dashboard">Open Dashboard</a>
+    <a class="btn btn-outline-light" href="#consult">Consult</a>
+  </div>
+</header>
+
+<main>
+  <!-- HERO / HOME -->
+  <section class="hero">
+    <div style="flex:1">
+      <div style="display:inline-block;background:var(--accent);color:#fff;padding:6px 10px;border-radius:8px;font-weight:700;margin-bottom:8px">IoT Health Monitoring</div>
+      <h1 style="margin:8px 0">Remote patient & gym monitoring — ThingSpeak integration</h1>
+      <p class="small">Your Arduino + DHT22 + Pulse sensor sends data through NodeMCU to ThingSpeak. This dashboard reads the ThingSpeak channel (ID: <strong id="channelIdLabel">3128115</strong>) and displays live BPM, Temperature (°C) and Humidity (%).</p>
+      <div style="margin-top:12px">
+        <a class="btn btn-primary" href="#dashboard">View Live Dashboard</a>
+        <a class="btn btn-outline-primary" href="#consult">Request Consultation</a>
+      </div>
+
+      <ul style="margin-top:12px">
+        <li class="small">Polling: <strong id="pollLabel">13s</strong> — ThingSpeak write interval must remain ≥ 15s.</li>
+        <li class="small">Field mapping: <strong>field1 → BPM</strong>, <strong>field2 → Temperature</strong>, <strong>field3 → Humidity</strong></li>
+      </ul>
+    </div>
+
+    <img src="https://images.unsplash.com/photo-1580281657528-889c0f578a66?q=80&w=1400&auto=format&fit=crop&s=8b7a6d4b4d6df5e6c9f3a1da5a5d0a6f" alt="doctor monitoring">
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="mt-4 card p-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 style="margin:0">Live Dashboard</h3>
+      <div class="small">Channel: <strong id="channelLabel">3128115</strong></div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <div class="card p-3 text-center">
+          <h6>BPM (field1)</h6>
+          <canvas id="bpmGauge" class="gaugeCanvas"></canvas>
+          <h4 id="bpmLatest">--</h4>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card p-3 text-center">
+          <h6>Temperature °C (field2)</h6>
+          <canvas id="tempGauge" class="gaugeCanvas"></canvas>
+          <h4 id="tempLatest">--</h4>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card p-3 text-center">
+          <h6>Humidity % (field3)</h6>
+          <canvas id="humGauge" class="gaugeCanvas"></canvas>
+          <h4 id="humLatest">--</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-3 mt-3">
+      <h5 style="margin:0 0 8px 0">Combined recent readings</h5>
+      <canvas id="combinedChart" style="height:320px"></canvas>
+
+      <div class="mt-3 d-flex gap-2">
+        <button id="downloadCSV" class="btn btn-outline-primary">Download CSV</button>
+        <button id="exportPDF" class="btn btn-primary">Export PDF</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONSULT FORM -->
+  <section id="consult" class="card p-3 mt-4">
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Request a Consultation</h3>
+        <p class="small">Send a quick consult request to the doctor. Responses are saved to a Google Sheet via Apps Script (deploy the script and paste the deploy URL into the form).</p>
+
+        <form id="consultForm">
+          <div class="mb-2">
+            <label class="form-label small">Full name</label>
+            <input id="cf_name" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Email</label>
+            <input id="cf_email" class="form-control" type="email" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Message / Symptoms</label>
+            <textarea id="cf_message" class="form-control" rows="4" required></textarea>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">ThingSpeak Channel (optional)</label>
+            <input id="cf_channel" class="form-control" placeholder="3128115">
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Send Request</button>
+            <button type="button" id="clearForm" class="btn btn-outline-secondary">Clear</button>
+          </div>
+          <div id="consultStatus" class="small mt-2"></div>
+        </form>
+      </div>
+
+      <div class="col-md-6">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1200&auto=format&fit=crop&s=5e9b3f7f45c9b2f3e2f6f5e7b6dd7a34" alt="telemedicine" style="width:100%;height:360px;object-fit:cover;border-radius:8px">
+        <div class="small mt-2">Tip: deploy the Google Apps Script (instructions below) and paste the Web App URL into `SCRIPT_URL` at the top of this file (line shown in script comments)</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2025 Thapelo Mokoa — IoT based Health Monitoring System</footer>
+</main>
+
+<!-- ======= SCRIPTS ======= -->
+<script>
+/* ------------- CONFIG -------------
+   Replace ONLY if you want different defaults.
+   ThingSpeak channel & read key provided by you:
+   channelID = 3128115
+   readKey  = K72OYJMYOJZN240T
+   Poll every 13 seconds (13000 ms)
+-------------------------------------*/
+const CHANNEL_ID = '3128115';
+const THINGSPEAK_READ_API_KEY = 'K72OYJMYOJZN240T';
+const POLL_MS = 13000; // 13 seconds
+document.getElementById('channelLabel').innerText = CHANNEL_ID;
+document.getElementById('channelIdLabel').innerText = CHANNEL_ID;
+document.getElementById('pollLabel').innerText = (POLL_MS/1000)+'s';
+
+/* ------------- Utility & Chart setup ------------- */
+function makeGauge(ctx, maxValue, color) {
+  return new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['value','rest'],
+      datasets: [{ data: [0, maxValue], backgroundColor: [color,'#eee'], borderWidth: 0 }]
+    },
+    options: { rotation: Math.PI, circumference: Math.PI, cutout: '70%', plugins: { legend: { display: false } }, responsive: true }
+  });
+}
+
+const bpmGauge = makeGauge(document.getElementById('bpmGauge').getContext('2d'), 200, '#ff4d4d');
+const tempGauge = makeGauge(document.getElementById('tempGauge').getContext('2d'), 50, '#ff9800');
+const humGauge = makeGauge(document.getElementById('humGauge').getContext('2d'), 100, '#03a9f4');
+
+const combinedChart = new Chart(document.getElementById('combinedChart').getContext('2d'), {
+  type: 'line',
+  data: { labels: [], datasets: [
+    { label: 'BPM', data: [], borderColor: '#ff4d4d', fill: false },
+    { label: 'Temperature (°C)', data: [], borderColor: '#ff9800', fill: false },
+    { label: 'Humidity (%)', data: [], borderColor: '#03a9f4', fill: false }
+  ]},
+  options: { responsive: true, interaction: { mode: 'index', intersect: false }, stacked: false }
+});
+
+/* ------------- ThingSpeak fetch ------------- */
+async function fetchThingSpeakFeeds(channelId=CHANNEL_ID, readKey=THINGSPEAK_READ_API_KEY, results=40) {
+  const keyParam = readKey ? `&api_key=${readKey}` : '';
+  const url = `https://api.thingspeak.com/channels/${channelId}/feeds.json?results=${results}${keyParam}`;
+  const r = await fetch(url);
+  if(!r.ok) throw new Error('ThingSpeak fetch error: ' + r.status);
+  const j = await r.json();
+  return j.feeds || [];
+}
+
+let lastFeeds = [];
+
+async function refreshDashboard() {
   try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet = ss.getActiveSheet();
+    const feeds = await fetchThingSpeakFeeds();
+    if(!feeds || !feeds.length) return;
 
-    // If content-type is JSON (our HTML posts JSON), parse it differently
-    var body;
-    if (e.postData && e.postData.type === "application/json") {
-      body = JSON.parse(e.postData.contents);
-    } else {
-      body = e.parameter || {};
-    }
+    lastFeeds = feeds;
+    // ThingSpeak fields: field1 -> BPM, field2 -> Temp, field3 -> Hum
+    const labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString());
+    const bpmArr = feeds.map(f => parseFloat(f.field1) || 0);
+    const tempArr = feeds.map(f => parseFloat(f.field2) || 0);
+    const humArr = feeds.map(f => parseFloat(f.field3) || 0);
 
-    var name = body.name || '';
-    var email = body.email || '';
-    var message = body.message || body.msg || '';
-    var channel = body.channel || '';
+    const lastBPM = bpmArr.at(-1) || 0;
+    const lastTemp = tempArr.at(-1) || 0;
+    const lastHum = humArr.at(-1) || 0;
 
-    // Append to sheet: Timestamp, Name, Email, Channel, Message
-    sheet.appendRow([ new Date(), name, email, channel, message ]);
+    // Update gauges
+    bpmGauge.data.datasets[0].data[0] = lastBPM;
+    bpmGauge.data.datasets[0].data[1] = Math.max(0, 200 - lastBPM);
+    bpmGauge.update();
 
-    // Return success JSON
-    return ContentService
-      .createTextOutput(JSON.stringify({status: 'success'}))
-      .setMimeType(ContentService.MimeType.JSON);
+    tempGauge.data.datasets[0].data[0] = lastTemp;
+    tempGauge.data.datasets[0].data[1] = Math.max(0, 50 - lastTemp);
+    tempGauge.update();
+
+    humGauge.data.datasets[0].data[0] = lastHum;
+    humGauge.data.datasets[0].data[1] = Math.max(0, 100 - lastHum);
+    humGauge.update();
+
+    document.getElementById('bpmLatest').innerText = lastBPM;
+    document.getElementById('tempLatest').innerText = lastTemp + ' °C';
+    document.getElementById('humLatest').innerText = lastHum + ' %';
+
+    // Combined chart
+    combinedChart.data.labels = labels;
+    combinedChart.data.datasets[0].data = bpmArr;
+    combinedChart.data.datasets[1].data = tempArr;
+    combinedChart.data.datasets[2].data = humArr;
+    combinedChart.update();
 
   } catch (err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({status: 'error', error: err.toString()}))
-      .setMimeType(ContentService.MimeType.JSON);
+    console.error('refreshDashboard error', err);
   }
 }
 
-// Optional: allow GET for testing
-function doGet(e){
-  return ContentService.createTextOutput(JSON.stringify({status:'ready'})).setMimeType(ContentService.MimeType.JSON);
-}
+/* Start polling */
+refreshDashboard();
+setInterval(refreshDashboard, POLL_MS);
+
+/* ------------- CSV & PDF export ------------- */
+document.getElementById('downloadCSV').addEventListener('click', async () => {
+  const feeds = lastFeeds;
+  if(!feeds || !feeds.length) { alert('No data to download'); return; }
+  let csv = 'time,BPM,Temperature,Humidity\n';
+  feeds.forEach(f => { csv += `"${f.created_at}",${f.field1 || ''},${f.field2 || ''},${f.field3 || ''}\n`; });
+  const blob = new Blob([csv], { type:'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `thingspeak_channel_${CHANNEL_ID}.csv`; a.click();
+});
+
+document.getElementById('exportPDF').addEventListener('click', async () => {
+  const el = document.querySelector('#dashboard');
+  const canvas = await html2canvas(el, { scale: 1.25 });
+  const imgData = canvas.toDataURL('image/png');
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('l', 'pt', 'a4');
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  // fit image to page
+  pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
+  pdf.save(`report_channel_${CHANNEL_ID}.pdf`);
+});
+
+/* ------------- CONSULT FORM (Google Apps Script) -------------
+   Please deploy the Apps Script (see the script code below in the documentation).
+   After deploying as Web App, copy the Web App URL and paste it below into SCRIPT_URL.
+   Example: const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx.../exec'
+----------------------------------------------------------------------*/
+const SCRIPT_URL = ''; // <-- REPLACE with deployed Google Apps Script Web App URL
+
+document.getElementById('consultForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = document.getElementById('cf_name').value.trim();
+  const email = document.getElementById('cf_email').value.trim();
+  const msg = document.getElementById('cf_message').value.trim();
+  const channel = document.getElementById('cf_channel').value.trim() || CHANNEL_ID;
+
+  const statusEl = document.getElementById('consultStatus');
+  if(!SCRIPT_URL) { statusEl.innerText = 'Please deploy the Google Apps Script and paste the Web App URL into the script (SCRIPT_URL).'; statusEl.style.color = 'orange'; return; }
+
+  statusEl.innerText = 'Sending...';
+  try {
+    const payload = { name, email, message: msg, channel };
+    const res = await fetch(SCRIPT_URL, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    if(res.ok) {
+      statusEl.innerText = 'Request sent — doctor will review shortly.';
+      statusEl.style.color = 'green';
+      document.getElementById('consultForm').reset();
+    } else {
+      statusEl.innerText = 'Send failed: ' + res.status;
+      statusEl.style.color = 'red';
+    }
+  } catch (err) {
+    console.error('consult send error', err);
+    statusEl.innerText = 'Error sending request.';
+    statusEl.style.color = 'red';
+  }
+});
+
+document.getElementById('clearForm').addEventListener('click', ()=> document.getElementById('consultForm').reset());
+
+/* ------------- small clock ------------- */
+function updateClock(){ document.getElementById('clock').innerText = new Date().toLocaleString(); }
+updateClock(); setInterval(updateClock, 1000);
+
+/* ------------- Helpful console message ------------- */
+console.log('Dashboard initialized. ThingSpeak channel:', CHANNEL_ID, 'Read key:', '***hidden*** — using provided read key.');
+</script>
+
+</body>
+</html>
