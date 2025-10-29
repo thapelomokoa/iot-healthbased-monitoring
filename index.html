@@ -1,360 +1,193 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Smart Health Dashboard — IoT Health Monitor</title>
-
-  <!-- Google font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <!-- html2canvas + jsPDF for PDF export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT Health Monitor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    :root{
-      --bg: #f6f8fb;
-      --card: #ffffff;
-      --text: #0f1720;
-      --muted:#6b7a83;
-      --blue:#1e88e5;
-      --green:#2e7d32;
-      --red:#d32f2f;
-      --radius:14px;
-      --shadow: 0 10px 30px rgba(16,42,67,0.06);
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body { background-color: #f5f8ff; color: #333; }
+    header {
+      background: linear-gradient(90deg, #007BFF, #00C6FF);
+      color: white; padding: 20px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
     }
-    *{box-sizing:border-box;font-family:'Poppins',system-ui,Arial}
-    body{margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-    header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(180deg,rgba(255,255,255,0.8),transparent);backdrop-filter: blur(4px);position:sticky;top:0;z-index:50}
-    .brand{display:flex;align-items:center;gap:12px}
-    .brand .title{font-weight:700;font-size:18px}
-    main{max-width:1200px;margin:22px auto;padding:0 18px}
-    /* HERO */
-    .hero{display:flex;gap:20px;align-items:center;background:var(--card);border-radius:var(--radius);padding:36px;box-shadow:var(--shadow);overflow:hidden}
-    .hero-left{flex:1}
-    .hero h1{font-size:40px;margin:0 0 8px 0;line-height:1.03}
-    .hero p{margin:0 0 18px;color:var(--muted)}
-    .cta{display:flex;gap:12px}
-    .btn{padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:600}
-    .btn.primary{background:var(--blue);color:white}
-    .hero-right{width:420px;flex-shrink:0}
-    .hero-right img{width:100%;border-radius:12px;display:block;box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+    header h1 { font-size: 1.8rem; }
+    nav a {
+      color: white; margin-left: 20px; text-decoration: none;
+      font-weight: 500; transition: 0.3s;
+    }
+    nav a:hover { color: #f1f1f1; text-decoration: underline; }
+    .hero {
+      height: 90vh;
+      background: url('https://img.freepik.com/free-photo/doctor-monitoring-patient-data-smart-screen_23-2149367365.jpg') center/cover no-repeat;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; color: white;
+      background-attachment: fixed;
+    }
+    .hero h2 { font-size: 2.5rem; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); }
+    .hero p { font-size: 1.2rem; max-width: 600px; line-height: 1.5; }
+    .btn-primary {
+      margin-top: 20px;
+      background-color: #00C6FF; color: white; border: none;
+      padding: 12px 25px; border-radius: 25px; font-weight: 600;
+      cursor: pointer; transition: 0.3s;
+    }
+    .btn-primary:hover { background-color: #007BFF; }
 
-    /* GAUGE CARDS */
-    .cards{display:flex;margin-top:18px;gap:14px}
-    .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow);flex:1;min-width:0}
-    .card h3{margin:0;font-size:14px;color:var(--muted)}
-    .val{font-weight:700;font-size:20px;margin-top:6px}
-    .small{font-size:13px;color:var(--muted)}
+    .section { padding: 60px 40px; text-align: center; }
+    .section h3 { font-size: 2rem; margin-bottom: 40px; color: #007BFF; }
 
-    /* TREND + TABLE */
-    .grid{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-top:18px}
-    .chart-wrap{background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow)}
-    canvas{width:100%!important;height:300px!important}
+    .cards {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px; justify-content: center;
+    }
+    .card {
+      background: white; border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      padding: 25px; transition: 0.3s;
+    }
+    .card:hover { transform: translateY(-5px); }
 
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{padding:8px 10px;border-bottom:1px solid rgba(15,23,32,0.06);text-align:left}
-    th{color:var(--muted);font-weight:600}
+    #dashboard {
+      background: #eef4ff;
+    }
 
-    /* alerts */
-    .alerts{margin-top:12px}
-    .alert{padding:10px;border-radius:10px}
-    .ok{background:#e9fbe9;color:var(--green)}
-    .warn{background:#fff7e6;color:#9a7a00}
-    .crit{background:#ffecec;color:var(--red)}
+    canvas { width: 100% !important; height: 300px !important; }
 
-    footer{margin-top:28px;text-align:center;color:var(--muted);font-size:13px;padding-bottom:40px}
+    .footer {
+      background-color: #0a1833; color: #ddd; text-align: center; padding: 30px;
+    }
+    .footer p { font-size: 0.9rem; }
+    .highlight { color: #00C6FF; font-weight: bold; }
 
-    /* responsive */
-    @media (max-width:960px){
-      .hero{flex-direction:column}
-      .hero-right{width:100%}
-      .cards{flex-direction:column}
-      .grid{grid-template-columns:1fr}
-      canvas{height:240px!important}
+    @media (max-width: 768px) {
+      header { flex-direction: column; text-align: center; }
+      nav { margin-top: 10px; }
     }
   </style>
 </head>
+
 <body>
   <header>
-    <div class="brand">
-      <div style="width:48px;height:48px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:white;font-weight:700">SH</div>
-      <div>
-        <div class="title">Smart Health Dashboard</div>
-        <div class="small" style="color:var(--muted)">IoT Health Monitoring — Thapelo Mokoa</div>
-      </div>
-    </div>
-    <div style="display:flex;gap:10px;align-items:center">
-      <button class="btn">Home</button>
-      <button class="btn">Dashboard</button>
-      <button class="btn">Reports</button>
-      <button class="btn">About</button>
-    </div>
+    <h1>IoT Health Monitor</h1>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#doctor">Doctor View</a>
+      <a href="#tips">Health Tips</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
   </header>
 
-  <main>
-    <!-- HERO -->
-    <section class="hero" aria-label="Hero">
-      <div class="hero-left">
-        <h1>Smart Health Dashboard</h1>
-        <p>Monitor heart rate, temperature and humidity in real-time. Doctor-friendly layout for remote monitoring and gym/instructor integrations.</p>
-        <div class="cta">
-          <button class="btn primary" onclick="document.getElementById('trendChart').scrollIntoView({behavior:'smooth'})">Open Dashboard</button>
-          <button class="btn" id="demoBtn">View Demo</button>
-        </div>
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <h2>Stay Connected to Your Health</h2>
+    <p>Monitor your heart rate, temperature, and humidity in real-time from anywhere — powered by IoT and ThingSpeak.</p>
+    <button class="btn-primary" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})">View Dashboard</button>
+  </section>
 
-        <div class="alerts" id="alertsArea" style="margin-top:18px"></div>
-      </div>
-
-      <div class="hero-right">
-        <!-- Replace this URL with your generated image path in your repo if you want -->
-        <!-- Example: /images/hero-doctor.png -->
-        <img id="heroImage" src="https://images.unsplash.com/photo-1580281657528-889c0f578a66?q=80&w=1400&auto=format&fit=crop&s=8b7a6d4b4d6df5e6c9f3a1da5a5d0a6f" alt="Doctor monitoring">
-      </div>
-    </section>
-
-    <!-- Gauges -->
-    <div class="cards" aria-live="polite">
+  <!-- Dashboard Section -->
+  <section id="dashboard" class="section">
+    <h3>📊 Real-Time Health Dashboard</h3>
+    <div class="cards">
       <div class="card">
-        <h3>Heart rate (BPM)</h3>
-        <div style="display:flex;align-items:center;gap:12px">
-          <canvas id="miniBPM" width="120" height="80"></canvas>
-          <div>
-            <div class="val" id="bpmText">-- BPM</div>
-            <div class="small">Real-time heartbeat</div>
-          </div>
-        </div>
+        <h4>❤️ BPM (Heart Rate)</h4>
+        <p id="bpmValue">--</p>
       </div>
-
       <div class="card">
-        <h3>Temperature (°C)</h3>
-        <div style="display:flex;align-items:center;gap:12px">
-          <canvas id="miniTemp" width="120" height="80"></canvas>
-          <div>
-            <div class="val" id="tempText">-- °C</div>
-            <div class="small">Body temperature</div>
-          </div>
-        </div>
+        <h4>🌡️ Temperature (°C)</h4>
+        <p id="tempValue">--</p>
       </div>
-
       <div class="card">
-        <h3>Humidity (%)</h3>
-        <div style="display:flex;align-items:center;gap:12px">
-          <canvas id="miniHum" width="120" height="80"></canvas>
-          <div>
-            <div class="val" id="humText">-- %</div>
-            <div class="small">Ambient humidity</div>
-          </div>
-        </div>
+        <h4>💧 Humidity (%)</h4>
+        <p id="humValue">--</p>
       </div>
     </div>
+    <canvas id="dataChart"></canvas>
+  </section>
 
-    <!-- Trend chart + table -->
-    <div class="grid">
-      <div class="chart-wrap">
-        <h3 style="margin-top:0">Real-time trends</h3>
-        <canvas id="trendChart"></canvas>
-        <div style="display:flex;justify-content:space-between;margin-top:10px;align-items:center">
-          <div class="small">Live update from ThingSpeak (every 15s)</div>
-          <div style="display:flex;gap:8px">
-            <button class="btn" id="downloadCSV">Download CSV</button>
-            <button class="btn" id="exportPDF">Export PDF</button>
-          </div>
-        </div>
-      </div>
+  <!-- Doctor Monitoring Section -->
+  <section id="doctor" class="section" style="background:#f8fbff;">
+    <h3>👨‍⚕️ Doctor Monitoring from Anywhere</h3>
+    <p>Doctors can monitor patients remotely, view real-time sensor data, and provide instant advice through online consultations.</p>
+    <img src="https://img.freepik.com/free-photo/medical-monitor-showing-heartbeat-patient_23-2149367139.jpg" width="80%" style="border-radius:15px; margin-top:20px;">
+  </section>
 
-      <div class="card">
-        <h3 style="margin-top:0">Recent readings</h3>
-        <div style="max-height:360px;overflow:auto;margin-top:10px">
-          <table>
-            <thead><tr><th>Time</th><th>BPM</th><th>Temp (°C)</th><th>Hum (%)</th></tr></thead>
-            <tbody id="recentBody"><tr><td colspan="4" class="small">No data yet</td></tr></tbody>
-          </table>
-        </div>
-        <div style="margin-top:12px">
-          <div class="small" id="lastUpdated">Last update: --</div>
-        </div>
-      </div>
+  <!-- Health Tips -->
+  <section id="tips" class="section">
+    <h3>💡 Health Insights & Tips</h3>
+    <div class="cards">
+      <div class="card">Stay hydrated — your body performs best when humidity and temperature are balanced.</div>
+      <div class="card">Monitor your BPM daily — a resting BPM above 100 may indicate stress or fatigue.</div>
+      <div class="card">Exercise regularly and track your data to see real health progress!</div>
     </div>
+  </section>
 
-    <footer>© 2025 Thapelo Mokoa — IoT Health Monitoring System</footer>
-  </main>
+  <!-- About -->
+  <section id="about" class="section" style="background:#eef4ff;">
+    <h3>ℹ️ About the Project</h3>
+    <p>The <span class="highlight">IoT Based Health Monitoring System</span> allows real-time patient data collection through sensors connected to Arduino and NodeMCU. The data is visualized online using ThingSpeak and displayed here on this professional dashboard.</p>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section">
+    <h3>📞 Contact Us</h3>
+    <p>For collaboration, hospital integration, or demo requests:</p>
+    <p>Email: <span class="highlight">thapelomokoa.projects@gmail.com</span></p>
+  </section>
+
+  <div class="footer">
+    <p>Developed by <strong>Thapelo Mokoa</strong> — IoT Health Monitoring System © 2025</p>
+  </div>
 
   <script>
-    /* ---------------- CONFIG ---------------- */
-    const CHANNEL_ID = '3128115';
-    const READ_KEY = 'K72OYJMYOJZN240T'; // ThingSpeak read key
-    const POLL_MS = 15000; // 15 seconds
-    // field mapping: field1 -> BPM, field2 -> Temp, field3 -> Hum
-    const F_BPM = 'field1';
-    const F_TEMP = 'field2';
-    const F_HUM  = 'field3';
+    const channelID = "3128115"; // Replace with your ThingSpeak channel ID
+    const apiKey = "K72OYJMYOJZN240T"; // Read API Key
 
-    /* ---------------- small doughnut "gauges" implemented with Chart.js doughnut */
-    function createSmallGauge(canvas, max, color){
-      return new Chart(canvas.getContext('2d'), {
-        type: 'doughnut',
-        data: { labels:['value','rest'], datasets:[{ data:[0, max], backgroundColor:[color,'#f0f4f8'], borderWidth:0 }] },
-        options: { rotation: -90*Math.PI/180, circumference: 180*Math.PI/180, cutout:'70%', plugins:{legend:{display:false}}, responsive:true }
+    async function fetchData() {
+      const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=10`;
+      const response = await fetch(url);
+      const data = await response.json();
+      const feeds = data.feeds;
+
+      if (feeds.length > 0) {
+        const latest = feeds[feeds.length - 1];
+        document.getElementById('bpmValue').innerText = latest.field1 || "--";
+        document.getElementById('tempValue').innerText = latest.field2 || "--";
+        document.getElementById('humValue').innerText = latest.field3 || "--";
+
+        const labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString());
+        const bpm = feeds.map(f => f.field1);
+        const temp = feeds.map(f => f.field2);
+        const hum = feeds.map(f => f.field3);
+
+        drawChart(labels, bpm, temp, hum);
+      }
+    }
+
+    function drawChart(labels, bpm, temp, hum) {
+      const ctx = document.getElementById('dataChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: 'BPM', data: bpm, borderColor: 'red', fill: false },
+            { label: 'Temp (°C)', data: temp, borderColor: 'blue', fill: false },
+            { label: 'Humidity (%)', data: hum, borderColor: 'green', fill: false }
+          ]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
       });
     }
-    const miniBPM = createSmallGauge(document.getElementById('miniBPM'), 200, '#d32f2f');
-    const miniTemp = createSmallGauge(document.getElementById('miniTemp'), 50, '#1e88e5');
-    const miniHum = createSmallGauge(document.getElementById('miniHum'), 100, '#2e7d32');
 
-    /* trend chart */
-    const trendCtx = document.getElementById('trendChart').getContext('2d');
-    const trendChart = new Chart(trendCtx, {
-      type: 'line',
-      data: { labels: [], datasets: [
-        { label:'BPM', data: [], borderColor:'#d32f2f', tension:0.25, pointRadius:2 },
-        { label:'Temp (°C)', data: [], borderColor:'#1e88e5', tension:0.25, pointRadius:2 },
-        { label:'Hum (%)', data: [], borderColor:'#2e7d32', tension:0.25, pointRadius:2 }
-      ]},
-      options: { responsive:true, scales:{ x:{display:true}, y:{beginAtZero:false} }, plugins:{ tooltip:{mode:'index',intersect:false} } }
-    });
-
-    /* fetch feeds from thingspeak */
-    async function fetchFeeds(results=50){
-      const keyPart = READ_KEY ? `&api_key=${READ_KEY}` : '';
-      const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?results=${results}${keyPart}`;
-      const r = await fetch(url);
-      if(!r.ok) throw new Error('ThingSpeak fetch failed: ' + r.status);
-      return await r.json();
-    }
-
-    /* parse and update UI */
-    let lastFeeds = [];
-    function updateFromFeeds(json) {
-      const feeds = json.feeds || [];
-      lastFeeds = feeds.slice().reverse(); // newest first for table
-      // maps
-      const times = feeds.map(f=>f.created_at);
-      const bpm = feeds.map(f => parseFloat(f[F_BPM]) || null);
-      const temp = feeds.map(f => parseFloat(f[F_TEMP]) || null);
-      const hum  = feeds.map(f => parseFloat(f[F_HUM])  || null);
-
-      // last non-null values:
-      const lastBPM = [...bpm].reverse().find(v=>v!==null && !isNaN(v)) ?? null;
-      const lastTemp = [...temp].reverse().find(v=>v!==null && !isNaN(v)) ?? null;
-      const lastHum  = [...hum].reverse().find(v=>v!==null && !isNaN(v)) ?? null;
-
-      // update mini gauges
-      function setGauge(g, val, max){
-        g.data.datasets[0].data[0] = (val !== null ? val : 0);
-        g.data.datasets[0].data[1] = (max - (val !== null ? val : 0));
-        g.update();
-      }
-      setGauge(miniBPM, lastBPM, 200);
-      setGauge(miniTemp, lastTemp, 50);
-      setGauge(miniHum, lastHum, 100);
-
-      document.getElementById('bpmText').textContent = (lastBPM!==null ? Math.round(lastBPM) + ' BPM' : '-- BPM');
-      document.getElementById('tempText').textContent = (lastTemp!==null ? lastTemp.toFixed(1) + ' °C' : '-- °C');
-      document.getElementById('humText').textContent = (lastHum!==null ? lastHum.toFixed(1) + ' %' : '-- %');
-
-      // trend chart update
-      trendChart.data.labels = times.map(t => new Date(t).toLocaleTimeString());
-      trendChart.data.datasets[0].data = bpm;
-      trendChart.data.datasets[1].data = temp;
-      trendChart.data.datasets[2].data = hum;
-      trendChart.update();
-
-      // recent table update (newest first)
-      const tbody = document.getElementById('recentBody');
-      tbody.innerHTML = '';
-      lastFeeds.slice(0,100).forEach(f=>{
-        const tr = document.createElement('tr');
-        const tTime = document.createElement('td'); tTime.textContent = new Date(f.created_at).toLocaleString();
-        const tBpm  = document.createElement('td'); tBpm.textContent = f[F_BPM] || '--';
-        const tTemp = document.createElement('td'); tTemp.textContent = f[F_TEMP] || '--';
-        const tHum  = document.createElement('td'); tHum.textContent = f[F_HUM]  || '--';
-        tr.append(tTime,tBpm,tTemp,tHum);
-        tbody.appendChild(tr);
-      });
-
-      // last update text
-      const last = feeds.length ? feeds[feeds.length-1].created_at : null;
-      document.getElementById('lastUpdated').textContent = 'Last update: ' + (last ? new Date(last).toLocaleString() : '--');
-
-      // alerts area
-      const alertsEl = document.getElementById('alertsArea');
-      alertsEl.innerHTML = '';
-      const alerts = [];
-      if(lastBPM !== null){
-        if(lastBPM < 50) alerts.push({level:'warn', text:`Low BPM ${Math.round(lastBPM)}`});
-        else if(lastBPM > 140) alerts.push({level:'crit', text:`High BPM ${Math.round(lastBPM)}`});
-      }
-      if(lastTemp !== null){
-        if(lastTemp > 38) alerts.push({level:'crit', text:`High temp ${lastTemp.toFixed(1)}°C`});
-        else if(lastTemp > 37.2) alerts.push({level:'warn', text:`Slightly high temp ${lastTemp.toFixed(1)}°C`});
-      }
-      if(lastHum !== null){
-        if(lastHum < 20) alerts.push({level:'warn', text:`Low humidity ${lastHum.toFixed(1)}%`});
-        else if(lastHum > 80) alerts.push({level:'warn', text:`High humidity ${lastHum.toFixed(1)}%`});
-      }
-
-      if(alerts.length === 0){
-        alertsEl.innerHTML = `<div class="alert ok">All readings normal ✅</div>`;
-      } else {
-        alerts.forEach(a=>{
-          const div = document.createElement('div');
-          div.className = 'alert ' + (a.level==='crit' ? 'crit' : (a.level==='warn' ? 'warn' : 'ok'));
-          div.textContent = a.text;
-          alertsEl.appendChild(div);
-        });
-      }
-    }
-
-    async function refreshLoop(){
-      try{
-        const json = await fetchFeeds(200);
-        updateFromFeeds(json);
-      } catch(e){
-        console.error('Fetch error', e);
-      }
-    }
-
-    /* initial load */
-    refreshLoop();
-    setInterval(refreshLoop, POLL_MS);
-
-    /* CSV download */
-    document.getElementById('downloadCSV').addEventListener('click', ()=>{
-      const feeds = lastFeeds;
-      if(!feeds || !feeds.length){ alert('No data yet'); return; }
-      let csv = 'time,BPM,temperature,humidity\n';
-      feeds.forEach(f=>{
-        csv += `"${f.created_at}",${f[F_BPM]||''},${f[F_TEMP]||''},${f[F_HUM]||''}\n`;
-      });
-      const blob = new Blob([csv], { type:'text/csv' });
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `channel_${CHANNEL_ID}.csv`; a.click();
-    });
-
-    /* Export PDF snapshot of the chart area */
-    document.getElementById('exportPDF').addEventListener('click', async ()=>{
-      const el = document.getElementById('trendChart').parentElement;
-      const canvas = await html2canvas(el, {scale:1.2});
-      const img = canvas.toDataURL('image/png');
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('l', 'pt', 'a4');
-      const w = pdf.internal.pageSize.getWidth();
-      const h = pdf.internal.pageSize.getHeight();
-      pdf.addImage(img, 'PNG', 0, 0, w, h);
-      pdf.save(`report_${CHANNEL_ID}.pdf`);
-    });
-
-    // demo button (scroll)
-    document.getElementById('demoBtn').addEventListener('click', ()=> {
-      document.querySelector('.cards').scrollIntoView({behavior:'smooth'});
-    });
-
-    /* Helpful instruction: if you want to use your own hero image:
-       - Upload your image into your GitHub repo (e.g. /images/hero-doctor.png)
-       - Change the src of #heroImage to '/images/hero-doctor.png' */
+    setInterval(fetchData, 15000);
+    fetchData();
   </script>
 </body>
 </html>
