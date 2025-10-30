@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IoT Health Monitor</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+      font-family: "Poppins", sans-serif;
     }
+
     body {
       background-color: #f5f8ff;
       color: #333;
     }
+
     header {
-      background: linear-gradient(90deg, #007BFF, #00C6FF);
+      background: linear-gradient(90deg, #007bff, #00c6ff);
       color: white;
       padding: 20px 40px;
       display: flex;
@@ -28,9 +32,11 @@
       top: 0;
       z-index: 10;
     }
+
     header h1 {
       font-size: 1.8rem;
     }
+
     nav a {
       color: white;
       margin-left: 20px;
@@ -38,34 +44,39 @@
       font-weight: 500;
       transition: 0.3s;
     }
+
     nav a:hover {
       color: #f1f1f1;
       text-decoration: underline;
     }
+
     .hero {
-      height: 90vh;
-      background: url('https://img.freepik.com/free-photo/doctor-monitoring-patient-data-smart-screen_23-2149367365.jpg') center/cover no-repeat;
+      height: 100vh;
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url("https://img.freepik.com/free-photo/doctor-monitoring-patient-data-smart-screen_23-2149367365.jpg") center/cover no-repeat;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       color: white;
-      background-attachment: fixed;
     }
+
     .hero h2 {
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       margin-bottom: 15px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
     }
+
     .hero p {
       font-size: 1.2rem;
       max-width: 650px;
       line-height: 1.5;
     }
+
     .btn-primary {
       margin-top: 20px;
-      background-color: #00C6FF;
+      background-color: #00c6ff;
       color: white;
       border: none;
       padding: 12px 25px;
@@ -74,54 +85,73 @@
       cursor: pointer;
       transition: 0.3s;
     }
+
     .btn-primary:hover {
-      background-color: #007BFF;
+      background-color: #007bff;
     }
+
     .section {
       padding: 60px 40px;
       text-align: center;
     }
+
     .section h3 {
       font-size: 2rem;
       margin-bottom: 40px;
-      color: #007BFF;
+      color: #007bff;
     }
+
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 25px;
       justify-content: center;
     }
+
     .card {
       background: white;
       border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       padding: 25px;
       transition: 0.3s;
     }
+
     .card:hover {
       transform: translateY(-5px);
     }
+
     #dashboard {
       background: #eef4ff;
     }
+
     canvas {
       width: 100% !important;
       height: 300px !important;
     }
+
     .footer {
       background-color: #0a1833;
       color: #ddd;
       text-align: center;
       padding: 30px;
     }
+
     .footer p {
       font-size: 0.9rem;
     }
+
     .highlight {
-      color: #00C6FF;
+      color: #00c6ff;
       font-weight: bold;
     }
+
+    .section img {
+      width: 80%;
+      border-radius: 15px;
+      margin-top: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
     @media (max-width: 768px) {
       header {
         flex-direction: column;
@@ -130,9 +160,14 @@
       nav {
         margin-top: 10px;
       }
+      .hero {
+        height: auto;
+        padding: 100px 20px;
+      }
     }
   </style>
 </head>
+
 <body>
   <header>
     <h1>IoT Health Monitor</h1>
@@ -158,6 +193,7 @@
   <!-- Dashboard Section -->
   <section id="dashboard" class="section">
     <h3>📊 Real-Time Health Dashboard</h3>
+    <img src="https://img.freepik.com/free-photo/smart-medical-healthcare-interface-with-icons_53876-104482.jpg" alt="Health Dashboard">
     <div class="cards">
       <div class="card">
         <h4>❤️ BPM (Heart Rate)</h4>
@@ -178,45 +214,41 @@
   <!-- Doctor Monitoring Section -->
   <section id="doctor" class="section" style="background:#f8fbff;">
     <h3>👨‍⚕️ Doctor Monitoring from Anywhere</h3>
-    <p>
-      Doctors can access your health data remotely, view real-time readings from your sensors, and offer immediate 
-      feedback or medical advice online. This makes remote consultation safe and efficient.
-    </p>
-    <img src="https://img.freepik.com/free-photo/medical-monitor-showing-heartbeat-patient_23-2149367139.jpg" width="80%" style="border-radius:15px; margin-top:20px;">
+    <p>Doctors can access your health data remotely, view real-time readings from your sensors, and offer immediate feedback or medical advice online.</p>
+    <img src="https://img.freepik.com/free-photo/healthcare-worker-analyzing-patient-heart-rate_23-2148895121.jpg" alt="Doctor monitoring patient online">
   </section>
 
   <!-- Gym & Fitness Use Section -->
   <section id="gym" class="section" style="background:#eef7ff;">
     <h3>💪 IoT for Fitness & Gyms</h3>
-    <p>
-      This system can also be integrated into gyms or fitness centers, allowing trainers and members to track their 
-      heart rate and temperature during workouts. IoT technology provides real-time performance insights to improve 
-      training and prevent overexertion.
-    </p>
-    <img src="https://cdn.pixabay.com/photo/2020/06/04/18/42/heart-rate-5266866_960_720.jpg" width="80%" style="border-radius:15px; margin-top:20px;">
-    <p style="margin-top:10px;">
-      Empower your gym experience with smart health tracking — stay safe, track your progress, and achieve fitness goals efficiently.
-    </p>
+    <p>This system can also be used in gyms or fitness centers to track heart rate and temperature during workouts — preventing overexertion and promoting healthy training.</p>
+    <img src="https://img.freepik.com/free-photo/close-up-woman-training-with-smartwatch-gym_23-2149172709.jpg" alt="Gym training monitoring heart rate">
   </section>
 
   <!-- Health Tips -->
   <section id="tips" class="section">
     <h3>💡 Health Insights & Tips</h3>
     <div class="cards">
-      <div class="card">Stay hydrated — your body performs best when humidity and temperature are balanced.</div>
-      <div class="card">Monitor your BPM daily — a resting BPM above 100 may indicate stress or fatigue.</div>
-      <div class="card">Exercise regularly and track your data to see real health progress!</div>
+      <div class="card">
+        <img src="https://img.freepik.com/free-photo/drinking-water-after-exercise_144627-41983.jpg" alt="Stay hydrated">
+        <p>Stay hydrated — your body performs best when humidity and temperature are balanced.</p>
+      </div>
+      <div class="card">
+        <img src="https://img.freepik.com/free-photo/woman-checking-heart-rate-smartwatch_23-2148918010.jpg" alt="Heart rate monitoring">
+        <p>Monitor your BPM daily — a resting BPM above 100 may indicate stress or fatigue.</p>
+      </div>
+      <div class="card">
+        <img src="https://img.freepik.com/free-photo/people-exercising-gym_53876-138055.jpg" alt="Exercise regularly">
+        <p>Exercise regularly and track your data to see real health progress!</p>
+      </div>
     </div>
   </section>
 
   <!-- About -->
   <section id="about" class="section" style="background:#eef4ff;">
     <h3>ℹ️ About the Project</h3>
-    <p>
-      The <span class="highlight">IoT Based Health Monitoring System</span> uses sensors like DHT22 and Pulse Sensor with Arduino Uno and ESP8266 NodeMCU 
-      to collect and send real-time data to ThingSpeak. This platform visualizes that data on a live dashboard, 
-      allowing doctors and trainers to monitor vital signs remotely.
-    </p>
+    <p>The <span class="highlight">IoT Based Health Monitoring System</span> uses sensors like DHT22 and Pulse Sensor with Arduino Uno and ESP8266 NodeMCU to collect and send real-time data to ThingSpeak. The system allows remote health tracking and analysis for both personal and medical use.</p>
+    <img src="https://img.freepik.com/free-photo/smart-healthcare-technology-with-modern-hospital_53876-110934.jpg" alt="About IoT health project">
   </section>
 
   <!-- Contact -->
@@ -224,6 +256,7 @@
     <h3>📞 Contact Us</h3>
     <p>For collaboration, hospital integration, or demo requests:</p>
     <p>Email: <span class="highlight">thapelomokoa.projects@gmail.com</span></p>
+    <img src="https://img.freepik.com/free-photo/doctor-hand-holding-smartphone-contact-hospital_23-2149368037.jpg" alt="Contact us">
   </section>
 
   <div class="footer">
@@ -231,7 +264,7 @@
   </div>
 
   <script>
-    const channelID = "3128115"; // Replace with your ThingSpeak channel ID
+    const channelID = "3128115"; // Your ThingSpeak Channel ID
     const apiKey = "K72OYJMYOJZN240T"; // Read API Key
 
     async function fetchData() {
@@ -241,32 +274,35 @@
       const feeds = data.feeds;
       if (feeds.length > 0) {
         const latest = feeds[feeds.length - 1];
-        document.getElementById('bpmValue').innerText = latest.field1 || "--";
-        document.getElementById('tempValue').innerText = latest.field2 || "--";
-        document.getElementById('humValue').innerText = latest.field3 || "--";
+        document.getElementById("bpmValue").innerText = latest.field1 || "--";
+        document.getElementById("tempValue").innerText = latest.field2 || "--";
+        document.getElementById("humValue").innerText = latest.field3 || "--";
 
-        const labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString());
-        const bpm = feeds.map(f => f.field1);
-        const temp = feeds.map(f => f.field2);
-        const hum = feeds.map(f => f.field3);
+        const labels = feeds.map((f) => new Date(f.created_at).toLocaleTimeString());
+        const bpm = feeds.map((f) => f.field1);
+        const temp = feeds.map((f) => f.field2);
+        const hum = feeds.map((f) => f.field3);
 
         drawChart(labels, bpm, temp, hum);
       }
     }
 
     function drawChart(labels, bpm, temp, hum) {
-      const ctx = document.getElementById('dataChart').getContext('2d');
+      const ctx = document.getElementById("dataChart").getContext("2d");
       new Chart(ctx, {
-        type: 'line',
+        type: "line",
         data: {
           labels,
           datasets: [
-            { label: 'BPM', data: bpm, borderColor: 'red', fill: false },
-            { label: 'Temp (°C)', data: temp, borderColor: 'blue', fill: false },
-            { label: 'Humidity (%)', data: hum, borderColor: 'green', fill: false }
-          ]
+            { label: "BPM", data: bpm, borderColor: "red", fill: false },
+            { label: "Temp (°C)", data: temp, borderColor: "blue", fill: false },
+            { label: "Humidity (%)", data: hum, borderColor: "green", fill: false },
+          ],
         },
-        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        options: {
+          responsive: true,
+          plugins: { legend: { position: "bottom" } },
+        },
       });
     }
 
