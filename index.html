@@ -1,313 +1,202 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IoT Health Monitor</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IoT Based Health Monitoring System</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
-    }
-
     body {
-      background-color: #f5f8ff;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
       color: #333;
+      scroll-behavior: smooth;
     }
 
     header {
-      background: linear-gradient(90deg, #007bff, #00c6ff);
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                  url('https://images.unsplash.com/photo-1627856014543-878a1d32b4c1?auto=format&fit=crop&w=1400&q=80');
+      background-size: cover;
+      background-position: center;
       color: white;
-      padding: 20px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      text-align: center;
+      padding: 140px 20px;
     }
 
     header h1 {
-      font-size: 1.8rem;
-    }
-
-    nav a {
-      color: white;
-      margin-left: 20px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: 0.3s;
-    }
-
-    nav a:hover {
-      color: #f1f1f1;
-      text-decoration: underline;
-    }
-
-    .hero {
-      height: 100vh;
-      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-        url("https://img.freepik.com/free-photo/doctor-monitoring-patient-data-smart-screen_23-2149367365.jpg") center/cover no-repeat;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      color: white;
-    }
-
-    .hero h2 {
-      font-size: 2.8rem;
-      margin-bottom: 15px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-    }
-
-    .hero p {
-      font-size: 1.2rem;
-      max-width: 650px;
-      line-height: 1.5;
-    }
-
-    .btn-primary {
-      margin-top: 20px;
-      background-color: #00c6ff;
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      border-radius: 25px;
+      font-size: 3em;
       font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
     }
 
-    .btn-primary:hover {
-      background-color: #007bff;
+    header p {
+      font-size: 1.3em;
+      margin-top: 10px;
+      color: #f0f0f0;
     }
 
-    .section {
-      padding: 60px 40px;
+    section {
+      padding: 60px 20px;
       text-align: center;
     }
 
-    .section h3 {
-      font-size: 2rem;
-      margin-bottom: 40px;
-      color: #007bff;
+    .section-title {
+      font-size: 2.2em;
+      font-weight: 600;
+      color: #004aad;
+      margin-bottom: 25px;
     }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 25px;
+    .content {
+      max-width: 1100px;
+      margin: auto;
+      line-height: 1.8;
+      font-size: 1.1em;
+    }
+
+    .image-section {
+      display: flex;
+      flex-wrap: wrap;
       justify-content: center;
+      gap: 25px;
+      margin-top: 40px;
     }
 
-    .card {
-      background: white;
+    .image-section img {
+      width: 320px;
+      height: 230px;
+      object-fit: cover;
       border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      padding: 25px;
-      transition: 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
     }
 
-    .card:hover {
-      transform: translateY(-5px);
+    .image-section img:hover {
+      transform: scale(1.05);
     }
 
-    #dashboard {
-      background: #eef4ff;
+    .dashboard {
+      background: white;
+      padding: 50px 20px;
+      border-top: 4px solid #004aad;
     }
 
-    canvas {
-      width: 100% !important;
-      height: 300px !important;
+    iframe {
+      border: none;
+      width: 100%;
+      height: 400px;
+      border-radius: 10px;
     }
 
-    .footer {
-      background-color: #0a1833;
-      color: #ddd;
+    footer {
+      background: #004aad;
+      color: white;
       text-align: center;
       padding: 30px;
+      margin-top: 40px;
     }
 
-    .footer p {
-      font-size: 0.9rem;
+    footer p {
+      margin: 5px 0;
     }
 
-    .highlight {
-      color: #00c6ff;
-      font-weight: bold;
+    .btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 25px;
+      background-color: #004aad;
+      color: white;
+      border-radius: 30px;
+      text-decoration: none;
+      transition: background 0.3s;
     }
 
-    .section img {
-      width: 80%;
-      border-radius: 15px;
-      margin-top: 20px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        text-align: center;
-      }
-      nav {
-        margin-top: 10px;
-      }
-      .hero {
-        height: auto;
-        padding: 100px 20px;
-      }
+    .btn:hover {
+      background-color: #007bff;
     }
   </style>
 </head>
 
 <body>
+
+  <!-- Header -->
   <header>
-    <h1>IoT Health Monitor</h1>
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#dashboard">Dashboard</a>
-      <a href="#doctor">Doctor View</a>
-      <a href="#gym">Gym Use</a>
-      <a href="#tips">Health Tips</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </nav>
+    <h1>IoT Based Health Monitoring System</h1>
+    <p>Real-time Health Tracking for Doctors, Patients & Fitness Centers</p>
+    <a href="#dashboard" class="btn">View Live Data</a>
   </header>
 
-  <!-- Hero Section -->
-  <section id="home" class="hero">
-    <h2>Stay Connected to Your Health</h2>
-    <p>Monitor your heart rate, temperature, and humidity in real-time from anywhere — powered by IoT and ThingSpeak.</p>
-    <p style="margin-top: 10px; font-weight: 600;">Doctors can monitor you when you are at home and offer online consultations for quick medical support.</p>
-    <button class="btn-primary" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})">View Dashboard</button>
-  </section>
-
-  <!-- Dashboard Section -->
-  <section id="dashboard" class="section">
-    <h3>📊 Real-Time Health Dashboard</h3>
-    <img src="https://img.freepik.com/free-photo/smart-medical-healthcare-interface-with-icons_53876-104482.jpg" alt="Health Dashboard">
-    <div class="cards">
-      <div class="card">
-        <h4>❤️ BPM (Heart Rate)</h4>
-        <p id="bpmValue">--</p>
-      </div>
-      <div class="card">
-        <h4>🌡️ Temperature (°C)</h4>
-        <p id="tempValue">--</p>
-      </div>
-      <div class="card">
-        <h4>💧 Humidity (%)</h4>
-        <p id="humValue">--</p>
+  <!-- About Section -->
+  <section id="about">
+    <h2 class="section-title">About the System</h2>
+    <div class="content">
+      <p>
+        The <b>IoT Based Health Monitoring System</b> continuously measures vital signs such as <b>body temperature</b> and <b>heart rate</b>
+        using sensors like DHT22 and Pulse Sensor. It then sends the data wirelessly through an ESP8266 NodeMCU to the cloud (ThingSpeak),
+        allowing for live tracking and early health detection.
+      </p>
+      <div class="image-section">
+        <img src="https://images.unsplash.com/photo-1576765607924-3f7b9e9b0a47?auto=format&fit=crop&w=900&q=80" alt="Doctor monitoring system">
+        <img src="https://images.unsplash.com/photo-1580281658626-2a7b1fda8b52?auto=format&fit=crop&w=900&q=80" alt="Patient with sensors">
+        <img src="https://images.unsplash.com/photo-1611078489935-0cb8c043b72b?auto=format&fit=crop&w=900&q=80" alt="IoT health data dashboard">
       </div>
     </div>
-    <canvas id="dataChart"></canvas>
   </section>
 
   <!-- Doctor Monitoring Section -->
-  <section id="doctor" class="section" style="background:#f8fbff;">
-    <h3>👨‍⚕️ Doctor Monitoring from Anywhere</h3>
-    <p>Doctors can access your health data remotely, view real-time readings from your sensors, and offer immediate feedback or medical advice online.</p>
-    <img src="https://img.freepik.com/free-photo/healthcare-worker-analyzing-patient-heart-rate_23-2148895121.jpg" alt="Doctor monitoring patient online">
-  </section>
-
-  <!-- Gym & Fitness Use Section -->
-  <section id="gym" class="section" style="background:#eef7ff;">
-    <h3>💪 IoT for Fitness & Gyms</h3>
-    <p>This system can also be used in gyms or fitness centers to track heart rate and temperature during workouts — preventing overexertion and promoting healthy training.</p>
-    <img src="https://img.freepik.com/free-photo/close-up-woman-training-with-smartwatch-gym_23-2149172709.jpg" alt="Gym training monitoring heart rate">
-  </section>
-
-  <!-- Health Tips -->
-  <section id="tips" class="section">
-    <h3>💡 Health Insights & Tips</h3>
-    <div class="cards">
-      <div class="card">
-        <img src="https://img.freepik.com/free-photo/drinking-water-after-exercise_144627-41983.jpg" alt="Stay hydrated">
-        <p>Stay hydrated — your body performs best when humidity and temperature are balanced.</p>
-      </div>
-      <div class="card">
-        <img src="https://img.freepik.com/free-photo/woman-checking-heart-rate-smartwatch_23-2148918010.jpg" alt="Heart rate monitoring">
-        <p>Monitor your BPM daily — a resting BPM above 100 may indicate stress or fatigue.</p>
-      </div>
-      <div class="card">
-        <img src="https://img.freepik.com/free-photo/people-exercising-gym_53876-138055.jpg" alt="Exercise regularly">
-        <p>Exercise regularly and track your data to see real health progress!</p>
+  <section id="doctor">
+    <h2 class="section-title">Doctor Remote Monitoring</h2>
+    <div class="content">
+      <p>
+        With this system, doctors can monitor their patients from anywhere in the world. The live dashboard gives real-time access to
+        patients’ heart rate and temperature, enabling quick decision-making and early intervention — even from home.
+        The system also allows <b>online consultations</b> between doctors and patients for efficient, continuous care.
+      </p>
+      <div class="image-section">
+        <img src="https://images.unsplash.com/photo-1621524613448-d97a7f45b6b1?auto=format&fit=crop&w=900&q=80" alt="Online consultation">
+        <img src="https://images.unsplash.com/photo-1627856014543-878a1d32b4c1?auto=format&fit=crop&w=900&q=80" alt="Doctor with IoT dashboard">
+        <img src="https://images.unsplash.com/photo-1588776814546-ef3c7a4f2a8d?auto=format&fit=crop&w=900&q=80" alt="Health checkup IoT">
       </div>
     </div>
   </section>
 
-  <!-- About -->
-  <section id="about" class="section" style="background:#eef4ff;">
-    <h3>ℹ️ About the Project</h3>
-    <p>The <span class="highlight">IoT Based Health Monitoring System</span> uses sensors like DHT22 and Pulse Sensor with Arduino Uno and ESP8266 NodeMCU to collect and send real-time data to ThingSpeak. The system allows remote health tracking and analysis for both personal and medical use.</p>
-    <img src="https://img.freepik.com/free-photo/smart-healthcare-technology-with-modern-hospital_53876-110934.jpg" alt="About IoT health project">
+  <!-- Gym Section -->
+  <section id="gym">
+    <h2 class="section-title">Health Tracking in Gyms</h2>
+    <div class="content">
+      <p>
+        The same technology can be applied in <b>gyms and fitness centers</b> to monitor gym members’ heart rate and body temperature
+        during workouts. Trainers can use real-time data to ensure safety, avoid overexertion, and help clients maintain a healthy rhythm.
+        This makes the system ideal for both healthcare and fitness industries.
+      </p>
+      <div class="image-section">
+        <img src="https://images.unsplash.com/photo-1579758629934-0951a3c48e96?auto=format&fit=crop&w=900&q=80" alt="People exercising in gym">
+        <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=900&q=80" alt="Heart rate monitor at gym">
+        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=80" alt="Smart fitness tracker IoT">
+      </div>
+    </div>
   </section>
 
-  <!-- Contact -->
-  <section id="contact" class="section">
-    <h3>📞 Contact Us</h3>
-    <p>For collaboration, hospital integration, or demo requests:</p>
-    <p>Email: <span class="highlight">thapelomokoa.projects@gmail.com</span></p>
-    <img src="https://img.freepik.com/free-photo/doctor-hand-holding-smartphone-contact-hospital_23-2149368037.jpg" alt="Contact us">
+  <!-- Dashboard Section -->
+  <section class="dashboard" id="dashboard">
+    <h2 class="section-title">Live Health Data Dashboard</h2>
+    <div class="content">
+      <p>Real-time health data fetched from ThingSpeak Channel (Heart Rate & Temperature).</p>
+
+      <iframe src="https://thingspeak.com/channels/3128115/charts/1?bgcolor=%23ffffff&color=%23004aad&dynamic=true&results=60&type=line"></iframe>
+      <br><br>
+      <iframe src="https://thingspeak.com/channels/3128115/charts/2?bgcolor=%23ffffff&color=%23ff0000&dynamic=true&results=60&type=line"></iframe>
+    </div>
   </section>
 
-  <div class="footer">
-    <p>Developed by <strong>Thapelo Mokoa</strong> — IoT Health Monitoring System © 2025</p>
-  </div>
+  <!-- Footer -->
+  <footer>
+    <p><strong>IoT Health Monitoring System</strong> — Developed by Thapelo Mokoa</p>
+    <p>Empowering Healthcare through IoT & Innovation</p>
+  </footer>
 
-  <script>
-    const channelID = "3128115"; // Your ThingSpeak Channel ID
-    const apiKey = "K72OYJMYOJZN240T"; // Read API Key
-
-    async function fetchData() {
-      const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=10`;
-      const response = await fetch(url);
-      const data = await response.json();
-      const feeds = data.feeds;
-      if (feeds.length > 0) {
-        const latest = feeds[feeds.length - 1];
-        document.getElementById("bpmValue").innerText = latest.field1 || "--";
-        document.getElementById("tempValue").innerText = latest.field2 || "--";
-        document.getElementById("humValue").innerText = latest.field3 || "--";
-
-        const labels = feeds.map((f) => new Date(f.created_at).toLocaleTimeString());
-        const bpm = feeds.map((f) => f.field1);
-        const temp = feeds.map((f) => f.field2);
-        const hum = feeds.map((f) => f.field3);
-
-        drawChart(labels, bpm, temp, hum);
-      }
-    }
-
-    function drawChart(labels, bpm, temp, hum) {
-      const ctx = document.getElementById("dataChart").getContext("2d");
-      new Chart(ctx, {
-        type: "line",
-        data: {
-          labels,
-          datasets: [
-            { label: "BPM", data: bpm, borderColor: "red", fill: false },
-            { label: "Temp (°C)", data: temp, borderColor: "blue", fill: false },
-            { label: "Humidity (%)", data: hum, borderColor: "green", fill: false },
-          ],
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { position: "bottom" } },
-        },
-      });
-    }
-
-    setInterval(fetchData, 15000);
-    fetchData();
-  </script>
 </body>
 </html>
