@@ -1,733 +1,220 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>IoT Health Monitor — Demo (Single File)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT Health Monitoring System</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Fonts + Chart.js -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-  :root{
-    --bg:#f6f9ff; --card:#fff; --accent:#0a74ff; --accent2:#00c6ff;
-    --muted:#65748b; --radius:16px; --danger:#ff4d4f; --warn:#ffb020; --ok:#2ecc71;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; font-family:'Poppins',sans-serif; background:linear-gradient(180deg,var(--bg), #eef4ff);
-    color:#0e2233; -webkit-font-smoothing:antialiased;
-  }
-
-  /* Header */
-  header{
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    padding:16px 28px; background:linear-gradient(90deg,var(--accent),var(--accent2)); color:#fff;
-    position:sticky; top:0; z-index:60; box-shadow:0 6px 18px rgba(10,116,255,0.12);
-  }
-  header .brand{font-weight:600}
-  nav{display:flex; gap:14px}
-  nav a{color:rgba(255,255,255,0.95); text-decoration:none; font-weight:600}
-  nav a:hover{text-decoration:underline}
-
-  .container{max-width:1200px; margin:28px auto; padding:0 18px}
-
-  /* Page sections style */
-  .page{display:none}
-  .page.active{display:block}
-
-  /* Hero */
-  .hero{
-    display:grid; grid-template-columns: 1fr 420px; gap:28px; align-items:center;
-    background:rgba(255,255,255,0.85); border-radius:var(--radius); padding:34px;
-    box-shadow:0 10px 36px rgba(11,59,121,0.06);
-  }
-  .hero h1{font-size:2.6rem; color:var(--accent); margin:0 0 12px}
-  .hero p{color:var(--muted); font-size:1.05rem; line-height:1.5}
-  .cta {margin-top:16px; display:flex; gap:10px}
-  .btn{padding:12px 18px; border-radius:999px; font-weight:700; border:none; cursor:pointer}
-  .btn.primary{background:var(--accent2); color:white; box-shadow:0 12px 36px rgba(0,198,255,0.12)}
-  .btn.ghost{background:transparent; color:var(--accent); border:1px solid rgba(10,116,255,0.12)}
-
-  /* Dashboard / cards */
-  .card{background:var(--card); border-radius:12px; padding:16px; box-shadow:0 8px 24px rgba(11,59,121,0.04)}
-  .stats-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:14px}
-  .stat{padding:14px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfdff); text-align:center}
-  .stat .value{font-size:1.6rem; font-weight:700; color:var(--accent)}
-  .stat .label{color:var(--muted); margin-top:6px}
-
-  .row{display:grid; grid-template-columns:320px 1fr; gap:14px; align-items:start; margin-top:14px}
-  .gauges{display:flex; gap:10px; justify-content:center; align-items:center; padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#f7fbff)}
-  .gauge{width:100px; height:100px; position:relative; display:flex; align-items:center; justify-content:center}
-  .gLabel{position:relative; z-index:3; font-weight:700; text-align:center}
-
-  .chart-wrap{padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfdff)}
-
-  /* Info cards */
-  .info-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:16px}
-  .info-grid img{width:100%; border-radius:8px; margin-top:10px}
-
-  /* Reports table */
-  table{width:100%; border-collapse:collapse; margin-top:12px}
-  th,td{padding:10px; border-bottom:1px solid #eef3fb; text-align:left}
-  th{color:var(--muted)}
-  .controls{display:flex; gap:10px; align-items:center; margin-top:12px}
-
-  /* Contact form */
-  .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-
-  /* Footer */
-  footer{margin-top:22px; text-align:center; color:var(--muted); padding:18px 0}
-
-  /* Admin panel */
-  .admin{position:fixed; right:16px; bottom:16px; width:320px; background:linear-gradient(180deg,#fff,#fbfdff); padding:12px; border-radius:12px; box-shadow:0 18px 50px rgba(10,116,255,0.12); z-index:120}
-  .admin h4{margin:0 0 8px; color:var(--accent)}
-  .admin label{font-size:0.85rem; color:var(--muted); display:block; margin-top:8px}
-  .admin input{width:100%; padding:8px; border-radius:8px; border:1px solid #e6eefc; margin-top:6px}
-
-  /* Alert banner */
-  .alert{position:fixed; left:50%; transform:translateX(-50%); top:16px; padding:10px 14px; border-radius:999px; background:linear-gradient(90deg,var(--danger),#ff7a77); color:#fff; display:none; z-index:140}
-  .alert.show{display:block}
-
-  /* small screens */
-  @media(max-width:1024px){
-    .hero{grid-template-columns:1fr}
-    .row{grid-template-columns:1fr}
-    .stats-grid{grid-template-columns:repeat(1,1fr)}
-    .info-grid{grid-template-columns:1fr}
-    .form-grid{grid-template-columns:1fr}
-    .admin{position:static; margin:12px}
-  }
-  @media(max-width:600px){
-    nav a{display:none}
-  }
-</style>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f4f6f9;
+      color: #333;
+    }
+    header {
+      background: #1e90ff;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 600;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .dashboard h2 {
+      margin-top: 0;
+      color: #1e90ff;
+    }
+    canvas {
+      background: #f9f9f9;
+      border-radius: 10px;
+    }
+    button {
+      background: #1e90ff;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #0d6efd;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #1e90ff;
+      color: #fff;
+      margin-top: 20px;
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <div class="brand">IoT Health Monitor</div>
-  <nav aria-label="Main">
-    <a href="#" data-link="home">Home</a>
-    <a href="#" data-link="dashboard">Dashboard</a>
-    <a href="#" data-link="reports">Reports</a>
-    <a href="#" data-link="about">About</a>
-    <a href="#" data-link="contact">Contact</a>
-  </nav>
-</header>
+  <!-- Header -->
+  <header>
+    <h1>IoT Health Monitoring System</h1>
+    <p>Monitor your health remotely. Suitable for home and gym use.</p>
+  </header>
 
-<main class="container">
+  <!-- Main Content -->
+  <div class="container">
 
-  <!-- HOME -->
-  <section id="home" class="page active" aria-labelledby="homeTitle">
-    <div class="hero">
-      <div>
-        <h1 id="homeTitle">Smart Health Dashboard</h1>
-        <p>Monitor heart rate, temperature and humidity in real-time. Professional demo for clinics, gyms and product presentations.</p>
-        <div class="cta">
-          <button class="btn primary" data-nav="dashboard">Open Live Dashboard</button>
-          <button class="btn ghost" data-nav="reports">Download Reports</button>
-        </div>
-
-        <div style="margin-top:18px" class="card">
-          <h3 style="margin:0 0 8px 0; color:var(--accent)">Health Dashboard</h3>
-          <div class="stats-grid">
-            <div class="stat">
-              <div class="value" id="homeBPM">--</div>
-              <div class="label">Heart Rate</div>
-            </div>
-            <div class="stat">
-              <div class="value" id="homeTemp">--</div>
-              <div class="label">Temperature</div>
-            </div>
-            <div class="stat">
-              <div class="value" id="homeHum">--</div>
-              <div class="label">Humidity</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div>
-        <div style="border-radius:12px; overflow:hidden; box-shadow:0 14px 40px rgba(10,116,255,0.08)">
-          <img src="https://images.unsplash.com/photo-1580281657528-9f0d1a4f7b3b?auto=format&fit=crop&w=1000&q=80" alt="Doctor with tablet" style="width:100%; display:block">
-        </div>
-        <p style="margin-top:10px; color:var(--muted); font-size:0.9rem">Doctor + IoT monitor illustration — replace with licensed images if needed.</p>
-      </div>
+    <!-- Hero Section -->
+    <div class="card">
+      <img src="images/doctor-patient.jpg" alt="Doctor consulting patient">
+      <h2>Remote Health Monitoring</h2>
+      <p>Doctors can monitor your vitals from home and provide online consultations. Track your health anytime, anywhere.</p>
     </div>
 
-    <section style="margin-top:18px" class="card">
-      <h3 style="color:var(--accent)">Device Overview</h3>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px">
+    <!-- Dashboard Section -->
+    <div class="card dashboard">
+      <h2>Live Health Data</h2>
+      <div class="grid">
         <div>
-          <p style="color:var(--muted)">This demo uses NodeMCU/Arduino with DHT22 (temp/humidity) and a pulse sensor (BPM). Data is sent to ThingSpeak and visualized here in real time.</p>
-          <ul style="color:var(--muted)">
-            <li>ESP8266 / NodeMCU connects to WiFi</li>
-            <li>DHT22 — temperature & humidity</li>
-            <li>Pulse sensor — heart rate</li>
-          </ul>
+          <canvas id="temperatureChart"></canvas>
         </div>
         <div>
-          <img src="https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?auto=format&fit=crop&w=900&q=80" alt="electronics" style="width:100%; border-radius:8px">
+          <canvas id="heartRateChart"></canvas>
         </div>
       </div>
-    </section>
-  </section>
-
-  <!-- DASHBOARD -->
-  <section id="dashboard" class="page" aria-labelledby="dashTitle">
-    <div class="card">
-      <h2 id="dashTitle" style="color:var(--accent)">Live Dashboard</h2>
-
-      <div class="stats-grid">
-        <div class="stat">
-          <div class="value" id="bpmValue">-- BPM</div>
-          <div class="label">Heart Rate</div>
-        </div>
-        <div class="stat">
-          <div class="value" id="tempValue">-- °C</div>
-          <div class="label">Temperature</div>
-        </div>
-        <div class="stat">
-          <div class="value" id="humValue">-- %</div>
-          <div class="label">Humidity</div>
-        </div>
-      </div>
-
-      <div class="row">
-        <aside class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center">
-            <strong style="color:var(--muted)">Gauges</strong>
-            <small style="color:var(--muted)">Auto refresh: <span id="autoIntervalLabel">10s</span></small>
-          </div>
-          <div class="gauges" style="margin-top:12px">
-            <div class="gauge">
-              <canvas id="gaugeBPM" width="100" height="100"></canvas>
-              <div class="gLabel" id="gLabelBPM">--</div>
-            </div>
-            <div class="gauge">
-              <canvas id="gaugeTemp" width="100" height="100"></canvas>
-              <div class="gLabel" id="gLabelTemp">--</div>
-            </div>
-            <div class="gauge">
-              <canvas id="gaugeHum" width="100" height="100"></canvas>
-              <div class="gLabel" id="gLabelHum">--</div>
-            </div>
-          </div>
-
-          <div style="margin-top:12px; text-align:center">
-            <button class="btn ghost" id="refreshBtn">Refresh</button>
-            <button class="btn" id="downloadBtn">Download CSV</button>
-          </div>
-        </aside>
-
-        <div class="chart-wrap card">
-          <h3 style="margin:0 0 8px 0; color:var(--accent)">Real-time Data Chart</h3>
-          <canvas id="dataChart" style="width:100%; height:340px;"></canvas>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px">
-            <div class="small">Showing last <strong id="pointsLabel">12</strong> readings</div>
-            <div style="color:var(--muted); font-size:0.9rem">Channel: <strong id="channelLabel">3128115</strong></div>
-          </div>
-        </div>
-      </div>
-
+      <button onclick="downloadCSV()">Download Data</button>
     </div>
-  </section>
 
-  <!-- REPORTS -->
-  <section id="reports" class="page">
+    <!-- Gym Section -->
     <div class="card">
-      <h2 style="color:var(--accent)">Reports</h2>
-      <p style="color:var(--muted)">View recent ThingSpeak feeds and export to CSV for records.</p>
-      <div class="controls">
-        <label style="color:var(--muted)">Load points:</label>
-        <select id="reportCount">
-          <option>50</option><option selected>100</option><option>250</option><option>500</option>
-        </select>
-        <button class="btn" id="loadReportsBtn">Load</button>
-        <button class="btn ghost" id="exportAllBtn">Export (last 500)</button>
-      </div>
-
-      <div style="margin-top:12px; overflow:auto">
-        <table aria-label="Reports table">
-          <thead><tr><th>Timestamp</th><th>BPM</th><th>Temp (°C)</th><th>Humidity (%)</th></tr></thead>
-          <tbody id="reportsBody"></tbody>
-        </table>
-      </div>
+      <img src="images/gym-monitoring.jpg" alt="Gym monitoring heart rate">
+      <h2>Gym Integration</h2>
+      <p>Use the system in gyms to monitor heart rates and body temperature of members during workouts. Enhance safety and performance tracking.</p>
     </div>
-  </section>
 
-  <!-- ABOUT -->
-  <section id="about" class="page">
-    <div class="card">
-      <h2 style="color:var(--accent)">About</h2>
-      <p style="color:var(--muted)">This IoT Health Monitoring demo uses NodeMCU/ESP8266 and common sensors to publish data to ThingSpeak. The front-end pulls the ThingSpeak read API to visualize and export data.</p>
-
-      <div class="info-grid">
-        <div class="card">
-          <h4>Hardware</h4>
-          <p style="color:var(--muted)">NodeMCU (ESP8266) / Arduino — connects to WiFi and pushes data to ThingSpeak.</p>
-          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80" alt="microcontroller">
-        </div>
-
-        <div class="card">
-          <h4>Sensors</h4>
-          <p style="color:var(--muted)">DHT22 (temperature & humidity) and Pulse Sensor (heart rate).</p>
-          <img src="https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?auto=format&fit=crop&w=900&q=80" alt="sensors">
-        </div>
-
-        <div class="card">
-          <h4>Use Cases</h4>
-          <p style="color:var(--muted)">Remote patient monitoring, gym heart-rate tracking, early warning alerts for caregivers.</p>
-          <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=80" alt="gym wearable">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact" class="page">
-    <div class="card">
-      <h2 style="color:var(--accent)">Contact</h2>
-      <p style="color:var(--muted)">For demo requests, integration, or hospital/gym deployments contact us.</p>
-
-      <form id="contactForm" class="form-grid" style="margin-top:10px">
-        <input name="name" placeholder="Your name" required>
-        <input name="email" placeholder="Your email" required>
-        <textarea name="message" placeholder="Message" rows="4" style="grid-column:1/3"></textarea>
-        <div style="grid-column:1/3; display:flex; gap:8px;">
-          <button class="btn primary" type="submit">Send</button>
-          <button class="btn ghost" type="reset">Clear</button>
-        </div>
-      </form>
-
-    </div>
-  </section>
+  </div>
 
   <footer>
-    <p>Developed by <strong>Thapelo Mokoa</strong> — IoT Health Monitor © 2025</p>
+    &copy; 2025 IoT Health Monitoring System
   </footer>
-</main>
 
-<!-- Alert banner -->
-<div id="alertBanner" class="alert" role="status" aria-live="assertive"></div>
+  <!-- JavaScript for Thingspeak -->
+  <script>
+    const channelID = '3128115';
+    const readAPIKey = 'K72OYJMYOJZN240T';
+    const temperatureData = [];
+    const heartRateData = [];
+    const labels = [];
 
-<!-- Admin panel -->
-<div class="admin" aria-label="Admin panel">
-  <h4>Admin • Thresholds & Alerts</h4>
+    async function fetchData() {
+      const response = await fetch(`https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${readAPIKey}&results=20`);
+      const data = await response.json();
+      
+      temperatureData.length = 0;
+      heartRateData.length = 0;
+      labels.length = 0;
 
-  <label>ThingSpeak Channel ID</label>
-  <input id="cfgChannel" type="text" placeholder="3128115">
+      data.feeds.forEach(feed => {
+        labels.push(feed.created_at.slice(11,19));
+        temperatureData.push(feed.field1 ? parseFloat(feed.field1) : 0);
+        heartRateData.push(feed.field2 ? parseFloat(feed.field2) : 0);
+      });
 
-  <label>Read API Key</label>
-  <input id="cfgKey" type="text" placeholder="Read API Key">
-
-  <label>BPM high threshold (>=)</label>
-  <input id="thBPM" type="number" value="120">
-
-  <label>Temp high threshold °C (>=)</label>
-  <input id="thTemp" type="number" value="38">
-
-  <label>Humidity high threshold % (>=)</label>
-  <input id="thHum" type="number" value="85">
-
-  <label>Alert email (optional)</label>
-  <input id="alertEmail" type="text" placeholder="alerts@example.com">
-
-  <label>Alert phone (optional)</label>
-  <input id="alertPhone" type="text" placeholder="+27123456789">
-
-  <div style="display:flex; gap:8px; margin-top:10px">
-    <button class="btn" id="saveBtn">Save</button>
-    <button class="btn ghost" id="loadBtn">Load</button>
-    <button class="btn ghost" id="testAlertBtn">Test Alert</button>
-  </div>
-  <div style="margin-top:10px; font-size:0.85rem; color:var(--muted)">
-    Settings are stored in your browser (localStorage). Mail/SMS actions open the user's mail/SMS client.
-  </div>
-</div>
-
-<script>
-/* ===========================
-   Configuration (defaults)
-   =========================== */
-const DEFAULT = {
-  channelID: '3128115',
-  readKey: 'K72OYJMYOJZN240T',
-  thBPM: 120,
-  thTemp: 38,
-  thHum: 85,
-  alertEmail: '',
-  alertPhone: ''
-};
-
-let CFG = {...DEFAULT};
-
-/* DOM helpers for navigation */
-function showPage(name){
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const el = document.getElementById(name);
-  if(el) el.classList.add('active');
-  // update URL hash
-  history.replaceState(null, '', '#'+name);
-}
-/* navigation links */
-document.querySelectorAll('[data-link]').forEach(a => a.addEventListener('click', e => {
-  e.preventDefault(); const page = a.getAttribute('data-link'); showPage(page);
-}));
-document.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click', e => {
-  const dest = b.getAttribute('data-nav'); showPage(dest);
-}));
-
-/* set initial page from hash */
-if(location.hash){
-  const target = location.hash.replace('#','');
-  if(document.getElementById(target)) showPage(target);
-}
-
-/* ---------------------------
-   Persist & load admin config
-   --------------------------- */
-function saveConfig(){
-  const cfg = {
-    channelID: document.getElementById('cfgChannel').value.trim() || DEFAULT.channelID,
-    readKey: document.getElementById('cfgKey').value.trim() || DEFAULT.readKey,
-    thBPM: Number(document.getElementById('thBPM').value) || DEFAULT.thBPM,
-    thTemp: Number(document.getElementById('thTemp').value) || DEFAULT.thTemp,
-    thHum: Number(document.getElementById('thHum').value) || DEFAULT.thHum,
-    alertEmail: document.getElementById('alertEmail').value.trim(),
-    alertPhone: document.getElementById('alertPhone').value.trim()
-  };
-  localStorage.setItem('iotCfg', JSON.stringify(cfg));
-  CFG = cfg;
-  alert('Settings saved locally.');
-  // update page label
-  document.getElementById('channelLabel').innerText = CFG.channelID;
-}
-
-function loadConfig(){
-  const raw = localStorage.getItem('iotCfg');
-  if(!raw){
-    // populate with defaults
-    document.getElementById('cfgChannel').value = DEFAULT.channelID;
-    document.getElementById('cfgKey').value = DEFAULT.readKey;
-    document.getElementById('thBPM').value = DEFAULT.thBPM;
-    document.getElementById('thTemp').value = DEFAULT.thTemp;
-    document.getElementById('thHum').value = DEFAULT.thHum;
-    document.getElementById('alertEmail').value = '';
-    document.getElementById('alertPhone').value = '';
-    CFG = {...DEFAULT};
-    document.getElementById('channelLabel').innerText = CFG.channelID;
-    return;
-  }
-  try{
-    const cfg = JSON.parse(raw);
-    CFG = {...DEFAULT, ...cfg};
-    document.getElementById('cfgChannel').value = CFG.channelID;
-    document.getElementById('cfgKey').value = CFG.readKey;
-    document.getElementById('thBPM').value = CFG.thBPM;
-    document.getElementById('thTemp').value = CFG.thTemp;
-    document.getElementById('thHum').value = CFG.thHum;
-    document.getElementById('alertEmail').value = CFG.alertEmail;
-    document.getElementById('alertPhone').value = CFG.alertPhone;
-    document.getElementById('channelLabel').innerText = CFG.channelID;
-  }catch(err){
-    console.warn('bad saved config', err);
-  }
-}
-document.getElementById('saveBtn').addEventListener('click', saveConfig);
-document.getElementById('loadBtn').addEventListener('click', loadConfig);
-document.getElementById('testAlertBtn').addEventListener('click', ()=>showAlert('TEST ALERT — verify email/sms actions', 'test', {value:'TEST', threshold:'N/A'}));
-loadConfig();
-
-/* ===========================
-   ThingSpeak fetch & helpers
-   =========================== */
-function toNumber(v){ const n = parseFloat(v); return isNaN(n) ? null : n; }
-function channelID(){ return CFG.channelID || DEFAULT.channelID; }
-function readKey(){ return CFG.readKey || DEFAULT.readKey; }
-
-async function fetchFeeds(results=12){
-  const url = `https://api.thingspeak.com/channels/${channelID()}/feeds.json?api_key=${readKey()}&results=${results}`;
-  try{
-    const r = await fetch(url);
-    if(!r.ok) throw new Error('Network error');
-    const j = await r.json();
-    return j.feeds || [];
-  }catch(e){
-    console.error('fetchFeeds error', e);
-    return [];
-  }
-}
-
-/* ===========================
-   Charts & Gauges (Chart.js)
-   =========================== */
-let gaugeBPM, gaugeTemp, gaugeHum, lineChart;
-const pointsToShow = 12;
-document.getElementById('pointsLabel').innerText = pointsToShow;
-document.getElementById('autoIntervalLabel').innerText = '10s';
-document.getElementById('channelLabel').innerText = channelID();
-
-/* create doughnut gauge */
-function createGauge(canvas, color){
-  return new Chart(canvas.getContext('2d'), {
-    type:'doughnut',
-    data:{labels:['v','r'], datasets:[{data:[0,100], backgroundColor:[color,'rgba(220,230,250,0.4)'], borderWidth:0}]},
-    options:{rotation:-1.1*Math.PI, circumference:1.2*Math.PI, cutout:'70%', plugins:{legend:{display:false}, tooltip:{enabled:false}}, animation:{duration:700}}
-  });
-}
-
-/* create line chart */
-function createLineChart(canvas){
-  return new Chart(canvas.getContext('2d'), {
-    type:'line',
-    data:{labels:[], datasets:[
-      {label:'BPM', data:[], borderColor:'rgba(255,70,70,0.95)', backgroundColor:'rgba(255,70,70,0.06)', tension:0.25, pointRadius:2},
-      {label:'Temp (°C)', data:[], borderColor:'rgba(0,120,255,0.95)', backgroundColor:'rgba(0,120,255,0.06)', tension:0.25, pointRadius:2},
-      {label:'Humidity (%)', data:[], borderColor:'rgba(0,180,160,0.95)', backgroundColor:'rgba(0,180,160,0.06)', tension:0.25, pointRadius:2}
-    ]},
-    options:{responsive:true, plugins:{legend:{position:'bottom'}}, scales:{x:{display:true}, y:{display:true}}}
-  });
-}
-
-/* initialize charts/gauges on dashboard ready */
-function setupVisuals(){
-  gaugeBPM = createGauge(document.getElementById('gaugeBPM'), 'rgba(255,80,80,0.95)');
-  gaugeTemp = createGauge(document.getElementById('gaugeTemp'), 'rgba(0,120,255,0.95)');
-  gaugeHum = createGauge(document.getElementById('gaugeHum'), 'rgba(0,180,160,0.95)');
-  lineChart = createLineChart(document.getElementById('dataChart'));
-}
-
-/* update visuals with fetched feeds */
-async function updateVisuals(limit = pointsToShow){
-  const feeds = await fetchFeeds(limit);
-  if(feeds.length === 0) return;
-
-  const times = feeds.map(f => new Date(f.created_at).toLocaleTimeString());
-  const bpmArr = feeds.map(f => toNumber(f.field1));
-  const tempArr = feeds.map(f => toNumber(f.field2));
-  const humArr = feeds.map(f => toNumber(f.field3));
-
-  const last = feeds[feeds.length - 1];
-  const lastBPM = toNumber(last.field1);
-  const lastTemp = toNumber(last.field2);
-  const lastHum = toNumber(last.field3);
-
-  // update stat cards on pages
-  document.getElementById('bpmValue').innerText = lastBPM !== null ? `${lastBPM} BPM` : '-- BPM';
-  document.getElementById('tempValue').innerText = lastTemp !== null ? `${lastTemp} °C` : '-- °C';
-  document.getElementById('humValue').innerText = lastHum !== null ? `${lastHum} %` : '-- %';
-
-  document.getElementById('homeBPM').innerText = lastBPM !== null ? `${lastBPM}` : '--';
-  document.getElementById('homeTemp').innerText = lastTemp !== null ? `${lastTemp}` : '--';
-  document.getElementById('homeHum').innerText = lastHum !== null ? `${lastHum}` : '--';
-
-  // update gauges - scale conversions
-  const bpmPct = lastBPM !== null ? Math.min(100, Math.round((lastBPM / 200) * 100)) : 0;
-  const tempPct = lastTemp !== null ? Math.min(100, Math.round(((lastTemp + 10) / 60) * 100)) : 0;
-  const humPct = lastHum !== null ? Math.min(100, Math.round((lastHum / 100) * 100)) : 0;
-
-  // pick colors by thresholds
-  const cfg = CFG;
-  function colorFor(metric, value){
-    if(value === null) return 'rgba(180,180,200,0.95)';
-    if(metric === 'bpm'){
-      const hi = Number(cfg.thBPM || DEFAULT.thBPM);
-      if(value >= hi) return 'rgba(255,70,70,0.95)';
-      if(value >= hi*0.85) return 'rgba(255,170,60,0.95)';
-      return 'rgba(46,204,113,0.95)';
-    } else if(metric === 'temp'){
-      const hi = Number(cfg.thTemp || DEFAULT.thTemp);
-      if(value >= hi) return 'rgba(255,70,70,0.95)';
-      if(value >= hi - 2) return 'rgba(255,170,60,0.95)';
-      return 'rgba(0,120,255,0.95)';
-    } else {
-      const hi = Number(cfg.thHum || DEFAULT.thHum);
-      if(value >= hi) return 'rgba(255,70,70,0.95)';
-      if(value >= hi - 10) return 'rgba(255,170,60,0.95)';
-      return 'rgba(0,180,160,0.95)';
+      updateCharts();
     }
-  }
 
-  gaugeBPM.data.datasets[0].backgroundColor[0] = colorFor('bpm', lastBPM);
-  gaugeBPM.data.datasets[0].data = [bpmPct, 100 - bpmPct];
-  gaugeTemp.data.datasets[0].backgroundColor[0] = colorFor('temp', lastTemp);
-  gaugeTemp.data.datasets[0].data = [tempPct, 100 - tempPct];
-  gaugeHum.data.datasets[0].backgroundColor[0] = colorFor('hum', lastHum);
-  gaugeHum.data.datasets[0].data = [humPct, 100 - humPct];
+    // Temperature Chart
+    const tempCtx = document.getElementById('temperatureChart').getContext('2d');
+    const temperatureChart = new Chart(tempCtx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Temperature (°C)',
+          data: temperatureData,
+          borderColor: 'red',
+          backgroundColor: 'rgba(255,0,0,0.2)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true }
+    });
 
-  gaugeBPM.update(); gaugeTemp.update(); gaugeHum.update();
+    // Heart Rate Chart
+    const hrCtx = document.getElementById('heartRateChart').getContext('2d');
+    const heartRateChart = new Chart(hrCtx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Heart Rate (BPM)',
+          data: heartRateData,
+          borderColor: 'blue',
+          backgroundColor: 'rgba(0,0,255,0.2)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: { responsive: true }
+    });
 
-  document.getElementById('gLabelBPM').innerText = lastBPM !== null ? `${lastBPM} BPM` : '--';
-  document.getElementById('gLabelTemp').innerText = lastTemp !== null ? `${lastTemp} °C` : '--';
-  document.getElementById('gLabelHum').innerText = lastHum !== null ? `${lastHum} %` : '--';
+    function updateCharts() {
+      temperatureChart.data.labels = labels;
+      temperatureChart.data.datasets[0].data = temperatureData;
+      temperatureChart.update();
 
-  // update line chart (times oldest->newest)
-  lineChart.data.labels = times;
-  lineChart.data.datasets[0].data = bpmArr;
-  lineChart.data.datasets[1].data = tempArr;
-  lineChart.data.datasets[2].data = humArr;
-  lineChart.update();
-
-  // threshold checks
-  checkThresholds(lastBPM, lastTemp, lastHum);
-}
-
-/* ===========================
-   Threshold alerts & actions
-   =========================== */
-let lastAlerts = {bpm:0,temp:0,hum:0};
-const ALERT_COOLDOWN = 1000 * 60 * 3; // 3 minutes
-
-function showAlert(msg, metric, detail){
-  const banner = document.getElementById('alertBanner');
-  banner.innerHTML = `⚠️ ${msg} &nbsp;`;
-  // action buttons
-  const cfg = CFG;
-  const emailBtn = document.createElement('button'); emailBtn.className='btn ghost'; emailBtn.innerText='Send Email';
-  emailBtn.onclick = () => {
-    if(!cfg.alertEmail) return alert('No alert email configured.');
-    const subject = encodeURIComponent(`ALERT: ${metric.toUpperCase()} exceeded`);
-    const body = encodeURIComponent(`Metric: ${metric}\nValue: ${detail.value}\nThreshold: ${detail.threshold}\nTime: ${new Date().toLocaleString()}`);
-    window.location.href = `mailto:${cfg.alertEmail}?subject=${subject}&body=${body}`;
-  };
-  const smsBtn = document.createElement('button'); smsBtn.className='btn ghost'; smsBtn.innerText='Send SMS';
-  smsBtn.onclick = () => {
-    if(!cfg.alertPhone) return alert('No alert phone configured.');
-    const body = encodeURIComponent(`ALERT ${metric}: ${detail.value} >= ${detail.threshold}`);
-    window.location.href = `sms:${cfg.alertPhone}?&body=${body}`;
-  };
-  banner.appendChild(emailBtn); banner.appendChild(smsBtn);
-  banner.classList.add('show'); banner.style.display='block';
-  setTimeout(()=>{ banner.classList.remove('show'); banner.style.display='none'; banner.innerHTML=''; }, 20000);
-}
-
-function checkThresholds(bpm, temp, hum){
-  const now = Date.now();
-  const cfg = CFG;
-  if(bpm !== null){
-    const thr = Number(cfg.thBPM || DEFAULT.thBPM);
-    if(bpm >= thr && now - lastAlerts.bpm > ALERT_COOLDOWN){
-      lastAlerts.bpm = now;
-      showAlert(`Heart rate high: ${bpm} BPM (>= ${thr})`, 'bpm', {value:bpm, threshold:thr});
+      heartRateChart.data.labels = labels;
+      heartRateChart.data.datasets[0].data = heartRateData;
+      heartRateChart.update();
     }
-  }
-  if(temp !== null){
-    const thr = Number(cfg.thTemp || DEFAULT.thTemp);
-    if(temp >= thr && now - lastAlerts.temp > ALERT_COOLDOWN){
-      lastAlerts.temp = now;
-      showAlert(`Temperature high: ${temp} °C (>= ${thr})`, 'temp', {value:temp, threshold:thr});
+
+    // Download CSV
+    function downloadCSV() {
+      let csv = 'Time,Temperature,Heart Rate\n';
+      for(let i=0;i<labels.length;i++){
+        csv += `${labels[i]},${temperatureData[i]},${heartRateData[i]}\n`;
+      }
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'health_data.csv';
+      link.click();
     }
-  }
-  if(hum !== null){
-    const thr = Number(cfg.thHum || DEFAULT.thHum);
-    if(hum >= thr && now - lastAlerts.hum > ALERT_COOLDOWN){
-      lastAlerts.hum = now;
-      showAlert(`Humidity high: ${hum}% (>= ${thr})`, 'hum', {value:hum, threshold:thr});
-    }
-  }
-}
 
-/* ===========================
-   Reports table & CSV
-   =========================== */
-async function loadReports(count=100){
-  const tbody = document.getElementById('reportsBody');
-  tbody.innerHTML = '<tr><td colspan="4" style="color:var(--muted)">Loading…</td></tr>';
-  const feeds = await fetchFeeds(count);
-  tbody.innerHTML = '';
-  feeds.forEach(f => {
-    const tr = document.createElement('tr');
-    const bpm = f.field1 || '';
-    const t = f.field2 || '';
-    const h = f.field3 || '';
-    tr.innerHTML = `<td>${f.created_at}</td><td>${bpm}</td><td>${t}</td><td>${h}</td>`;
-    tbody.appendChild(tr);
-  });
-}
+    // Auto-fetch every 15 seconds
+    fetchData();
+    setInterval(fetchData, 15000);
 
-/* CSV download helper */
-async function exportCSV(count=500){
-  const feeds = await fetchFeeds(count);
-  let csv = 'created_at,BPM,Temperature,Humidity\n';
-  feeds.forEach(f => csv += `${f.created_at},${f.field1||''},${f.field2||''},${f.field3||''}\n`);
-  const blob = new Blob([csv], {type:'text/csv'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'thingspeak_export.csv'; a.click();
-}
-
-/* ===========================
-   Contact form handler
-   =========================== */
-document.getElementById('contactForm').addEventListener('submit', function(e){
-  e.preventDefault();
-  const name = this.name.value.trim();
-  const email = this.email.value.trim();
-  const message = this.message.value.trim();
-  if(!name || !email) return alert('Please enter name and email.');
-  const subj = encodeURIComponent(`Demo request from ${name}`);
-  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
-  window.location.href = `mailto:thapelomokoa.projects@gmail.com?subject=${subj}&body=${body}`;
-});
-
-/* ===========================
-   UI events
-   =========================== */
-document.getElementById('refreshBtn').addEventListener('click', ()=>updateVisuals(pointsToShow));
-document.getElementById('downloadBtn').addEventListener('click', ()=>exportCSV(500));
-document.getElementById('loadReportsBtn').addEventListener('click', ()=>{ loadReports(Number(document.getElementById('reportCount').value)); });
-document.getElementById('exportAllBtn').addEventListener('click', ()=>exportCSV(500));
-
-/* Admin save/load events */
-document.getElementById('cfgChannel').value = DEFAULT.channelID;
-document.getElementById('cfgKey').value = DEFAULT.readKey;
-document.getElementById('thBPM').value = DEFAULT.thBPM;
-document.getElementById('thTemp').value = DEFAULT.thTemp;
-document.getElementById('thHum').value = DEFAULT.thHum;
-
-document.getElementById('saveBtn').addEventListener('click', saveConfig);
-document.getElementById('loadBtn').addEventListener('click', loadConfig);
-document.getElementById('testAlertBtn').addEventListener('click', ()=>showAlert('Manual TEST alert', 'TEST', {value:'TEST', threshold:'N/A'}));
-
-/* auto-refresh loop */
-let autoTimer = null;
-function startAutoRefresh(){
-  if(autoTimer) clearInterval(autoTimer);
-  autoTimer = setInterval(()=>updateVisuals(pointsToShow), 10000);
-}
-function stopAutoRefresh(){ if(autoTimer) clearInterval(autoTimer); autoTimer = null; }
-
-/* initial setup */
-(function init(){
-  // load config from localStorage if any
-  loadConfig();
-  setupVisuals();
-  updateVisuals(pointsToShow);
-  loadReports(100);
-  startAutoRefresh();
-
-  // show channelID in UI
-  document.getElementById('channelLabel').innerText = channelID();
-})();
-
-/* save config before unload */
-window.addEventListener('beforeunload', ()=>{
-  const cfg = {
-    channelID: document.getElementById('cfgChannel').value.trim() || DEFAULT.channelID,
-    readKey: document.getElementById('cfgKey').value.trim() || DEFAULT.readKey,
-    thBPM: Number(document.getElementById('thBPM').value) || DEFAULT.thBPM,
-    thTemp: Number(document.getElementById('thTemp').value) || DEFAULT.thTemp,
-    thHum: Number(document.getElementById('thHum').value) || DEFAULT.thHum,
-    alertEmail: document.getElementById('alertEmail').value.trim(),
-    alertPhone: document.getElementById('alertPhone').value.trim()
-  };
-  localStorage.setItem('iotCfg', JSON.stringify(cfg));
-  CFG = cfg;
-});
-</script>
-
+  </script>
 </body>
 </html>
