@@ -1,220 +1,386 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IoT Health Monitoring System</title>
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>IoT Health Monitor — Demo</title>
 
-  <style>
-    /* General Styles */
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      background: #f4f6f9;
-      color: #333;
-    }
-    header {
-      background: #1e90ff;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-      font-weight: 600;
-    }
-    .container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 20px;
-    }
-    .card {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-    .card img {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-    .dashboard h2 {
-      margin-top: 0;
-      color: #1e90ff;
-    }
-    canvas {
-      background: #f9f9f9;
-      border-radius: 10px;
-    }
-    button {
-      background: #1e90ff;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-size: 16px;
-    }
-    button:hover {
-      background: #0d6efd;
-    }
-    footer {
-      text-align: center;
-      padding: 15px;
-      background: #1e90ff;
-      color: #fff;
-      margin-top: 20px;
-    }
-  </style>
+<!-- Fonts & Chart.js -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root{
+  --bg:#f6f9ff; 
+  --card:#fff; 
+  --accent:#0a74ff; 
+  --accent2:#00c6ff; 
+  --muted:#65748b; 
+  --radius:16px; 
+  --danger:#ff4d4f; 
+  --warn:#ffb020; 
+  --ok:#2ecc71;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; 
+  font-family:'Poppins',sans-serif; 
+  background:linear-gradient(180deg,var(--bg), #eef4ff);
+  color:#0e2233;
+  -webkit-font-smoothing:antialiased;
+  transition: background 0.5s;
+}
+
+/* Header */
+header{
+  display:flex; align-items:center; justify-content:space-between; gap:12px; 
+  padding:16px 28px; 
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  color:#fff; 
+  position:sticky; top:0; z-index:60; 
+  box-shadow:0 6px 18px rgba(10,116,255,0.12);
+}
+header .brand{font-weight:600; font-size:1.25rem}
+nav{display:flex; gap:14px}
+nav a{color:rgba(255,255,255,0.95); text-decoration:none; font-weight:600}
+nav a:hover{text-decoration:underline}
+
+/* Container */
+.container{max-width:1200px; margin:28px auto; padding:0 18px}
+
+/* Pages */
+.page{display:none; opacity:0; transition:opacity 0.5s}
+.page.active{display:block; opacity:1}
+
+/* Hero */
+.hero{
+  display:grid; grid-template-columns:1fr 420px; gap:28px; align-items:center;
+  background:rgba(255,255,255,0.85); border-radius:var(--radius); padding:34px;
+  box-shadow:0 10px 36px rgba(11,59,121,0.06);
+}
+.hero h1{font-size:2.6rem; color:var(--accent); margin:0 0 12px}
+.hero p{color:var(--muted); font-size:1.05rem; line-height:1.5}
+.cta{margin-top:16px; display:flex; gap:10px}
+.btn{
+  padding:12px 18px; border-radius:999px; font-weight:700; border:none; cursor:pointer;
+  transition:all 0.2s;
+}
+.btn.primary{background:var(--accent2); color:white; box-shadow:0 12px 36px rgba(0,198,255,0.12);}
+.btn.primary:hover{transform:scale(1.05);}
+.btn.ghost{background:transparent; color:var(--accent); border:1px solid rgba(10,116,255,0.12);}
+.btn.ghost:hover{background:rgba(10,116,255,0.05);}
+
+/* Cards / Dashboard */
+.card{
+  background:var(--card); border-radius:12px; padding:16px; 
+  box-shadow:0 8px 24px rgba(11,59,121,0.04); transition: transform 0.2s;
+}
+.card:hover{transform: translateY(-4px);}
+.stats-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:14px}
+.stat{padding:14px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfdff); text-align:center}
+.stat .value{font-size:1.6rem; font-weight:700; color:var(--accent)}
+.stat .label{color:var(--muted); margin-top:6px}
+.row{display:grid; grid-template-columns:320px 1fr; gap:14px; align-items:start; margin-top:14px}
+.gauges{display:flex; gap:10px; justify-content:center; align-items:center; padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#f7fbff)}
+.gauge{width:100px; height:100px; position:relative; display:flex; align-items:center; justify-content:center}
+.gLabel{position:relative; z-index:3; font-weight:700; text-align:center}
+.chart-wrap{padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfdff)}
+
+/* Info cards */
+.info-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:16px}
+.info-grid img{width:100%; border-radius:8px; margin-top:10px}
+
+/* Reports table */
+table{width:100%; border-collapse:collapse; margin-top:12px}
+th,td{padding:10px; border-bottom:1px solid #eef3fb; text-align:left}
+th{color:var(--muted)}
+.controls{display:flex; gap:10px; align-items:center; margin-top:12px; flex-wrap:wrap}
+
+/* Contact form */
+.form-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.form-grid textarea{resize:none}
+
+/* Footer */
+footer{margin-top:22px; text-align:center; color:var(--muted); padding:18px 0}
+
+/* Admin panel */
+.admin{
+  position:fixed; right:16px; bottom:16px; width:320px; background:linear-gradient(180deg,#fff,#fbfdff);
+  padding:12px; border-radius:12px; box-shadow:0 18px 50px rgba(10,116,255,0.12); z-index:120;
+}
+
+/* Alert banner */
+.alert{position:fixed; left:50%; transform:translateX(-50%); top:16px; padding:10px 14px; border-radius:999px; background:linear-gradient(90deg,var(--danger),#ff7a77); color:#fff; display:none; z-index:140; transition:all 0.3s}
+.alert.show{display:block}
+
+/* Responsive */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr}
+  .row{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(1,1fr)}
+  .info-grid{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .admin{position:static; margin:12px}
+}
+@media(max-width:600px){ nav a{display:none} }
+</style>
 </head>
 
 <body>
+<header>
+  <div class="brand">IoT Health Monitor</div>
+  <nav aria-label="Main">
+    <a href="#" data-link="home">Home</a>
+    <a href="#" data-link="dashboard">Dashboard</a>
+    <a href="#" data-link="reports">Reports</a>
+    <a href="#" data-link="about">About</a>
+    <a href="#" data-link="contact">Contact</a>
+  </nav>
+</header>
 
-  <!-- Header -->
-  <header>
-    <h1>IoT Health Monitoring System</h1>
-    <p>Monitor your health remotely. Suitable for home and gym use.</p>
-  </header>
-
-  <!-- Main Content -->
-  <div class="container">
-
-    <!-- Hero Section -->
-    <div class="card">
-      <img src="images/doctor-patient.jpg" alt="Doctor consulting patient">
-      <h2>Remote Health Monitoring</h2>
-      <p>Doctors can monitor your vitals from home and provide online consultations. Track your health anytime, anywhere.</p>
+<main class="container">
+<!-- HOME -->
+<section id="home" class="page active" aria-labelledby="homeTitle">
+<div class="hero">
+  <div>
+    <h1 id="homeTitle">Smart Health Dashboard</h1>
+    <p>Monitor heart rate, temperature, and humidity in real-time. Professional demo for clinics, gyms, and product presentations.</p>
+    <div class="cta">
+      <button class="btn primary" data-nav="dashboard">Open Live Dashboard</button>
+      <button class="btn ghost" data-nav="reports">Download Reports</button>
     </div>
-
-    <!-- Dashboard Section -->
-    <div class="card dashboard">
-      <h2>Live Health Data</h2>
-      <div class="grid">
-        <div>
-          <canvas id="temperatureChart"></canvas>
+    <div style="margin-top:18px" class="card">
+      <h3 style="margin:0 0 8px 0; color:var(--accent)">Health Dashboard</h3>
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="value" id="homeBPM">--</div>
+          <div class="label">Heart Rate</div>
         </div>
-        <div>
-          <canvas id="heartRateChart"></canvas>
+        <div class="stat">
+          <div class="value" id="homeTemp">--</div>
+          <div class="label">Temperature</div>
+        </div>
+        <div class="stat">
+          <div class="value" id="homeHum">--</div>
+          <div class="label">Humidity</div>
         </div>
       </div>
-      <button onclick="downloadCSV()">Download Data</button>
     </div>
-
-    <!-- Gym Section -->
-    <div class="card">
-      <img src="images/gym-monitoring.jpg" alt="Gym monitoring heart rate">
-      <h2>Gym Integration</h2>
-      <p>Use the system in gyms to monitor heart rates and body temperature of members during workouts. Enhance safety and performance tracking.</p>
-    </div>
-
   </div>
+  <div>
+    <div style="border-radius:12px; overflow:hidden; box-shadow:0 14px 40px rgba(10,116,255,0.08)">
+      <img src="https://images.unsplash.com/photo-1580281657528-9f0d1a4f7b3b?auto=format&fit=crop&w=1000&q=80" alt="Doctor with tablet" style="width:100%; display:block">
+    </div>
+    <p style="margin-top:10px; color:var(--muted); font-size:0.9rem">Doctor + IoT monitor illustration — replace with licensed images if needed.</p>
+  </div>
+</div>
+<section style="margin-top:18px" class="card">
+  <h3 style="color:var(--accent)">Device Overview</h3>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px">
+    <div>
+      <p style="color:var(--muted)">This demo uses NodeMCU/Arduino with DHT22 (temp/humidity) and a pulse sensor (BPM). Data is sent to ThingSpeak and visualized here in real time.</p>
+      <ul style="color:var(--muted)">
+        <li>ESP8266 / NodeMCU connects to WiFi</li>
+        <li>DHT22 — temperature & humidity</li>
+        <li>Pulse sensor — heart rate</li>
+      </ul>
+    </div>
+    <div>
+      <img src="https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?auto=format&fit=crop&w=900&q=80" alt="electronics" style="width:100%; border-radius:8px">
+    </div>
+  </div>
+</section>
+</section>
 
-  <footer>
-    &copy; 2025 IoT Health Monitoring System
-  </footer>
+<!-- DASHBOARD -->
+<section id="dashboard" class="page" aria-labelledby="dashboardTitle">
+<h2 id="dashboardTitle">Live Dashboard</h2>
+<div class="row">
+  <div class="gauges card">
+    <div class="gauge">
+      <canvas id="bpmGauge"></canvas>
+      <div class="gLabel" id="bpmLabel">-- BPM</div>
+    </div>
+    <div class="gauge">
+      <canvas id="tempGauge"></canvas>
+      <div class="gLabel" id="tempLabel">-- °C</div>
+    </div>
+    <div class="gauge">
+      <canvas id="humGauge"></canvas>
+      <div class="gLabel" id="humLabel">-- %</div>
+    </div>
+  </div>
+  <div class="chart-wrap card">
+    <canvas id="liveChart"></canvas>
+  </div>
+</div>
+</section>
 
-  <!-- JavaScript for Thingspeak -->
-  <script>
-    const channelID = '3128115';
-    const readAPIKey = 'K72OYJMYOJZN240T';
-    const temperatureData = [];
-    const heartRateData = [];
-    const labels = [];
+<!-- REPORTS -->
+<section id="reports" class="page" aria-labelledby="reportsTitle">
+<h2 id="reportsTitle">Reports</h2>
+<div class="controls">
+  <button class="btn primary" onclick="downloadCSV()">Download CSV</button>
+</div>
+<div style="overflow-x:auto" class="card">
+  <table id="reportTable">
+    <thead>
+      <tr><th>Time</th><th>BPM</th><th>Temp (°C)</th><th>Humidity (%)</th></tr>
+    </thead>
+    <tbody>
+      <!-- Data rows dynamically filled -->
+    </tbody>
+  </table>
+</div>
+</section>
 
-    async function fetchData() {
-      const response = await fetch(`https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${readAPIKey}&results=20`);
-      const data = await response.json();
-      
-      temperatureData.length = 0;
-      heartRateData.length = 0;
-      labels.length = 0;
+<!-- ABOUT -->
+<section id="about" class="page" aria-labelledby="aboutTitle">
+<h2 id="aboutTitle">About the System</h2>
+<p>This IoT Health Monitor is suitable for home, clinic, and gym usage. You can:</p>
+<ul>
+  <li>Monitor patients remotely in real-time</li>
+  <li>Get notifications for abnormal readings</li>
+  <li>Export data for analysis</li>
+</ul>
+<div class="info-grid">
+  <div class="card"><h4>Doctor Monitoring</h4><img src="https://images.unsplash.com/photo-1580281657528-9f0d1a4f7b3b?auto=format&fit=crop&w=600&q=60" alt="Doctor"></div>
+  <div class="card"><h4>Gym Users</h4><img src="https://images.unsplash.com/photo-1599058917216-6235a38d3f26?auto=format&fit=crop&w=600&q=60" alt="Gym"></div>
+  <div class="card"><h4>Home Care</h4><img src="https://images.unsplash.com/photo-1588776814546-7f27f4f6e0cd?auto=format&fit=crop&w=600&q=60" alt="Home"></div>
+</div>
+</section>
 
-      data.feeds.forEach(feed => {
-        labels.push(feed.created_at.slice(11,19));
-        temperatureData.push(feed.field1 ? parseFloat(feed.field1) : 0);
-        heartRateData.push(feed.field2 ? parseFloat(feed.field2) : 0);
-      });
+<!-- CONTACT -->
+<section id="contact" class="page" aria-labelledby="contactTitle">
+<h2 id="contactTitle">Contact</h2>
+<div class="card">
+  <form onsubmit="alert('Message sent!');return false;">
+    <div class="form-grid">
+      <input type="text" placeholder="Name" required>
+      <input type="email" placeholder="Email" required>
+      <textarea rows="4" placeholder="Message" required></textarea>
+    </div>
+    <button type="submit" class="btn primary" style="margin-top:12px">Send Message</button>
+  </form>
+</div>
+</section>
+</main>
 
-      updateCharts();
-    }
+<footer>© 2025 IoT Health Monitor — All Rights Reserved</footer>
 
-    // Temperature Chart
-    const tempCtx = document.getElementById('temperatureChart').getContext('2d');
-    const temperatureChart = new Chart(tempCtx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Temperature (°C)',
-          data: temperatureData,
-          borderColor: 'red',
-          backgroundColor: 'rgba(255,0,0,0.2)',
-          fill: true,
-          tension: 0.3
-        }]
-      },
-      options: { responsive: true }
-    });
+<!-- JS -->
+<script>
+// Page Navigation
+document.querySelectorAll('[data-link]').forEach(el=>{
+  el.addEventListener('click', e=>{
+    e.preventDefault();
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    const id = el.getAttribute('data-link');
+    document.getElementById(id).classList.add('active');
+  });
+});
 
-    // Heart Rate Chart
-    const hrCtx = document.getElementById('heartRateChart').getContext('2d');
-    const heartRateChart = new Chart(hrCtx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Heart Rate (BPM)',
-          data: heartRateData,
-          borderColor: 'blue',
-          backgroundColor: 'rgba(0,0,255,0.2)',
-          fill: true,
-          tension: 0.3
-        }]
-      },
-      options: { responsive: true }
-    });
+// CTA buttons
+document.querySelectorAll('[data-nav]').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(el.getAttribute('data-nav')).classList.add('active');
+  });
+});
 
-    function updateCharts() {
-      temperatureChart.data.labels = labels;
-      temperatureChart.data.datasets[0].data = temperatureData;
-      temperatureChart.update();
+// ThingSpeak Config
+const channelID = "3128115";
+const readAPI = "K72OYJMYOJZN240T";
+const apiURL = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${readAPI}&results=1`;
 
-      heartRateChart.data.labels = labels;
-      heartRateChart.data.datasets[0].data = heartRateData;
-      heartRateChart.update();
-    }
+// Live Data Update
+async function fetchData(){
+  try{
+    const res = await fetch(apiURL);
+    const data = await res.json();
+    const feed = data.feeds[0];
+    if(!feed) return;
 
-    // Download CSV
-    function downloadCSV() {
-      let csv = 'Time,Temperature,Heart Rate\n';
-      for(let i=0;i<labels.length;i++){
-        csv += `${labels[i]},${temperatureData[i]},${heartRateData[i]}\n`;
-      }
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'health_data.csv';
-      link.click();
-    }
+    const bpm = feed.field1; 
+    const temp = feed.field2; 
+    const hum = feed.field3;
 
-    // Auto-fetch every 15 seconds
-    fetchData();
-    setInterval(fetchData, 15000);
+    document.getElementById("homeBPM").textContent = bpm || "--";
+    document.getElementById("homeTemp").textContent = temp || "--";
+    document.getElementById("homeHum").textContent = hum || "--";
 
-  </script>
+    bpmLabel.textContent = bpm+" BPM";
+    tempLabel.textContent = temp+" °C";
+    humLabel.textContent = hum+" %";
+
+    addChartData(bpm,temp,hum);
+    addReportRow(feed.created_at,bpm,temp,hum);
+  }catch(e){console.error(e)}
+}
+
+// Chart.js setup
+const ctx = document.getElementById('liveChart').getContext('2d');
+const liveChart = new Chart(ctx,{
+  type:'line',
+  data:{
+    labels:[],
+    datasets:[
+      {label:'BPM', data:[], borderColor:'#0a74ff', fill:false, tension:0.2},
+      {label:'Temp °C', data:[], borderColor:'#ff7a00', fill:false, tension:0.2},
+      {label:'Humidity %', data:[], borderColor:'#2ecc71', fill:false, tension:0.2}
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'top'}},
+    scales:{x:{display:true},y:{beginAtZero:false}}
+  }
+});
+
+function addChartData(bpm,temp,hum){
+  const time = new Date().toLocaleTimeString();
+  liveChart.data.labels.push(time);
+  liveChart.data.datasets[0].data.push(bpm);
+  liveChart.data.datasets[1].data.push(temp);
+  liveChart.data.datasets[2].data.push(hum);
+  if(liveChart.data.labels.length>20){
+    liveChart.data.labels.shift();
+    liveChart.data.datasets.forEach(ds=>ds.data.shift());
+  }
+  liveChart.update();
+}
+
+// Reports Table
+function addReportRow(time,bpm,temp,hum){
+  const tbody = document.getElementById('reportTable').querySelector('tbody');
+  const tr = document.createElement('tr');
+  tr.innerHTML=`<td>${new Date(time).toLocaleString()}</td><td>${bpm}</td><td>${temp}</td><td>${hum}</td>`;
+  tbody.prepend(tr);
+}
+
+// Download CSV
+function downloadCSV(){
+  const rows = [['Time','BPM','Temp','Humidity']];
+  document.querySelectorAll('#reportTable tbody tr').forEach(tr=>{
+    const cols=[...tr.querySelectorAll('td')].map(td=>td.textContent);
+    rows.push(cols);
+  });
+  const csv = rows.map(r=>r.join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='health_report_'+Date.now()+'.csv';
+  a.click();
+}
+
+// Gauges (simple example)
+const bpmLabel = document.getElementById('bpmLabel');
+const tempLabel = document.getElementById('tempLabel');
+const humLabel = document.getElementById('humLabel');
+
+// Auto-fetch every 5 seconds
+setInterval(fetchData,5000);
+fetchData();
+</script>
 </body>
 </html>
