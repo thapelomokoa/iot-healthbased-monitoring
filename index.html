@@ -3,93 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IoT Health Monitor 2.0</title>
+<title>IoT Health Monitor</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-  body { background:#f4f7ff; color:#333; }
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+  body { background-color: #f5f8ff; color: #333; }
   header {
-    background: linear-gradient(90deg,#0a74ff,#00d4ff);
-    color:white; padding:20px 40px;
-    display:flex; justify-content:space-between; align-items:center;
-    position:sticky; top:0; z-index:100;
+    background: linear-gradient(90deg, #007BFF, #00C6FF);
+    color: white;
+    padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 10;
   }
-  header h1 { font-size:1.9rem; font-weight:600; }
-  nav a { color:white; margin-left:20px; text-decoration:none; font-weight:500; transition:0.3s; }
-  nav a:hover { color:#f1f1f1; text-decoration:underline; }
+  header h1 { font-size: 1.8rem; }
+  nav a { color: white; margin-left: 20px; text-decoration: none; font-weight: 500; transition: 0.3s; }
+  nav a:hover { color: #f1f1f1; text-decoration: underline; }
 
   /* Hero Section */
   .hero {
-    height:100vh;
-    background: url('https://img.freepik.com/free-photo/finger-pressing-virtual-heart-see-graph-white-background_953771-19.jpg') center/cover no-repeat;
-    background-size:cover;
-    display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;
-    color:white; position:relative;
+    height: 90vh;
+    background: url('https://img.freepik.com/free-photo/doctor-monitoring-patient-data-smart-screen_23-2149367365.jpg') center/cover no-repeat;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; color: white;
     background-attachment: fixed;
   }
-  .hero::after {
-    content:""; position:absolute; top:0; left:0; right:0; bottom:0;
-    background: rgba(0,0,0,0.45); z-index:1;
-  }
-  .hero > * { position:relative; z-index:2; }
-  .hero h2 { font-size:3rem; margin-bottom:20px; text-shadow:2px2px4px rgba(0,0,0,0.4);}
-  .hero p { font-size:1.2rem; max-width:650px; line-height:1.5; }
+  .hero h2 { font-size: 2.5rem; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); }
+  .hero p { font-size: 1.2rem; max-width: 600px; line-height: 1.5; }
   .btn-primary {
-    margin-top:20px; background-color:#00d4ff; color:white; border:none;
-    padding:12px 30px; border-radius:30px; font-weight:600; cursor:pointer; transition:0.3s;
+    margin-top: 20px;
+    background-color: #00C6FF; color: white; border: none;
+    padding: 12px 25px; border-radius: 25px;
+    font-weight: 600; cursor: pointer; transition: 0.3s;
   }
-  .btn-primary:hover { background:#0a74ff; }
+  .btn-primary:hover { background-color: #007BFF; }
 
-  /* Section Styling */
-  .section { padding:70px 50px; text-align:center; }
-  .section h3 { font-size:2.2rem; margin-bottom:50px; color:#0a74ff; }
-  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:25px; justify-content:center; }
-  .card { background:white; border-radius:20px; box-shadow:0 10px 25px rgba(0,0,0,0.1); padding:30px; transition:0.3s; }
-  .card:hover { transform: translateY(-10px); }
+  /* Sections */
+  .section { padding: 60px 40px; text-align: center; }
+  .section h3 { font-size: 2rem; margin-bottom: 40px; color: #007BFF; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; justify-content: center; }
+  .card {
+    background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    padding: 25px; transition: 0.3s;
+  }
+  .card:hover { transform: translateY(-5px); }
 
-  #dashboard { background:#e8f2ff; border-top:5px solid #0a74ff; border-bottom:5px solid #0a74ff; border-radius:25px; padding:50px 40px; }
+  #dashboard { background: #eef4ff; }
+  canvas { width: 100% !important; height: 300px !important; }
 
-  canvas { width:100% !important; height:350px !important; }
+  .footer { background-color: #0a1833; color: #ddd; text-align: center; padding: 30px; }
+  .footer p { font-size: 0.9rem; }
+  .highlight { color: #00C6FF; font-weight: bold; }
 
-  .footer { background:#0a1833; color:#ddd; text-align:center; padding:40px; }
-  .footer p { font-size:0.95rem; }
-  .highlight { color:#00d4ff; font-weight:bold; }
-
-  img.responsive { width:80%; max-width:600px; border-radius:20px; margin-top:30px; transition:0.3s; }
-  img.responsive:hover { transform: scale(1.05); }
-
-  @media(max-width:768px){ header{flex-direction:column;text-align:center;} nav{margin-top:10px;} }
+  @media (max-width: 768px) {
+    header { flex-direction: column; text-align: center; }
+    nav { margin-top: 10px; }
+  }
 </style>
 </head>
-<body>
 
+<body>
 <header>
-  <h1>IoT Health Monitor 2.0</h1>
+  <h1>IoT Health Monitor</h1>
   <nav>
     <a href="#home">Home</a>
     <a href="#dashboard">Dashboard</a>
-    <a href="#doctor">AI Doctor</a>
-    <a href="#gym">Gym Monitor</a>
+    <a href="#doctor">Doctor View</a>
     <a href="#tips">Health Tips</a>
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
   </nav>
 </header>
 
-<!-- Hero -->
+<!-- Hero Section -->
 <section id="home" class="hero">
-  <h2>Monitor Your Health Anytime, Anywhere</h2>
-  <p>Real-time heart rate, temperature, and humidity tracking using IoT sensors and ThingSpeak analytics.</p>
+  <h2>Stay Connected to Your Health</h2>
+  <p>Monitor your heart rate, temperature, and humidity in real-time from anywhere — powered by IoT and ThingSpeak.</p>
   <button class="btn-primary" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})">View Dashboard</button>
 </section>
 
-<!-- Dashboard -->
+<!-- Dashboard Section -->
 <section id="dashboard" class="section">
-  <h3>📊 Live Health Dashboard</h3>
+  <h3>📊 Real-Time Health Dashboard</h3>
   <div class="cards">
     <div class="card">
-      <h4>❤️ Heart Rate (BPM)</h4>
+      <h4>❤️ BPM (Heart Rate)</h4>
       <p id="bpmValue">--</p>
     </div>
     <div class="card">
@@ -102,42 +102,35 @@
     </div>
   </div>
   <canvas id="dataChart"></canvas>
-  <button class="btn-primary" onclick="downloadCSV()">Download Data</button>
 </section>
 
-<!-- AI Doctor -->
-<section id="doctor" class="section" style="background:#f0f7ff;">
-  <h3>🤖 AI Doctor Assistant</h3>
-  <p>Get instant insights and guidance from AI-powered doctor assistant using real-time sensor data.</p>
-  <img src="https://img.freepik.com/free-photo/futuristic-virtual-doctor-hologram_1150-19803.jpg" class="responsive">
-</section>
-
-<!-- Gym Section -->
-<section id="gym" class="section">
-  <h3>🏋️‍♀️ Gym & Fitness Monitoring</h3>
-  <p>Track workouts and heart rate to optimize fitness training and ensure safety using IoT wearable sensors.</p>
-  <img src="https://img.freepik.com/free-photo/man-using-smartwatch-gym_1157-39526.jpg" class="responsive">
+<!-- Doctor Monitoring Section -->
+<section id="doctor" class="section" style="background:#f8fbff;">
+  <h3>👨‍⚕️ Doctor Monitoring from Anywhere</h3>
+  <p>Doctors can monitor patients remotely, view real-time sensor data, and provide instant advice through online consultations.</p>
+  <img src="https://img.freepik.com/free-photo/medical-monitor-showing-heartbeat-patient_23-2149367139.jpg" width="80%" style="border-radius:15px; margin-top:20px;">
 </section>
 
 <!-- Health Tips -->
-<section id="tips" class="section" style="background:#e8f2ff;">
+<section id="tips" class="section">
   <h3>💡 Health Insights & Tips</h3>
   <div class="cards">
-    <div class="card">Hydrate regularly and maintain optimal humidity for body performance.</div>
-    <div class="card">Monitor BPM daily — abnormal resting heart rates may require attention.</div>
-    <div class="card">Use IoT sensors to track fitness progress over time.</div>
+    <div class="card">Stay hydrated — your body performs best when humidity and temperature are balanced.</div>
+    <div class="card">Monitor your BPM daily — a resting BPM above 100 may indicate stress or fatigue.</div>
+    <div class="card">Exercise regularly and track your data to see real health progress!</div>
   </div>
 </section>
 
 <!-- About -->
-<section id="about" class="section">
-  <h3>ℹ️ About IoT Health Monitor</h3>
-  <p>The <span class="highlight">IoT Health Monitoring System</span> uses Arduino and NodeMCU to collect real-time data and visualize it via ThingSpeak. Ideal for patients, gyms, and medical professionals.</p>
+<section id="about" class="section" style="background:#eef4ff;">
+  <h3>ℹ️ About the Project</h3>
+  <p>The <span class="highlight">IoT Based Health Monitoring System</span> allows real-time patient data collection through sensors connected to Arduino and NodeMCU. The data is visualized online using ThingSpeak and displayed here on this professional dashboard.</p>
 </section>
 
 <!-- Contact -->
-<section id="contact" class="section" style="background:#f0f7ff;">
+<section id="contact" class="section">
   <h3>📞 Contact Us</h3>
+  <p>For collaboration, hospital integration, or demo requests:</p>
   <p>Email: <span class="highlight">thapelomokoa.projects@gmail.com</span></p>
 </section>
 
@@ -146,67 +139,48 @@
 </div>
 
 <script>
-const channelID = "3128115"; 
-const apiKey = "K72OYJMYOJZN240T"; 
+  const channelID = "3128115"; 
+  const apiKey = "K72OYJMYOJZN240T";
 
-async function fetchData() {
-  const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=20`;
-  const response = await fetch(url);
-  const data = await response.json();
-  const feeds = data.feeds;
-
-  if(feeds.length > 0){
-    const latest = feeds[feeds.length - 1];
-    document.getElementById('bpmValue').innerText = latest.field1 || "--";
-    document.getElementById('tempValue').innerText = latest.field2 || "--";
-    document.getElementById('humValue').innerText = latest.field3 || "--";
-
-    const labels = feeds.map(f=>new Date(f.created_at).toLocaleTimeString());
-    const bpm = feeds.map(f=>f.field1);
-    const temp = feeds.map(f=>f.field2);
-    const hum = feeds.map(f=>f.field3);
-
-    drawChart(labels,bpm,temp,hum);
-  }
-}
-
-function drawChart(labels,bpm,temp,hum){
-  const ctx = document.getElementById('dataChart').getContext('2d');
-  new Chart(ctx,{
-    type:'line',
-    data:{
-      labels,
-      datasets:[
-        {label:'BPM', data:bpm, borderColor:'red', fill:false},
-        {label:'Temp (°C)', data:temp, borderColor:'blue', fill:false},
-        {label:'Humidity (%)', data:hum, borderColor:'green', fill:false}
-      ]
-    },
-    options:{ responsive:true, plugins:{ legend:{ position:'bottom' } } }
-  });
-}
-
-// Download CSV
-function downloadCSV(){
-  fetch(`https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=50`)
-  .then(res=>res.json())
-  .then(data=>{
+  async function fetchData() {
+    const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=10`;
+    const response = await fetch(url);
+    const data = await response.json();
     const feeds = data.feeds;
-    let csv = "Date,BPM,Temperature,Humidity\n";
-    feeds.forEach(f=>{
-      csv += `${f.created_at},${f.field1},${f.field2},${f.field3}\n`;
+
+    if (feeds.length > 0) {
+      const latest = feeds[feeds.length - 1];
+      document.getElementById('bpmValue').innerText = latest.field1 || "--";
+      document.getElementById('tempValue').innerText = latest.field2 || "--";
+      document.getElementById('humValue').innerText = latest.field3 || "--";
+
+      const labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString());
+      const bpm = feeds.map(f => f.field1);
+      const temp = feeds.map(f => f.field2);
+      const hum = feeds.map(f => f.field3);
+
+      drawChart(labels, bpm, temp, hum);
+    }
+  }
+
+  function drawChart(labels, bpm, temp, hum) {
+    const ctx = document.getElementById('dataChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'BPM', data: bpm, borderColor: 'red', fill: false },
+          { label: 'Temp (°C)', data: temp, borderColor: 'blue', fill: false },
+          { label: 'Humidity (%)', data: hum, borderColor: 'green', fill: false }
+        ]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
     });
-    const blob = new Blob([csv], {type:'text/csv'});
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = "health_data.csv";
-    link.click();
-  });
-}
+  }
 
-setInterval(fetchData,15000);
-fetchData();
+  setInterval(fetchData, 15000);
+  fetchData();
 </script>
-
 </body>
 </html>
