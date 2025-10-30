@@ -9,7 +9,6 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
     body { background-color: #f5f8ff; color: #333; }
-
     header {
       background: linear-gradient(90deg, #007BFF, #00C6FF);
       color: white; padding: 20px 40px;
@@ -22,14 +21,24 @@
       font-weight: 500; transition: 0.3s;
     }
     nav a:hover { color: #f1f1f1; text-decoration: underline; }
-
     .hero {
       height: 90vh;
-      background: url('https://www.freepik.com/free-photo/finger-pressing-virtual-heart-see-graph_953771.htm#fromView=search&page=1&position=16&uuid=eb12f6e4-67bf-41b0-b838-76905f65cf15&query=pulse+sensor') center/cover no-repeat;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      text-align: center; color: white;
+      background: url('https://img.freepik.com/free-vector/doctor-using-iot-devices-monitoring-patient_23-2149367380.jpg') center/cover no-repeat;
+      background-size: cover;
       background-attachment: fixed;
+      position: relative;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; color: white;
     }
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 1;
+    }
+    .hero > * { position: relative; z-index: 2; }
     .hero h2 { font-size: 2.5rem; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); }
     .hero p { font-size: 1.2rem; max-width: 650px; line-height: 1.5; }
     .btn-primary {
@@ -66,7 +75,12 @@
     .footer p { font-size: 0.9rem; }
     .highlight { color: #00C6FF; font-weight: bold; }
 
-    img.responsive-img { width: 80%; border-radius: 15px; margin-top: 20px; }
+    img.responsive {
+      width: 80%;
+      max-width: 600px;
+      border-radius: 15px;
+      margin-top: 20px;
+    }
 
     @media (max-width: 768px) {
       header { flex-direction: column; text-align: center; }
@@ -82,7 +96,7 @@
       <a href="#home">Home</a>
       <a href="#dashboard">Dashboard</a>
       <a href="#doctor">Doctor View</a>
-      <a href="#gym">Gym Monitoring</a>
+      <a href="#gym">For Gyms</a>
       <a href="#tips">Health Tips</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
@@ -92,7 +106,7 @@
   <!-- Hero Section -->
   <section id="home" class="hero">
     <h2>Stay Connected to Your Health</h2>
-    <p>Monitor your heart rate, temperature, and humidity in real-time from anywhere — whether at home or at the gym. Doctors can provide online consultations instantly.</p>
+    <p>Monitor heart rate, temperature, and humidity in real-time from anywhere — powered by IoT and ThingSpeak.</p>
     <button class="btn-primary" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})">View Dashboard</button>
   </section>
 
@@ -120,27 +134,18 @@
   <section id="doctor" class="section" style="background:#f8fbff;">
     <h3>👨‍⚕️ Doctor Monitoring from Anywhere</h3>
     <p>Doctors can monitor patients remotely, view real-time sensor data, and provide instant advice through online consultations.</p>
-    <img src="https://img.freepik.com/free-photo/medical-monitor-showing-heartbeat-patient_23-2149367139.jpg" class="responsive-img">
+    <img src="https://img.freepik.com/free-vector/doctor-using-iot-devices-monitoring-patient_23-2149367380.jpg" class="responsive">
   </section>
 
-  <!-- Gym Monitoring Section -->
+  <!-- Gym Section -->
   <section id="gym" class="section">
-    <h3>🏋️‍♂️ Gym & Fitness Monitoring</h3>
-    <p>Gyms can provide IoT health monitoring for members. Track heart rate, temperature, and humidity during workouts to ensure safety and optimize performance.</p>
-    <div class="cards">
-      <div class="card">
-        <img src="https://img.freepik.com/free-photo/fitness-trainer-using-tablet-gym_23-2149058816.jpg" class="responsive-img">
-        <p>Trainers can monitor heart rate remotely.</p>
-      </div>
-      <div class="card">
-        <img src="https://img.freepik.com/free-photo/young-man-training-gym_1150-18021.jpg" class="responsive-img">
-        <p>Members get real-time feedback on workouts.</p>
-      </div>
-    </div>
+    <h3>🏋️‍♂️ Gym Heart Rate Monitoring</h3>
+    <p>Gyms can track clients' heart rates in real-time to ensure safe workouts and optimal training plans.</p>
+    <img src="https://img.freepik.com/free-vector/fitness-people-wearable-iot-devices_23-2149367395.jpg" class="responsive">
   </section>
 
   <!-- Health Tips -->
-  <section id="tips" class="section" style="background:#eef4ff;">
+  <section id="tips" class="section">
     <h3>💡 Health Insights & Tips</h3>
     <div class="cards">
       <div class="card">Stay hydrated — your body performs best when humidity and temperature are balanced.</div>
@@ -150,15 +155,15 @@
   </section>
 
   <!-- About -->
-  <section id="about" class="section">
+  <section id="about" class="section" style="background:#eef4ff;">
     <h3>ℹ️ About the Project</h3>
-    <p>The <span class="highlight">IoT Based Health Monitoring System</span> allows real-time patient and fitness data collection through sensors connected to Arduino and NodeMCU. The data is visualized online using ThingSpeak and displayed here on this professional dashboard.</p>
+    <p>The <span class="highlight">IoT Based Health Monitoring System</span> allows real-time patient data collection through sensors connected to Arduino and NodeMCU. The data is visualized online using ThingSpeak and displayed here on this professional dashboard.</p>
   </section>
 
   <!-- Contact -->
-  <section id="contact" class="section" style="background:#eef4ff;">
+  <section id="contact" class="section">
     <h3>📞 Contact Us</h3>
-    <p>For collaboration, hospital integration, gym setups, or demo requests:</p>
+    <p>For collaboration, hospital integration, or demo requests:</p>
     <p>Email: <span class="highlight">thapelomokoa.projects@gmail.com</span></p>
   </section>
 
@@ -167,8 +172,8 @@
   </div>
 
   <script>
-    const channelID = "3128115"; // ThingSpeak channel ID
-    const apiKey = "K72OYJMYOJZN240T"; // Read API Key
+    const channelID = "3128115";
+    const apiKey = "K72OYJMYOJZN240T";
 
     async function fetchData() {
       const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=10`;
@@ -212,4 +217,3 @@
   </script>
 </body>
 </html>
-
