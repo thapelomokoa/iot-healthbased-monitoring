@@ -9,6 +9,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
     body { background-color: #f5f8ff; color: #333; }
+
     header {
       background: linear-gradient(90deg, #007BFF, #00C6FF);
       color: white; padding: 20px 40px;
@@ -21,9 +22,10 @@
       font-weight: 500; transition: 0.3s;
     }
     nav a:hover { color: #f1f1f1; text-decoration: underline; }
+
     .hero {
       height: 90vh;
-      background: url('https://img.freepik.com/free-photo/smartwatch-fitness-tracker-lying-gym_1150-24132.jpg') center/cover no-repeat;
+      background: url('https://img.freepik.com/free-photo/doctor-monitoring-patient-data-smart-screen_23-2149367365.jpg') center/cover no-repeat;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
       text-align: center; color: white;
       background-attachment: fixed;
@@ -49,16 +51,14 @@
       background: white; border-radius: 15px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       padding: 25px; transition: 0.3s;
-      min-height: 150px;
-      display: flex; flex-direction: column; justify-content: center;
-      align-items: center;
-      font-size: 1rem;
     }
     .card:hover { transform: translateY(-5px); }
 
-    #dashboard { background: #eef4ff; }
+    #dashboard {
+      background: #eef4ff;
+    }
 
-    canvas { width: 100% !important; height: 350px !important; margin-top: 30px; }
+    canvas { width: 100% !important; height: 300px !important; }
 
     .footer {
       background-color: #0a1833; color: #ddd; text-align: center; padding: 30px;
@@ -66,7 +66,7 @@
     .footer p { font-size: 0.9rem; }
     .highlight { color: #00C6FF; font-weight: bold; }
 
-    .doctor-img { width: 80%; border-radius: 15px; margin-top: 20px; }
+    img.responsive-img { width: 80%; border-radius: 15px; margin-top: 20px; }
 
     @media (max-width: 768px) {
       header { flex-direction: column; text-align: center; }
@@ -82,6 +82,7 @@
       <a href="#home">Home</a>
       <a href="#dashboard">Dashboard</a>
       <a href="#doctor">Doctor View</a>
+      <a href="#gym">Gym Monitoring</a>
       <a href="#tips">Health Tips</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
@@ -91,7 +92,7 @@
   <!-- Hero Section -->
   <section id="home" class="hero">
     <h2>Stay Connected to Your Health</h2>
-    <p>Monitor your heart rate, temperature, and humidity in real-time from anywhere — perfect for home, gyms, or professional fitness centers.</p>
+    <p>Monitor your heart rate, temperature, and humidity in real-time from anywhere — whether at home or at the gym. Doctors can provide online consultations instantly.</p>
     <button class="btn-primary" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})">View Dashboard</button>
   </section>
 
@@ -118,32 +119,46 @@
   <!-- Doctor Monitoring Section -->
   <section id="doctor" class="section" style="background:#f8fbff;">
     <h3>👨‍⚕️ Doctor Monitoring from Anywhere</h3>
-    <p>Doctors can monitor patients remotely, view real-time sensor data, and provide instant online consultations. This feature also helps gyms track members' heart rates for safe workouts.</p>
-    <img class="doctor-img" src="https://img.freepik.com/free-photo/trainer-checking-heart-rate-woman-gym_23-2149261241.jpg" alt="Doctor & Gym Monitoring">
+    <p>Doctors can monitor patients remotely, view real-time sensor data, and provide instant advice through online consultations.</p>
+    <img src="https://img.freepik.com/free-photo/medical-monitor-showing-heartbeat-patient_23-2149367139.jpg" class="responsive-img">
+  </section>
+
+  <!-- Gym Monitoring Section -->
+  <section id="gym" class="section">
+    <h3>🏋️‍♂️ Gym & Fitness Monitoring</h3>
+    <p>Gyms can provide IoT health monitoring for members. Track heart rate, temperature, and humidity during workouts to ensure safety and optimize performance.</p>
+    <div class="cards">
+      <div class="card">
+        <img src="https://img.freepik.com/free-photo/fitness-trainer-using-tablet-gym_23-2149058816.jpg" class="responsive-img">
+        <p>Trainers can monitor heart rate remotely.</p>
+      </div>
+      <div class="card">
+        <img src="https://img.freepik.com/free-photo/young-man-training-gym_1150-18021.jpg" class="responsive-img">
+        <p>Members get real-time feedback on workouts.</p>
+      </div>
+    </div>
   </section>
 
   <!-- Health Tips -->
-  <section id="tips" class="section">
+  <section id="tips" class="section" style="background:#eef4ff;">
     <h3>💡 Health Insights & Tips</h3>
     <div class="cards">
       <div class="card">Stay hydrated — your body performs best when humidity and temperature are balanced.</div>
       <div class="card">Monitor your BPM daily — a resting BPM above 100 may indicate stress or fatigue.</div>
       <div class="card">Exercise regularly and track your data to see real health progress!</div>
-      <div class="card">Use IoT monitoring in gyms to ensure safe and effective workouts.</div>
     </div>
   </section>
 
   <!-- About -->
-  <section id="about" class="section" style="background:#eef4ff;">
+  <section id="about" class="section">
     <h3>ℹ️ About the Project</h3>
-    <p>The <span class="highlight">IoT Based Health Monitoring System</span> allows real-time patient data collection through sensors connected to Arduino and NodeMCU. The data is visualized online using ThingSpeak and displayed here on this professional dashboard. Perfect for personal use, gyms, and healthcare facilities.</p>
-    <img class="doctor-img" src="https://img.freepik.com/free-photo/fitness-tracking-wearable-close-up_23-2149367294.jpg" alt="Fitness Wearable">
+    <p>The <span class="highlight">IoT Based Health Monitoring System</span> allows real-time patient and fitness data collection through sensors connected to Arduino and NodeMCU. The data is visualized online using ThingSpeak and displayed here on this professional dashboard.</p>
   </section>
 
   <!-- Contact -->
-  <section id="contact" class="section">
+  <section id="contact" class="section" style="background:#eef4ff;">
     <h3>📞 Contact Us</h3>
-    <p>For collaboration, gym integration, or demo requests:</p>
+    <p>For collaboration, hospital integration, gym setups, or demo requests:</p>
     <p>Email: <span class="highlight">thapelomokoa.projects@gmail.com</span></p>
   </section>
 
@@ -152,7 +167,7 @@
   </div>
 
   <script>
-    const channelID = "3128115"; // Replace with your ThingSpeak channel ID
+    const channelID = "3128115"; // ThingSpeak channel ID
     const apiKey = "K72OYJMYOJZN240T"; // Read API Key
 
     async function fetchData() {
@@ -183,9 +198,9 @@
         data: {
           labels,
           datasets: [
-            { label: 'BPM', data: bpm, borderColor: 'red', fill: false, tension:0.2 },
-            { label: 'Temp (°C)', data: temp, borderColor: 'blue', fill: false, tension:0.2 },
-            { label: 'Humidity (%)', data: hum, borderColor: 'green', fill: false, tension:0.2 }
+            { label: 'BPM', data: bpm, borderColor: 'red', fill: false },
+            { label: 'Temp (°C)', data: temp, borderColor: 'blue', fill: false },
+            { label: 'Humidity (%)', data: hum, borderColor: 'green', fill: false }
           ]
         },
         options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
