@@ -1,187 +1,513 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IoT Health Monitor</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IoT Health Monitor — Demo</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Fonts & Chart.js -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-  body { background-color: #f5f8ff; color: #333; }
-  header {
-    background: linear-gradient(90deg, #007BFF, #00C6FF);
-    color: white;
-    padding: 20px 40px;
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; z-index: 10;
-  }
-  header h1 { font-size: 1.8rem; }
-  nav a { color: white; margin-left: 20px; text-decoration: none; font-weight: 500; transition: 0.3s; }
-  nav a:hover { color: #f1f1f1; text-decoration: underline; }
+  <style>
+    :root{
+      --bg:#f6f9ff;
+      --card:#ffffff;
+      --accent-1:#0a74ff;
+      --accent-2:#00c6ff;
+      --muted:#65748b;
+      --glass: rgba(255,255,255,0.7);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Poppins',sans-serif;
+      background: linear-gradient(180deg,var(--bg) 0%, #eef4ff 100%);
+      color:#123;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+    }
 
-  /* Hero Section */
-  .hero {
-    height: 90vh;
-    background: url('https://www.freepik.com/free-vector/blue-healthcare-medical-science-background-with-text-space_8998523.htm#fromView=search&page=3&position=46&uuid=19a4f3dd-0f85-4c0c-89ba-82f9cfbd89b9&query=pulse+sensor+wallpaper+white+background') center/cover no-repeat;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    text-align: center; color: white;
-    background-attachment: fixed;
-  }
-  .hero h2 { font-size: 2.5rem; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); }
-  .hero p { font-size: 1.2rem; max-width: 600px; line-height: 1.5; }
-  .btn-primary {
-    margin-top: 20px;
-    background-color: #00C6FF; color: white; border: none;
-    padding: 12px 25px; border-radius: 25px;
-    font-weight: 600; cursor: pointer; transition: 0.3s;
-  }
-  .btn-primary:hover { background-color: #007BFF; }
+    /* Header */
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      padding:18px 32px;
+      background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
+      color:white;
+      position:sticky;
+      top:0;
+      z-index:50;
+      box-shadow: 0 6px 18px rgba(10,116,255,0.12);
+    }
+    header h1{font-size:1.25rem; font-weight:600; letter-spacing:0.2px}
+    nav{display:flex; gap:14px}
+    nav a{color:rgba(255,255,255,0.95); text-decoration:none; font-weight:500; font-size:0.95rem}
+    nav a:hover{text-decoration:underline; opacity:0.95}
 
-  /* Sections */
-  .section { padding: 60px 40px; text-align: center; }
-  .section h3 { font-size: 2rem; margin-bottom: 40px; color: #007BFF; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; justify-content: center; }
-  .card {
-    background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    padding: 25px; transition: 0.3s;
-  }
-  .card:hover { transform: translateY(-5px); }
+    /* Main layout */
+    .container{max-width:1200px; margin:36px auto; padding:0 20px}
+    .hero{
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:30px;
+      align-items:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.85));
+      border-radius:var(--radius);
+      padding:36px;
+      box-shadow:0 8px 30px rgba(11,59,121,0.06);
+      overflow:hidden;
+    }
+    .hero-left h2{font-size:2rem; margin-bottom:12px; color:var(--accent-1)}
+    .hero-left p{color:var(--muted); margin-bottom:18px}
+    .hero-cta{display:flex; gap:12px; flex-wrap:wrap}
+    .btn{
+      background:var(--accent-2);
+      border:none;
+      color:white;
+      padding:10px 18px;
+      border-radius:999px;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow: 0 6px 18px rgba(0,198,255,0.12);
+    }
+    .btn.secondary{
+      background:transparent;
+      color:var(--accent-1);
+      border:1px solid rgba(10,116,255,0.12);
+      box-shadow:none;
+    }
 
-  #dashboard { background: #eef4ff; }
-  canvas { width: 100% !important; height: 300px !important; }
+    .hero-right{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      align-items:center;
+      justify-content:center;
+    }
+    .hero-image{
+      width:100%;
+      max-width:380px;
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:0 14px 40px rgba(10,116,255,0.08);
+    }
+    .hero-image img{width:100%; display:block}
 
-  .footer { background-color: #0a1833; color: #ddd; text-align: center; padding: 30px; }
-  .footer p { font-size: 0.9rem; }
-  .highlight { color: #00C6FF; font-weight: bold; }
+    /* Dashboard card */
+    .dashboard{
+      margin-top:26px;
+      background:var(--card);
+      border-radius:16px;
+      padding:18px;
+      box-shadow: 0 8px 24px rgba(15,32,64,0.05);
+    }
 
-  @media (max-width: 768px) {
-    header { flex-direction: column; text-align: center; }
-    nav { margin-top: 10px; }
-  }
-</style>
+    .grid-3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:16px;
+      margin-bottom:18px;
+    }
+    .stat{
+      background:linear-gradient(180deg, #fff, #fbfdff);
+      border-radius:12px;
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      align-items:flex-start;
+      min-height:90px;
+    }
+    .stat h4{margin:0; color:var(--muted); font-weight:600; font-size:0.9rem}
+    .stat .value{font-size:1.6rem; font-weight:700; color:var(--accent-1)}
+
+    /* Gauges + chart row */
+    .row{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:18px;
+      align-items:center;
+    }
+
+    .gauges{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      padding:12px;
+      border-radius:12px;
+      background:linear-gradient(180deg,#ffffff,#f7fbff);
+      box-shadow: inset 0 -1px 0 rgba(10,116,255,0.02);
+    }
+    .gauge-row{
+      display:flex; gap:10px; justify-content:center; align-items:center;
+    }
+    .gauge{
+      width:96px; height:96px; display:flex; align-items:center; justify-content:center; position:relative;
+    }
+    .gauge canvas{position:absolute; left:0; top:0}
+    .gauge .gLabel{position:relative; z-index:3; font-size:0.9rem; text-align:center}
+
+    /* Chart card */
+    .chart-card{
+      padding:10px 12px;
+      border-radius:12px;
+      background:linear-gradient(180deg,#fff,#fbfdff);
+      box-shadow: 0 6px 20px rgba(11,59,121,0.03);
+    }
+
+    .controls{display:flex; gap:10px; margin-top:12px; align-items:center; flex-wrap:wrap}
+    .small{font-size:0.9rem; color:var(--muted)}
+
+    /* Sections below */
+    section.card-section{
+      margin-top:28px;
+      display:grid;
+      grid-template-columns: repeat(3,1fr);
+      gap:18px;
+    }
+    .card-section .card{
+      padding:20px;
+    }
+    .card-section img{width:100%; border-radius:12px; margin-top:12px}
+
+    /* Footer */
+    footer{margin-top:36px; text-align:center; padding:26px 10px; color:var(--muted)}
+    footer p{margin:0}
+
+    /* Responsive */
+    @media(max-width:1050px){
+      .hero{grid-template-columns:1fr}
+      .row{grid-template-columns:1fr}
+      .grid-3{grid-template-columns:repeat(1,1fr)}
+      section.card-section{grid-template-columns:repeat(1,1fr)}
+    }
+  </style>
 </head>
-
 <body>
+
 <header>
   <h1>IoT Health Monitor</h1>
-  <nav>
+  <nav aria-label="Primary">
     <a href="#home">Home</a>
     <a href="#dashboard">Dashboard</a>
-    <a href="#doctor">Doctor View</a>
-    <a href="#tips">Health Tips</a>
+    <a href="#doctor">Doctor</a>
+    <a href="#gym">Gym</a>
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
   </nav>
 </header>
 
-<!-- Hero Section -->
-<section id="home" class="hero">
-  <h2>Stay Connected to Your Health</h2>
-  <p>Monitor your heart rate, temperature, and humidity in real-time from anywhere — powered by IoT and ThingSpeak.</p>
-  <button class="btn-primary" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})">View Dashboard</button>
-</section>
-
-<!-- Dashboard Section -->
-<section id="dashboard" class="section">
-  <h3>📊 Real-Time Health Dashboard</h3>
-  <div class="cards">
-    <div class="card">
-      <h4>❤️ BPM (Heart Rate)</h4>
-      <p id="bpmValue">--</p>
+<main class="container">
+  <!-- HERO -->
+  <section id="home" class="hero" aria-labelledby="hero-title">
+    <div class="hero-left">
+      <h2 id="hero-title">Professional IoT Health Monitoring — Demo</h2>
+      <p>Real-time heart rate, temperature and humidity monitoring. Designed for clinics, gyms and product demos — powered by ThingSpeak and affordable IoT sensors.</p>
+      <div class="hero-cta">
+        <button class="btn" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})">Live Dashboard</button>
+        <button class="btn secondary" onclick="downloadCSV()">Download Data</button>
+      </div>
     </div>
-    <div class="card">
-      <h4>🌡️ Temperature (°C)</h4>
-      <p id="tempValue">--</p>
+
+    <div class="hero-right">
+      <div class="hero-image" aria-hidden="true">
+        <!-- Replace with your licensed IoT-related image if desired -->
+        <img src="https://img.freepik.com/free-photo/finger-pressing-virtual-heart-see-graph-white-background_953771-19.jpg" alt="Virtual heart and IoT graph illustration">
+      </div>
+
+      <div style="text-align:center; font-size:0.9rem; color:var(--muted)">Demo — use real ThingSpeak channel credentials below to show live data</div>
     </div>
-    <div class="card">
-      <h4>💧 Humidity (%)</h4>
-      <p id="humValue">--</p>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="dashboard" aria-labelledby="dashboard-title">
+    <h3 id="dashboard-title" style="margin:0 0 12px 0; color:var(--accent-1)">📊 Real-Time Dashboard</h3>
+
+    <div class="grid-3" role="list">
+      <div class="stat" role="listitem">
+        <h4>❤️ Heart Rate</h4>
+        <div class="value" id="bpmValue">-- BPM</div>
+        <div class="small">Latest reading</div>
+      </div>
+
+      <div class="stat" role="listitem">
+        <h4>🌡 Temperature</h4>
+        <div class="value" id="tempValue">-- °C</div>
+        <div class="small">Latest reading</div>
+      </div>
+
+      <div class="stat" role="listitem">
+        <h4>💧 Humidity</h4>
+        <div class="value" id="humValue">-- %</div>
+        <div class="small">Latest reading</div>
+      </div>
     </div>
-  </div>
-  <canvas id="dataChart"></canvas>
-</section>
 
-<!-- Doctor Monitoring Section -->
-<section id="doctor" class="section" style="background:#f8fbff;">
-  <h3>👨‍⚕️ Doctor Monitoring from Anywhere</h3>
-  <p>Doctors can monitor patients remotely, view real-time sensor data, and provide instant advice through online consultations.</p>
-  <img src="https://img.freepik.com/free-photo/medical-monitor-showing-heartbeat-patient_23-2149367139.jpg" width="80%" style="border-radius:15px; margin-top:20px;">
-</section>
+    <div class="row" style="margin-top:12px">
+      <!-- Gauges -->
+      <aside class="gauges" aria-label="Live gauges">
+        <div style="font-weight:600; color:var(--muted); text-align:center">Live Gauges</div>
+        <div class="gauge-row">
+          <div class="gauge">
+            <canvas id="gaugeBPM" width="96" height="96"></canvas>
+            <div class="gLabel" id="gLabelBPM">--</div>
+          </div>
+          <div class="gauge">
+            <canvas id="gaugeTemp" width="96" height="96"></canvas>
+            <div class="gLabel" id="gLabelTemp">--</div>
+          </div>
+          <div class="gauge">
+            <canvas id="gaugeHum" width="96" height="96"></canvas>
+            <div class="gLabel" id="gLabelHum">--</div>
+          </div>
+        </div>
 
-<!-- Health Tips -->
-<section id="tips" class="section">
-  <h3>💡 Health Insights & Tips</h3>
-  <div class="cards">
-    <div class="card">Stay hydrated — your body performs best when humidity and temperature are balanced.</div>
-    <div class="card">Monitor your BPM daily — a resting BPM above 100 may indicate stress or fatigue.</div>
-    <div class="card">Exercise regularly and track your data to see real health progress!</div>
-  </div>
-</section>
+        <div style="text-align:center; margin-top:8px" class="small">Auto-refresh every 10 seconds</div>
+      </aside>
 
-<!-- About -->
-<section id="about" class="section" style="background:#eef4ff;">
-  <h3>ℹ️ About the Project</h3>
-  <p>The <span class="highlight">IoT Based Health Monitoring System</span> allows real-time patient data collection through sensors connected to Arduino and NodeMCU. The data is visualized online using ThingSpeak and displayed here on this professional dashboard.</p>
-</section>
+      <!-- Chart -->
+      <div class="chart-card" aria-hidden="false">
+        <canvas id="dataChart"></canvas>
+        <div class="controls">
+          <div class="small">Showing last <strong id="pointsCount">10</strong> readings</div>
+          <div style="flex:1"></div>
+          <button class="btn secondary" onclick="refreshNow()">Refresh</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- Contact -->
-<section id="contact" class="section">
-  <h3>📞 Contact Us</h3>
-  <p>For collaboration, hospital integration, or demo requests:</p>
-  <p>Email: <span class="highlight">thapelomokoa.projects@gmail.com</span></p>
-</section>
+  <!-- Sections: Doctor / Gym / Tips -->
+  <section class="card-section" aria-label="Info sections">
+    <div class="card">
+      <h4>👨‍⚕️ Doctor Monitoring</h4>
+      <p style="color:var(--muted)">Doctors can remotely check patients' vitals and get alerts when values go out of range. Integrate with teleconsultation workflows.</p>
+      <img src="https://img.freepik.com/free-photo/doctor-checking-health-patient_53876-154232.jpg" alt="Doctor checking patient">
+    </div>
 
-<div class="footer">
-  <p>Developed by <strong>Thapelo Mokoa</strong> — IoT Health Monitoring System © 2025</p>
-</div>
+    <div class="card">
+      <h4>🏋️‍♂️ Gym Integration</h4>
+      <p style="color:var(--muted)">Track members' heart rate during workouts and build safer training plans. Connect wearables to ThingSpeak for live group monitoring.</p>
+      <img src="https://img.freepik.com/free-photo/man-wearing-smartwatch-doing-exercise-gym_1157-39526.jpg" alt="Gym wearable">
+    </div>
+
+    <div class="card">
+      <h4>💡 Health Tips</h4>
+      <p style="color:var(--muted)">Use readings to personalize advice — hydration, rest, and pace recommendations. Dashboard supports CSV export for clinical records.</p>
+      <img src="https://img.freepik.com/free-vector/medical-data-dashboard-illustration_23-2148821891.jpg" alt="Health tips illustration">
+    </div>
+  </section>
+
+  <!-- About & Contact -->
+  <section style="margin-top:22px; display:grid; grid-template-columns:1fr 1fr; gap:18px;">
+    <div class="card" style="padding:20px">
+      <h4>About this Demo</h4>
+      <p style="color:var(--muted)">This product-demo shows how Arduino/NodeMCU sensors publish BPM, temperature, and humidity to ThingSpeak. The front-end fetches the read API to show live graphs and gauges.</p>
+      <ul style="color:var(--muted)">
+        <li>ThingSpeak live pull (no writes from this UI)</li>
+        <li>CSV download of recent feeds</li>
+        <li>Responsive UI for product demos and presentations</li>
+      </ul>
+    </div>
+
+    <div class="card" id="contact" style="padding:20px">
+      <h4>Contact / Demo Request</h4>
+      <p style="color:var(--muted)">Email to schedule a live demo or integration discussion.</p>
+      <p><strong>Email:</strong> <a href="mailto:thapelomokoa.projects@gmail.com">thapelomokoa.projects@gmail.com</a></p>
+
+      <form id="contactForm" onsubmit="submitContact(event)" style="margin-top:8px; display:flex; flex-direction:column; gap:8px">
+        <input id="name" placeholder="Your name" style="padding:10px; border-radius:8px; border:1px solid #e6eefc">
+        <input id="email" placeholder="Your email" style="padding:10px; border-radius:8px; border:1px solid #e6eefc">
+        <textarea id="msg" placeholder="Message (optional)" style="padding:10px; border-radius:8px; border:1px solid #e6eefc"></textarea>
+        <div style="display:flex; gap:8px">
+          <button class="btn" type="submit">Send</button>
+          <button type="button" class="btn secondary" onclick="document.getElementById('contactForm').reset()">Clear</button>
+        </div>
+        <div id="contactStatus" style="font-size:0.9rem; color:var(--muted)"></div>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <p>Developed by <strong>Thapelo Mokoa</strong> — IoT Health Monitoring Demo © 2025</p>
+  </footer>
+</main>
 
 <script>
-  const channelID = "3128115"; 
-  const apiKey = "K72OYJMYOJZN240T";
+/* ===========================
+   CONFIG — set channel & key
+   =========================== */
+const channelID = "3128115";   // <-- your ThingSpeak channel ID
+const apiKey    = "K72OYJMYOJZN240T"; // <-- your ThingSpeak Read API Key
+const pointsToShow = 10;       // how many recent readings to plot
+document.getElementById('pointsCount').innerText = pointsToShow;
 
-  async function fetchData() {
-    const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=10`;
-    const response = await fetch(url);
-    const data = await response.json();
-    const feeds = data.feeds;
+/* Helper for safe numeric parsing */
+function toNumber(v){ const n = parseFloat(v); return isNaN(n) ? null : n; }
 
-    if (feeds.length > 0) {
-      const latest = feeds[feeds.length - 1];
-      document.getElementById('bpmValue').innerText = latest.field1 || "--";
-      document.getElementById('tempValue').innerText = latest.field2 || "--";
-      document.getElementById('humValue').innerText = latest.field3 || "--";
+/* ================
+   Gauges (doughnut)
+   ================ */
+function createGauge(canvas, color){
+  const ctx = canvas.getContext('2d');
+  return new Chart(ctx, {
+    type:'doughnut',
+    data:{
+      labels:['value','rest'],
+      datasets:[{
+        data:[0,100],
+        backgroundColor:[color,'rgba(220,230,250,0.35)'],
+        borderWidth:0
+      }]
+    },
+    options:{
+      rotation: -1.1 * Math.PI,
+      circumference: 1.2 * Math.PI,
+      cutout: '70%',
+      plugins:{legend:{display:false}, tooltip:{enabled:false}},
+      animation:{duration:800}
+    }
+  });
+}
 
-      const labels = feeds.map(f => new Date(f.created_at).toLocaleTimeString());
-      const bpm = feeds.map(f => f.field1);
-      const temp = feeds.map(f => f.field2);
-      const hum = feeds.map(f => f.field3);
+const gaugeBPM = createGauge(document.getElementById('gaugeBPM'),'rgba(255,80,80,0.95)');
+const gaugeTemp = createGauge(document.getElementById('gaugeTemp'),'rgba(0,122,255,0.95)');
+const gaugeHum = createGauge(document.getElementById('gaugeHum'),'rgba(0,200,200,0.95)');
 
-      drawChart(labels, bpm, temp, hum);
+/* ================
+   Line chart (history)
+   ================ */
+const ctxLine = document.getElementById('dataChart').getContext('2d');
+const lineChart = new Chart(ctxLine, {
+  type:'line',
+  data:{
+    labels: [],
+    datasets:[
+      { label:'BPM', data:[], borderColor:'rgba(255,70,70,0.95)', backgroundColor:'rgba(255,70,70,0.06)', tension:0.2, pointRadius:3 },
+      { label:'Temp (°C)', data:[], borderColor:'rgba(0,120,255,0.95)', backgroundColor:'rgba(0,120,255,0.06)', tension:0.2, pointRadius:3 },
+      { label:'Humidity (%)', data:[], borderColor:'rgba(0,180,160,0.95)', backgroundColor:'rgba(0,180,160,0.06)', tension:0.2, pointRadius:3 }
+    ]
+  },
+  options:{
+    responsive:true,
+    plugins:{legend:{position:'bottom'}},
+    scales:{
+      x:{ display:true, title:{display:false} },
+      y:{ display:true }
     }
   }
+});
 
-  function drawChart(labels, bpm, temp, hum) {
-    const ctx = document.getElementById('dataChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          { label: 'BPM', data: bpm, borderColor: 'red', fill: false },
-          { label: 'Temp (°C)', data: temp, borderColor: 'blue', fill: false },
-          { label: 'Humidity (%)', data: hum, borderColor: 'green', fill: false }
-        ]
-      },
-      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+/* =================
+   Fetch & update UI
+   ================= */
+async function fetchDataAndUpdate(limit = pointsToShow){
+  const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=${limit}`;
+  try{
+    const resp = await fetch(url);
+    if(!resp.ok) throw new Error('Network response was not ok');
+    const data = await resp.json();
+    const feeds = data.feeds || [];
+
+    if(feeds.length === 0){
+      console.warn('No feeds found');
+      return;
+    }
+
+    // Build arrays
+    const times = feeds.map(f => new Date(f.created_at).toLocaleTimeString());
+    const bpmArr = feeds.map(f => toNumber(f.field1));
+    const tempArr = feeds.map(f => toNumber(f.field2));
+    const humArr = feeds.map(f => toNumber(f.field3));
+
+    // Update latest values (last element)
+    const last = feeds[feeds.length - 1];
+    const lastBPM = toNumber(last.field1);
+    const lastTemp = toNumber(last.field2);
+    const lastHum = toNumber(last.field3);
+
+    document.getElementById('bpmValue').innerText = (lastBPM !== null) ? `${lastBPM} BPM` : '--';
+    document.getElementById('tempValue').innerText = (lastTemp !== null) ? `${lastTemp} °C` : '--';
+    document.getElementById('humValue').innerText = (lastHum !== null) ? `${lastHum} %` : '--';
+
+    // Update gauges: set value as percent of an expected max (adjust as needed)
+    // BPM: scale to 200 bpm max; Temp: scale 50C; Humidity: 100%
+    const bpmPct = lastBPM !== null ? Math.min(100, Math.round((lastBPM / 200) * 100)) : 0;
+    const tempPct = lastTemp !== null ? Math.min(100, Math.round((lastTemp / 50) * 100)) : 0;
+    const humPct = lastHum !== null ? Math.min(100, Math.round((lastHum / 100) * 100)) : 0;
+
+    gaugeBPM.data.datasets[0].data = [bpmPct, 100 - bpmPct];
+    gaugeTemp.data.datasets[0].data = [tempPct, 100 - tempPct];
+    gaugeHum.data.datasets[0].data = [humPct, 100 - humPct];
+
+    gaugeBPM.update(); gaugeTemp.update(); gaugeHum.update();
+
+    document.getElementById('gLabelBPM').innerText = (lastBPM!==null? lastBPM + ' BPM' : '--');
+    document.getElementById('gLabelTemp').innerText = (lastTemp!==null? lastTemp + ' °C' : '--');
+    document.getElementById('gLabelHum').innerText = (lastHum!==null? lastHum + ' %' : '--');
+
+    // Update line chart (use arrays; put oldest -> newest)
+    lineChart.data.labels = times;
+    lineChart.data.datasets[0].data = bpmArr;
+    lineChart.data.datasets[1].data = tempArr;
+    lineChart.data.datasets[2].data = humArr;
+    lineChart.update();
+  }catch(err){
+    console.error('Fetch error', err);
+  }
+}
+
+/* auto-refresh */
+let refreshTimer = setInterval(()=>fetchDataAndUpdate(pointsToShow), 10000);
+fetchDataAndUpdate(pointsToShow);
+
+/* manual refresh */
+function refreshNow(){ fetchDataAndUpdate(pointsToShow); }
+
+/* CSV download of recent 50 points */
+function downloadCSV(){
+  const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=50`;
+  fetch(url).then(r=>r.json()).then(data=>{
+    const feeds = data.feeds || [];
+    let csv = 'created_at,BPM,Temperature,Humidity\n';
+    feeds.forEach(f=>{
+      csv += `${f.created_at},${f.field1||''},${f.field2||''},${f.field3||''}\n`;
     });
+    const blob = new Blob([csv], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'thingspeak_health_data.csv';
+    a.click();
+  }).catch(e=>{
+    alert('Failed to download CSV: ' + e.message);
+  });
+}
+
+/* Contact form (simple demo behavior) */
+function submitContact(e){
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const msg = document.getElementById('msg').value.trim();
+  const status = document.getElementById('contactStatus');
+
+  if(!name || !email){
+    status.innerText = 'Please enter your name and email.';
+    return;
   }
 
-  setInterval(fetchData, 15000);
-  fetchData();
+  // For demo, we'll just open the default mail client with a prefilled message
+  const subject = encodeURIComponent(`Demo request from ${name}`);
+  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${msg}`);
+  window.location.href = `mailto:thapelomokoa.projects@gmail.com?subject=${subject}&body=${body}`;
+  status.innerText = 'Opening your mail client...';
+}
 </script>
 </body>
 </html>
-
