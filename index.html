@@ -21,9 +21,11 @@
       font-weight: 500; transition: 0.3s;
     }
     nav a:hover { color: #f1f1f1; text-decoration: underline; }
+
+    /* Hero Section with new pulse sensor image */
     .hero {
       height: 90vh;
-      background: url('https://img.freepik.com/free-vector/doctor-using-iot-devices-monitoring-patient_23-2149367380.jpg') center/cover no-repeat;
+      background: url('https://img.freepik.com/premium-photo/finger-pressing-virtual-heart-see-graph-white-background_953771-19.jpg') center/cover no-repeat;
       background-size: cover;
       background-attachment: fixed;
       position: relative;
@@ -41,6 +43,7 @@
     .hero > * { position: relative; z-index: 2; }
     .hero h2 { font-size: 2.5rem; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); }
     .hero p { font-size: 1.2rem; max-width: 650px; line-height: 1.5; }
+
     .btn-primary {
       margin-top: 20px;
       background-color: #00C6FF; color: white; border: none;
@@ -63,9 +66,7 @@
     }
     .card:hover { transform: translateY(-5px); }
 
-    #dashboard {
-      background: #eef4ff;
-    }
+    #dashboard { background: #eef4ff; }
 
     canvas { width: 100% !important; height: 300px !important; }
 
@@ -96,7 +97,6 @@
       <a href="#home">Home</a>
       <a href="#dashboard">Dashboard</a>
       <a href="#doctor">Doctor View</a>
-      <a href="#gym">For Gyms</a>
       <a href="#tips">Health Tips</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
@@ -106,7 +106,7 @@
   <!-- Hero Section -->
   <section id="home" class="hero">
     <h2>Stay Connected to Your Health</h2>
-    <p>Monitor heart rate, temperature, and humidity in real-time from anywhere — powered by IoT and ThingSpeak.</p>
+    <p>Monitor your heart rate, temperature, and humidity in real-time from anywhere — powered by IoT and ThingSpeak.</p>
     <button class="btn-primary" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})">View Dashboard</button>
   </section>
 
@@ -134,14 +134,7 @@
   <section id="doctor" class="section" style="background:#f8fbff;">
     <h3>👨‍⚕️ Doctor Monitoring from Anywhere</h3>
     <p>Doctors can monitor patients remotely, view real-time sensor data, and provide instant advice through online consultations.</p>
-    <img src="https://img.freepik.com/free-vector/doctor-using-iot-devices-monitoring-patient_23-2149367380.jpg" class="responsive">
-  </section>
-
-  <!-- Gym Section -->
-  <section id="gym" class="section">
-    <h3>🏋️‍♂️ Gym Heart Rate Monitoring</h3>
-    <p>Gyms can track clients' heart rates in real-time to ensure safe workouts and optimal training plans.</p>
-    <img src="https://img.freepik.com/free-vector/fitness-people-wearable-iot-devices_23-2149367395.jpg" class="responsive">
+    <img src="https://img.freepik.com/free-photo/medical-monitor-showing-heartbeat-patient_23-2149367139.jpg" class="responsive">
   </section>
 
   <!-- Health Tips -->
@@ -172,8 +165,8 @@
   </div>
 
   <script>
-    const channelID = "3128115";
-    const apiKey = "K72OYJMYOJZN240T";
+    const channelID = "3128115"; // ThingSpeak channel ID
+    const apiKey = "K72OYJMYOJZN240T"; // Read API Key
 
     async function fetchData() {
       const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=10`;
