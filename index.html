@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IoT Health Monitoring System</title>
+<title>IoT Health Monitor</title>
 <style>
 body { margin:0; font-family:'Arial',sans-serif; background:#f8f9fa; color:#333; scroll-behavior:smooth; }
 .navbar { position:fixed; top:0; width:100%; background:#4facfe; display:flex; justify-content:center; gap:15px; padding:10px; z-index:100; }
@@ -69,13 +69,13 @@ form button:hover { background:#0056b3; }
 <!-- Doctor -->
 <section id="doctor" class="section">
   <h2>Doctor Portal</h2>
-  <p>Doctors can monitor patients in real-time and schedule online consultations via Teams.</p>
+  <p>Doctors monitor patients in real-time and schedule online consultations via Teams.</p>
   <button class="btn" id="scheduleBtn">Schedule Consultation</button>
   <table>
     <thead>
       <tr><th>Patient</th><th>BPM</th><th>Temp</th><th>Humidity</th><th>Status</th><th>Consult</th></tr>
     </thead>
-    <tbody>
+    <tbody id="doctorTableBody">
       <tr>
         <td>Demo Patient</td>
         <td id="docBpm">--</td>
@@ -150,19 +150,21 @@ navLinks.forEach(link=>{
   });
 });
 
-// ThingSpeak Live Data
+// ThingSpeak
 const CHANNEL_ID='3128115';
 const READ_KEY='K72OYJMYOJZN240T';
 let bpmData=[], tempData=[], humData=[];
+
+// Chart
 const ctx = document.getElementById('combinedChart').getContext('2d');
-const combinedChart = new Chart(ctx,{
-  type:'line',
-  data:{labels:[], datasets:[
-    {label:'BPM ❤️', data:[], borderColor:'red', fill:false},
-    {label:'Temp 🌡️', data:[], borderColor:'orange', fill:false},
-    {label:'Humidity 💧', data:[], borderColor:'blue', fill:false}
+const combinedChart = new Chart(ctx, {
+  type: 'line',
+  data: { labels: [], datasets: [
+    { label:'BPM ❤️', data:[], borderColor:'red', fill:false },
+    { label:'Temperature 🌡️', data:[], borderColor:'orange', fill:false },
+    { label:'Humidity 💧', data:[], borderColor:'blue', fill:false }
   ]},
-  options:{ responsive:true, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:true}}, scales:{y:{beginAtZero:true}} }
+  options: { responsive:true, interaction:{mode:'index', intersect:false}, plugins:{legend:{display:true}}, scales:{y:{beginAtZero:true}} }
 });
 
 async function fetchThingSpeak(){
