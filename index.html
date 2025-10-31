@@ -25,9 +25,12 @@ table { width:100%; border-collapse:collapse; margin-top:20px; }
 table th, table td { border:1px solid #ccc; padding:10px; text-align:center; }
 table th { background:#4facfe; color:#fff; }
 .ai-suggestion { background:#fff3cd; border-left:5px solid #ffc107; padding:10px; margin:10px 0; border-radius:5px; }
-form input, form textarea { width:100%; padding:10px; margin:8px 0; border-radius:5px; border:1px solid #ccc; }
+form input, form textarea, form select { width:100%; padding:10px; margin:8px 0; border-radius:5px; border:1px solid #ccc; }
 form button { background:#007bff; color:#fff; border:none; padding:10px 15px; border-radius:5px; cursor:pointer; }
 form button:hover { background:#0056b3; }
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:200; }
+.modal-content { background:#fff; padding:20px; border-radius:10px; max-width:400px; width:90%; }
+.close-btn { float:right; cursor:pointer; font-weight:bold; color:#333; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -67,6 +70,7 @@ form button:hover { background:#0056b3; }
 <section id="doctor" class="section">
   <h2>Doctor Portal</h2>
   <p>Doctors can monitor patients in real-time and schedule online consultations via Teams.</p>
+  <button class="btn" id="scheduleBtn">Schedule Consultation</button>
   <table>
     <thead>
       <tr><th>Patient</th><th>BPM</th><th>Temp</th><th>Humidity</th><th>Status</th><th>Consult</th></tr>
@@ -84,6 +88,24 @@ form button:hover { background:#0056b3; }
   </table>
 </section>
 
+<!-- Modal for scheduling -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="closeModal">&times;</span>
+    <h3>Schedule Online Consultation</h3>
+    <form id="scheduleForm">
+      <input type="text" placeholder="Patient Name" required>
+      <input type="datetime-local" required>
+      <select required>
+        <option value="">Select Platform</option>
+        <option value="teams">Microsoft Teams</option>
+        <option value="zoom">Zoom</option>
+      </select>
+      <button type="submit">Schedule</button>
+    </form>
+  </div>
+</div>
+
 <!-- Gym -->
 <section id="gym" class="section">
   <h2>Gym Dashboard</h2>
@@ -92,14 +114,14 @@ form button:hover { background:#0056b3; }
     <li>Live monitoring of BPM, temperature, and humidity</li>
     <li>Receive automated alerts when vitals exceed thresholds</li>
     <li>Track members’ progress over time</li>
-    <li>Integrate AI to provide health tips and performance suggestions</li>
+    <li>AI-driven health tips and performance suggestions</li>
   </ul>
 </section>
 
 <!-- About Us -->
 <section id="about" class="section">
   <h2>About IoT Health Monitoring System</h2>
-  <p>Our IoT Health Monitoring System combines sensors, cloud, and AI to track vital health parameters like heart rate, temperature, and humidity. Patients, doctors, and gyms can access real-time dashboards, receive automated alerts, and perform online consultations securely.</p>
+  <p>Our IoT Health Monitoring System combines sensors, cloud, and AI to track vital health parameters. Patients, doctors, and gyms can access real-time dashboards, receive automated alerts, and perform online consultations securely.</p>
 </section>
 
 <!-- Contact Us -->
@@ -117,12 +139,11 @@ form button:hover { background:#0056b3; }
 // Navigation
 const navLinks = document.querySelectorAll('.navbar a');
 const sections = document.querySelectorAll('.section');
-
-navLinks.forEach(link => {
-  link.addEventListener('click', (e)=>{
+navLinks.forEach(link=>{
+  link.addEventListener('click',(e)=>{
     e.preventDefault();
     const target = link.getAttribute('data-section');
-    sections.forEach(sec => sec.classList.remove('active'));
+    sections.forEach(sec=>sec.classList.remove('active'));
     document.getElementById(target).classList.add('active');
     navLinks.forEach(l=>l.classList.remove('active'));
     link.classList.add('active');
@@ -133,11 +154,10 @@ navLinks.forEach(link => {
 const CHANNEL_ID='3128115';
 const READ_KEY='K72OYJMYOJZN240T';
 let bpmData=[], tempData=[], humData=[];
-
 const ctx = document.getElementById('combinedChart').getContext('2d');
-const combinedChart = new Chart(ctx, {
+const combinedChart = new Chart(ctx,{
   type:'line',
-  data:{ labels:[], datasets:[
+  data:{labels:[], datasets:[
     {label:'BPM ❤️', data:[], borderColor:'red', fill:false},
     {label:'Temp 🌡️', data:[], borderColor:'orange', fill:false},
     {label:'Humidity 💧', data:[], borderColor:'blue', fill:false}
@@ -160,14 +180,11 @@ function updateDashboard(){
   const bpm = bpmData[bpmData.length-1]||0;
   const temp = tempData[tempData.length-1]||0;
   const hum = humData[humData.length-1]||0;
-
   document.getElementById('bpmValue').textContent = bpm;
   document.getElementById('tempValue').textContent = temp;
   document.getElementById('humValue').textContent = hum;
-
   const healthScore = Math.round((bpm/120 + temp/40 + hum/100)/3*100);
   document.getElementById('healthScore').textContent = isNaN(healthScore)? '--':healthScore;
-
   document.getElementById('docBpm').textContent = bpm;
   document.getElementById('docTemp').textContent = temp;
   document.getElementById('docHum').textContent = hum;
@@ -175,23 +192,31 @@ function updateDashboard(){
   if(bpm>100 || temp>38 || hum>70) status='🔴';
   else if(bpm<60 || temp<36) status='🟡';
   document.getElementById('docStatus').textContent = status;
-
   combinedChart.data.labels = bpmData.map((_,i)=>i+1);
   combinedChart.data.datasets[0].data = bpmData;
   combinedChart.data.datasets[1].data = tempData;
   combinedChart.data.datasets[2].data = humData;
   combinedChart.update();
-
-  // Simple AI suggestion
-  let suggestion = 'All readings normal 👍';
-  if(status==='🔴') suggestion='Alert! Please take immediate action 🚨';
+  let suggestion='All readings normal 👍';
+  if(status==='🔴') suggestion='Alert! Take immediate action 🚨';
   else if(status==='🟡') suggestion='Monitor closely ⚠️';
   document.getElementById('aiSuggestion').textContent = `AI Suggestion: ${suggestion}`;
 }
-
-// Initial fetch and auto-refresh every 15 seconds
 fetchThingSpeak();
 setInterval(fetchThingSpeak,15000);
+
+// Modal Scheduling
+const modal = document.getElementById('modal');
+const scheduleBtn = document.getElementById('scheduleBtn');
+const closeModal = document.getElementById('closeModal');
+scheduleBtn.onclick = ()=> modal.style.display='flex';
+closeModal.onclick = ()=> modal.style.display='none';
+window.onclick = e=>{ if(e.target===modal) modal.style.display='none'; }
+document.getElementById('scheduleForm').onsubmit = e=>{
+  e.preventDefault();
+  alert('Consultation Scheduled Successfully!');
+  modal.style.display='none';
+};
 </script>
 
 </body>
