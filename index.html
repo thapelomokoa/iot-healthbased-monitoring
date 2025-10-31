@@ -6,70 +6,71 @@
 <title>IoT Health Monitoring System</title>
 <style>
 body { margin:0; font-family:'Arial',sans-serif; background:#f8f9fa; color:#333; scroll-behavior:smooth; }
-.navbar { position:fixed; top:0; width:100%; background:#4facfe; display:flex; justify-content:center; gap:20px; padding:10px; z-index:100; }
-.navbar a { color:#fff; text-decoration:none; font-weight:bold; cursor:pointer; }
-.section { display:none; padding:120px 20px 40px; min-height:80vh; }
-.section.active { display:block; }
+.navbar { position:fixed; top:0; width:100%; background:#4facfe; display:flex; justify-content:center; gap:15px; padding:10px; z-index:100; }
+.navbar a { color:#fff; text-decoration:none; font-weight:bold; padding:8px 12px; border-radius:5px; }
+.navbar a.active, .navbar a:hover { background:#007bff; }
+.section { display:none; padding:120px 20px 40px; min-height:100vh; }
+.section.active { display:block; animation:fadeIn 0.6s; }
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
 .hero { background:linear-gradient(90deg,#4facfe,#00f2fe); color:#fff; text-align:center; padding:140px 20px 80px; }
-.hero h1 { font-size:3em; margin-bottom:10px; }
-.hero p { font-size:1.2em; margin-bottom:20px; }
+.hero h1 { font-size:3em; margin-bottom:15px; }
+.hero p { font-size:1.2em; margin-bottom:25px; }
 .btn { padding:10px 20px; margin:5px; border-radius:8px; border:none; cursor:pointer; color:#fff; background:#007bff; text-decoration:none; display:inline-block; }
 .widgets { display:flex; flex-wrap:wrap; gap:20px; margin-bottom:20px; justify-content:center; }
 .widget { flex:1 1 150px; background:#e9f5ff; padding:20px; border-radius:12px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
 .heartbeat { font-size:2em; animation:beat 1s infinite alternate; }
 @keyframes beat { 0%{transform:scale(1);}50%{transform:scale(1.2);}100%{transform:scale(1);} }
-.alert { color:red; font-weight:bold; animation:flash 1s infinite alternate; }
-@keyframes flash {0%,100%{opacity:1;}50%{opacity:0.4;}}
 canvas { width:100% !important; max-width:100%; height:300px !important; }
 table { width:100%; border-collapse:collapse; margin-top:20px; }
 table th, table td { border:1px solid #ccc; padding:10px; text-align:center; }
 table th { background:#4facfe; color:#fff; }
-input, textarea { padding:10px; width:100%; margin:5px 0; border-radius:6px; border:1px solid #ccc; }
-form { max-width:500px; margin:auto; }
+.ai-suggestion { background:#fff3cd; border-left:5px solid #ffc107; padding:10px; margin:10px 0; border-radius:5px; }
+form input, form textarea { width:100%; padding:10px; margin:8px 0; border-radius:5px; border:1px solid #ccc; }
+form button { background:#007bff; color:#fff; border:none; padding:10px 15px; border-radius:5px; cursor:pointer; }
+form button:hover { background:#0056b3; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
 <nav class="navbar">
-  <a onclick="showSection('hero')">Home</a>
-  <a onclick="showSection('patient')">Patient</a>
-  <a onclick="showSection('doctor')">Doctor</a>
-  <a onclick="showSection('gym')">Gym</a>
-  <a onclick="showSection('about')">About Us</a>
-  <a onclick="showSection('contact')">Contact</a>
+  <a href="#" data-section="home" class="active">Home</a>
+  <a href="#" data-section="patient">Patient</a>
+  <a href="#" data-section="doctor">Doctor</a>
+  <a href="#" data-section="gym">Gym</a>
+  <a href="#" data-section="about">About Us</a>
+  <a href="#" data-section="contact">Contact Us</a>
 </nav>
 
-<!-- Hero Section -->
-<section id="hero" class="hero section active">
+<!-- Home -->
+<section id="home" class="section active hero">
   <h1>Monitor Your Health Anywhere</h1>
-  <p>Real-Time ❤️ BPM, 🌡️ Temperature & 💧 Humidity</p>
-  <a class="btn" onclick="showSection('patient')">View Dashboard</a>
-  <a class="btn" onclick="showSection('doctor')">Book Consultation</a>
+  <p>Real-Time ❤️ BPM, 🌡️ Temperature & 💧 Humidity with AI Insights</p>
+  <a class="btn" data-section="patient">View Dashboard</a>
+  <a class="btn" data-section="doctor">Book Consultation</a>
 </section>
 
-<!-- Patient Section -->
+<!-- Patient -->
 <section id="patient" class="section">
   <h2>Patient Dashboard</h2>
   <div class="widgets">
-    <div class="widget heartbeat">❤️ <span id="bpmValue">--</span></div>
+    <div class="widget heartbeat">❤️ BPM: <span id="bpmValue">--</span></div>
     <div class="widget">🌡️ Temp: <span id="tempValue">--</span> °C</div>
     <div class="widget">💧 Humidity: <span id="humValue">--</span> %</div>
     <div class="widget">Health Score: <span id="healthScore">--</span></div>
   </div>
   <canvas id="combinedChart"></canvas>
-  <h3>AI Health Tips 🤖</h3>
-  <ul id="aiTips">
-    <li>Loading AI insights...</li>
-  </ul>
+  <div class="ai-suggestion" id="aiSuggestion">AI Suggestion: --</div>
 </section>
 
-<!-- Doctor Section -->
+<!-- Doctor -->
 <section id="doctor" class="section">
   <h2>Doctor Portal</h2>
-  <p>View patient data and schedule online consultations via Teams.</p>
-  <table id="doctorTable">
-    <thead><tr><th>Patient</th><th>BPM</th><th>Temp</th><th>Humidity</th><th>Status</th><th>Consult</th></tr></thead>
+  <p>Doctors can monitor patients in real-time and schedule online consultations via Teams.</p>
+  <table>
+    <thead>
+      <tr><th>Patient</th><th>BPM</th><th>Temp</th><th>Humidity</th><th>Status</th><th>Consult</th></tr>
+    </thead>
     <tbody>
       <tr>
         <td>Demo Patient</td>
@@ -77,22 +78,28 @@ form { max-width:500px; margin:auto; }
         <td id="docTemp">--</td>
         <td id="docHum">--</td>
         <td id="docStatus">--</td>
-        <td><a href="https://teams.microsoft.com/l/meetup-join/123456789" target="_blank">Join Teams</a></td>
+        <td><a href="https://teams.microsoft.com/l/meetup-join/..." target="_blank">Teams Link</a></td>
       </tr>
     </tbody>
   </table>
 </section>
 
-<!-- Gym Section -->
+<!-- Gym -->
 <section id="gym" class="section">
   <h2>Gym Dashboard</h2>
-  <p>The IoT Health Monitoring System allows gyms to monitor multiple members in real-time. Track heart rate zones, detect overexertion, and optimize workouts. Alerts notify trainers of abnormal readings. Gamified leaderboards motivate members to maintain healthy streaks.</p>
+  <p>Gyms can monitor multiple members' heart rates in real-time, optimize workouts, and prevent overexertion using IoT health monitoring systems.</p>
+  <ul>
+    <li>Live monitoring of BPM, temperature, and humidity</li>
+    <li>Receive automated alerts when vitals exceed thresholds</li>
+    <li>Track members’ progress over time</li>
+    <li>Integrate AI to provide health tips and performance suggestions</li>
+  </ul>
 </section>
 
 <!-- About Us -->
 <section id="about" class="section">
-  <h2>About IoT Health Monitoring</h2>
-  <p>This system combines IoT sensors (pulse, temperature, humidity) with Arduino and ESP8266 to provide live health monitoring. Doctors and gyms can track users remotely. AI insights predict health trends and provide personalized tips. Alerts prevent emergencies by notifying abnormal readings in real-time.</p>
+  <h2>About IoT Health Monitoring System</h2>
+  <p>Our IoT Health Monitoring System combines sensors, cloud, and AI to track vital health parameters like heart rate, temperature, and humidity. Patients, doctors, and gyms can access real-time dashboards, receive automated alerts, and perform online consultations securely.</p>
 </section>
 
 <!-- Contact Us -->
@@ -102,40 +109,42 @@ form { max-width:500px; margin:auto; }
     <input type="text" placeholder="Your Name" required>
     <input type="email" placeholder="Your Email" required>
     <textarea placeholder="Your Message" rows="5" required></textarea>
-    <button class="btn" type="submit">Send Message</button>
+    <button type="submit">Send Message</button>
   </form>
 </section>
 
 <script>
-// Section navigation
-function showSection(id){
-  document.querySelectorAll('.section').forEach(sec=>sec.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+// Navigation
+const navLinks = document.querySelectorAll('.navbar a');
+const sections = document.querySelectorAll('.section');
 
-// ThingSpeak data
+navLinks.forEach(link => {
+  link.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const target = link.getAttribute('data-section');
+    sections.forEach(sec => sec.classList.remove('active'));
+    document.getElementById(target).classList.add('active');
+    navLinks.forEach(l=>l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+// ThingSpeak Live Data
 const CHANNEL_ID='3128115';
 const READ_KEY='K72OYJMYOJZN240T';
 let bpmData=[], tempData=[], humData=[];
 
-// Chart.js setup
 const ctx = document.getElementById('combinedChart').getContext('2d');
 const combinedChart = new Chart(ctx, {
-  type: 'line',
-  data: { labels: [], datasets: [
-    { label:'BPM ❤️', data:[], borderColor:'red', fill:false },
-    { label:'Temperature 🌡️', data:[], borderColor:'orange', fill:false },
-    { label:'Humidity 💧', data:[], borderColor:'blue', fill:false }
+  type:'line',
+  data:{ labels:[], datasets:[
+    {label:'BPM ❤️', data:[], borderColor:'red', fill:false},
+    {label:'Temp 🌡️', data:[], borderColor:'orange', fill:false},
+    {label:'Humidity 💧', data:[], borderColor:'blue', fill:false}
   ]},
-  options: {
-    responsive:true,
-    interaction:{mode:'index', intersect:false},
-    plugins:{legend:{display:true}},
-    scales:{y:{beginAtZero:true}}
-  }
+  options:{ responsive:true, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:true}}, scales:{y:{beginAtZero:true}} }
 });
 
-// Fetch ThingSpeak data
 async function fetchThingSpeak(){
   try{
     const res = await fetch(`https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_KEY}&results=20`);
@@ -144,22 +153,20 @@ async function fetchThingSpeak(){
     tempData = data.feeds.map(f=>parseFloat(f.field2)||0);
     humData = data.feeds.map(f=>parseFloat(f.field3)||0);
     updateDashboard();
-    updateAIInsights();
   }catch(e){console.error(e);}
 }
 
-// Update patient and doctor dashboards
 function updateDashboard(){
-  const bpm = bpmData[bpmData.length-1] || 0;
-  const temp = tempData[tempData.length-1] || 0;
-  const hum = humData[humData.length-1] || 0;
+  const bpm = bpmData[bpmData.length-1]||0;
+  const temp = tempData[tempData.length-1]||0;
+  const hum = humData[humData.length-1]||0;
 
   document.getElementById('bpmValue').textContent = bpm;
   document.getElementById('tempValue').textContent = temp;
   document.getElementById('humValue').textContent = hum;
 
   const healthScore = Math.round((bpm/120 + temp/40 + hum/100)/3*100);
-  document.getElementById('healthScore').textContent = isNaN(healthScore)? '--' : healthScore;
+  document.getElementById('healthScore').textContent = isNaN(healthScore)? '--':healthScore;
 
   document.getElementById('docBpm').textContent = bpm;
   document.getElementById('docTemp').textContent = temp;
@@ -174,24 +181,15 @@ function updateDashboard(){
   combinedChart.data.datasets[1].data = tempData;
   combinedChart.data.datasets[2].data = humData;
   combinedChart.update();
+
+  // Simple AI suggestion
+  let suggestion = 'All readings normal 👍';
+  if(status==='🔴') suggestion='Alert! Please take immediate action 🚨';
+  else if(status==='🟡') suggestion='Monitor closely ⚠️';
+  document.getElementById('aiSuggestion').textContent = `AI Suggestion: ${suggestion}`;
 }
 
-// AI insights (basic simulation)
-function updateAIInsights(){
-  const tips = [];
-  const bpm = bpmData[bpmData.length-1] || 0;
-  const temp = tempData[tempData.length-1] || 0;
-  const hum = humData[humData.length-1] || 0;
-  if(bpm>100) tips.push("Your heart rate is high ❤️. Consider resting.");
-  if(bpm<60) tips.push("Your heart rate is low ❤️. Light activity recommended.");
-  if(temp>37.5) tips.push("You may have a fever 🌡️. Monitor closely.");
-  if(hum>70) tips.push("High humidity 💧 detected. Stay hydrated.");
-  if(tips.length===0) tips.push("All readings are normal. Keep up the good work!");
-  const ul = document.getElementById('aiTips');
-  ul.innerHTML = tips.map(t=>`<li>${t}</li>`).join('');
-}
-
-// Initial fetch and auto-refresh
+// Initial fetch and auto-refresh every 15 seconds
 fetchThingSpeak();
 setInterval(fetchThingSpeak,15000);
 </script>
