@@ -1,516 +1,257 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>IoT Health Monitor — Professional Demo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IoT Health Monitoring System</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      color: #0d1b2a;
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    header {
+      background-color: #007bff;
+      padding: 15px 0;
+      text-align: center;
+      color: white;
+      font-size: 1.5em;
+      font-weight: 600;
+    }
 
-<style>
-  :root{
-    --bg:#f6f9ff;
-    --card:#ffffff;
-    --accent:#0a74ff;
-    --accent-2:#00c6ff;
-    --muted:#65748b;
-    --radius:12px;
-    --danger:#ff4d4f;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family:'Poppins',sans-serif;
-    background:var(--bg);
-    color:#0b2333;
-    -webkit-font-smoothing:antialiased;
-    scroll-behavior:smooth;
-  }
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #f0f4f8;
+      border-bottom: 2px solid #007bff;
+    }
 
-  /* STICKY NAV */
-  header{
-    position:sticky; top:0; z-index:120;
-    background:linear-gradient(90deg,var(--accent),var(--accent-2));
-    padding:12px 20px; color:white; display:flex; align-items:center; justify-content:space-between;
-    box-shadow:0 6px 18px rgba(10,116,255,0.12);
-  }
-  .brand{font-weight:700; font-size:1.05rem}
-  nav{display:flex; gap:14px}
-  nav a{color:white; text-decoration:none; font-weight:600; padding:6px 8px; border-radius:8px}
-  nav a:hover{background:rgba(255,255,255,0.06)}
+    nav a {
+      text-decoration: none;
+      color: #007bff;
+      padding: 14px 20px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
 
-  /* TOP BANNER IMAGE (only image, separated) */
-  .top-banner{
-    width:100%;
-    height:50vh; /* ~50% of viewport height */
-    background-image:url("https://images.pexels.com/photos/8376288/pexels-photo-8376288.jpeg");
-    background-size:cover;
-    background-position:center;
-    display:block;
-  }
+    nav a:hover {
+      background-color: #007bff;
+      color: white;
+    }
 
-  .container{max-width:1100px; margin:28px auto; padding:0 16px}
+    section {
+      display: none;
+      padding: 30px;
+      text-align: center;
+    }
 
-  /* Intro area under banner */
-  .intro{
-    background:linear-gradient(180deg,#fff,#fbfdff);
-    border-radius:12px;
-    padding:28px;
-    box-shadow:0 10px 30px rgba(10,116,255,0.06);
-    transform:translateY(-36px);
-  }
-  .intro h1{margin:0; color:var(--accent); font-size:2rem}
-  .intro p{margin:10px 0 0; color:var(--muted); font-size:1rem}
+    section.active {
+      display: block;
+    }
 
-  .cta{margin-top:14px; display:flex; gap:10px; flex-wrap:wrap}
-  .btn{padding:10px 16px; border-radius:999px; font-weight:700; cursor:pointer; border:none}
-  .btn.primary{background:var(--accent-2); color:white}
-  .btn.ghost{background:transparent; color:var(--accent); border:1px solid rgba(10,116,255,0.12)}
+    /* Hero Section */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 80vh;
+      background-image: url('https://i.ibb.co/ZJpZ6S1/doctor-healthcare.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
 
-  /* Sections */
-  section{margin-top:36px; padding-bottom:6px}
-  .card{background:var(--card); border-radius:12px; padding:16px; box-shadow:0 8px 24px rgba(11,59,121,0.04)}
+    .hero-text {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 30px 50px;
+      border-radius: 10px;
+    }
 
-  /* Dashboard stats */
-  .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:12px}
-  .stat{background:linear-gradient(180deg,#fff,#fbfdff); padding:12px; border-radius:10px; text-align:center}
-  .stat .value{font-size:1.4rem; font-weight:700; color:var(--accent)}
-  .stat .label{color:var(--muted); margin-top:6px}
+    .hero-text h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
 
-  .dashboard-grid{display:grid; grid-template-columns:320px 1fr; gap:16px; margin-top:12px}
-  .gauges{display:flex; gap:10px; justify-content:center; align-items:center; padding:8px; border-radius:10px}
-  .gauge{width:96px;height:96px; position:relative}
-  .gLabel{text-align:center; margin-top:6px; font-weight:700}
+    .hero-text p {
+      font-size: 1.2em;
+    }
 
-  .chart-wrap{padding:12px; border-radius:10px}
+    footer {
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
 
-  /* Teleconsult / Gym */
-  .two-col{display:grid; grid-template-columns:1fr 420px; gap:16px; align-items:center}
-  .two-col img{width:100%; border-radius:10px}
+    /* Dashboard Elements */
+    .data-box {
+      background-color: #f0f8ff;
+      border: 1px solid #007bff;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px auto;
+      width: 80%;
+      max-width: 700px;
+    }
 
-  /* Reports table */
-  table{width:100%; border-collapse:collapse; margin-top:12px}
-  th,td{padding:10px; border-bottom:1px solid #eef3fb; text-align:left}
-  th{color:var(--muted)}
+    .chart {
+      width: 80%;
+      margin: 30px auto;
+    }
 
-  /* Modal booking */
-  .modal-backdrop{position:fixed; inset:0; background:rgba(8,20,40,0.55); display:none; z-index:300; align-items:center; justify-content:center}
-  .modal{width:100%; max-width:720px; background:white; border-radius:12px; padding:18px; box-shadow:0 20px 60px rgba(10,116,255,0.12)}
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      margin-top: 15px;
+    }
 
-  /* small footer */
-  footer{margin-top:28px; text-align:center; color:var(--muted); padding:18px 0}
+    button:hover {
+      background-color: #0056b3;
+    }
 
-  /* Fade-in animation utilities */
-  .reveal{opacity:0; transform:translateY(12px); transition:all 600ms cubic-bezier(.2,.9,.2,1)}
-  .reveal.show{opacity:1; transform:none}
-
-  @media(max-width:980px){
-    .intro{transform:none}
-    .two-col{grid-template-columns:1fr}
-    .dashboard-grid{grid-template-columns:1fr}
-    nav{display:none} /* simple mobile behavior */
-  }
-</style>
+  </style>
 </head>
 <body>
 
-<header>
-  <div class="brand">IoT Health Monitor</div>
-  <nav aria-label="Main navigation">
-    <a href="#home" onclick="scrollToSection('home')">Home</a>
-    <a href="#dashboard" onclick="scrollToSection('dashboard')">Dashboard</a>
-    <a href="#tele" onclick="scrollToSection('tele')">Doctor</a>
-    <a href="#gym" onclick="scrollToSection('gym')">Gym</a>
-    <a href="#consult" onclick="openBooking()">Consult</a>
-    <a href="#contact" onclick="scrollToSection('contact')">Contact</a>
+  <header>IoT Health Monitoring System</header>
+
+  <nav>
+    <a href="#" onclick="showPage('home')">Home</a>
+    <a href="#" onclick="showPage('dashboard')">Dashboard</a>
+    <a href="#" onclick="showPage('doctor')">Doctor</a>
+    <a href="#" onclick="showPage('gym')">Gym</a>
+    <a href="#" onclick="showPage('consult')">Consult</a>
+    <a href="#" onclick="showPage('contact')">Contact</a>
   </nav>
-</header>
 
-<!-- TOP BANNER IMAGE ONLY -->
-<div class="top-banner" id="home" role="img" aria-label="Healthcare banner image"></div>
-
-<!-- MAIN CONTAINER -->
-<div class="container">
-  <!-- INTRO (separate and below the image) -->
-  <div class="intro reveal" id="intro">
-    <h1>Stay connected to your health</h1>
-    <p>Monitor your heart rate, temperature and humidity in real-time from home or while training — powered by low-cost IoT devices and ThingSpeak. Doctors can remotely monitor patients and provide teleconsultations. Gyms can offer safer training with live heart-rate tracking.</p>
-    <div class="cta">
-      <button class="btn primary" onclick="scrollToSection('dashboard')">View Live Dashboard</button>
-      <button class="btn ghost" onclick="openBooking()">Book Consultation</button>
-    </div>
-  </div>
-
-  <!-- DOCTOR / TELECONSULT SECTION -->
-  <section id="tele" class="reveal">
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap">
-        <div style="flex:1">
-          <h2 style="color:var(--accent); margin:0 0 8px 0">Doctor Monitoring & Teleconsultation</h2>
-          <p style="color:var(--muted)">Allow clinicians to monitor patients from home — view live vitals, export records, and arrange online consultations quickly. This demo includes booking and simulated consult flows.</p>
-          <ul style="color:var(--muted)"><li>Live vitals feed</li><li>CSV export for records</li><li>Book teleconsultation</li></ul>
-          <div style="margin-top:10px">
-            <button class="btn primary" onclick="openBooking()">Book a Consultation</button>
-            <button class="btn ghost" onclick="simulateConsult()">Simulate Consult</button>
-          </div>
-        </div>
-        <div style="width:420px">
-          <img src="https://images.pexels.com/photos/5450140/pexels-photo-5450140.jpeg" alt="Doctor teleconsultation" style="width:100%; border-radius:10px">
-        </div>
+  <!-- HOME PAGE -->
+  <section id="home" class="active">
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Welcome to IoT Health Monitoring</h1>
+        <p>Track your health anywhere — Anytime. Connect with your doctor online and stay fit with real-time data.</p>
       </div>
     </div>
   </section>
 
-  <!-- GYM SECTION -->
-  <section id="gym" class="reveal">
-    <div class="card">
-      <h2 style="color:var(--accent)">Gyms & Fitness Integration</h2>
-      <div class="two-col" style="margin-top:10px">
-        <div>
-          <p style="color:var(--muted)">Use wearable pulse sensors to track gym members during workout classes. Provide trainers a live dashboard, set safe heart rate zones, and export session reports.</p>
-          <ul style="color:var(--muted)"><li>Group dashboards for trainers</li><li>Automated alerts for extreme vitals</li><li>Exportable session CSVs</li></ul>
-        </div>
-        <div>
-          <img src="https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg" alt="Gym monitoring" />
-        </div>
-      </div>
+  <!-- DASHBOARD PAGE -->
+  <section id="dashboard">
+    <h2>Health Monitoring Dashboard</h2>
+    <p>Live health statistics from IoT devices using Arduino, ESP8266, Pulse Sensor, and DHT22.</p>
+    
+    <div class="data-box">
+      <h3>Patient Live Data</h3>
+      <p>💓 Heart Rate: <span id="heartRate">--</span> BPM</p>
+      <p>🌡️ Temperature: <span id="temperature">--</span> °C</p>
+      <p>💧 Humidity: <span id="humidity">--</span> %</p>
+      <button onclick="downloadData()">Download Data</button>
+    </div>
+
+    <div class="chart">
+      <canvas id="healthChart" width="400" height="200"></canvas>
     </div>
   </section>
 
-  <!-- DASHBOARD (ThingSpeak integration) -->
-  <section id="dashboard" class="reveal" style="margin-top:18px">
-    <div class="card">
-      <h2 style="color:var(--accent); margin:0 0 8px 0">Real-Time Dashboard</h2>
-      <p style="color:var(--muted); margin:0 0 12px 0">Live readings (BPM, Temperature, Humidity) fetched from ThingSpeak. Dashboard auto-refreshes every 15 seconds.</p>
-
-      <div class="stats" role="region" aria-label="Latest readings">
-        <div class="stat">
-          <div class="value" id="bpmValue">-- BPM</div>
-          <div class="label">Heart Rate</div>
-        </div>
-        <div class="stat">
-          <div class="value" id="tempValue">-- °C</div>
-          <div class="label">Temperature</div>
-        </div>
-        <div class="stat">
-          <div class="value" id="humValue">-- %</div>
-          <div class="label">Humidity</div>
-        </div>
-      </div>
-
-      <div class="dashboard-grid">
-        <aside class="card" style="min-height:220px">
-          <div style="display:flex; justify-content:space-between; align-items:center">
-            <strong style="color:var(--muted)">Gauges</strong>
-            <small style="color:var(--muted)">Auto-refresh 15s</small>
-          </div>
-
-          <div class="gauges" style="margin-top:12px">
-            <div style="text-align:center">
-              <div class="gauge"><canvas id="gaugeBPM" width="96" height="96"></canvas></div>
-              <div class="gLabel" id="gLabelBPM">--</div>
-            </div>
-            <div style="text-align:center">
-              <div class="gauge"><canvas id="gaugeTemp" width="96" height="96"></canvas></div>
-              <div class="gLabel" id="gLabelTemp">--</div>
-            </div>
-            <div style="text-align:center">
-              <div class="gauge"><canvas id="gaugeHum" width="96" height="96"></canvas></div>
-              <div class="gLabel" id="gLabelHum">--</div>
-            </div>
-          </div>
-
-          <div style="text-align:center; margin-top:12px">
-            <button class="btn ghost" id="refreshNow">Refresh</button>
-            <button class="btn primary" id="downloadCSV">Download CSV</button>
-          </div>
-        </aside>
-
-        <div class="chart-wrap card">
-          <h3 style="margin:0 0 8px 0; color:var(--accent)">History</h3>
-          <canvas id="dataChart" style="width:100%; height:320px"></canvas>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px">
-            <div style="color:var(--muted)">Showing last <strong id="pointsCount">12</strong> readings</div>
-            <div style="color:var(--muted)">Channel: <strong id="channelLabel">3128115</strong></div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- DOCTOR PAGE -->
+  <section id="doctor">
+    <h2>Doctor Portal</h2>
+    <p>Monitor patient health remotely and provide instant feedback through online consultation.</p>
+    <img src="https://i.ibb.co/pwHnDkM/doctor-online.jpg" alt="Doctor Online" width="70%" style="border-radius:10px;">
   </section>
 
-  <!-- REPORTS (optional small table) -->
-  <section id="reports" class="reveal" style="margin-top:18px">
-    <div class="card">
-      <h3 style="margin:0 0 8px 0; color:var(--accent)">Reports & Data</h3>
-      <p style="color:var(--muted)">Download recent readings as CSV for record keeping.</p>
-      <div style="margin-top:10px">
-        <button class="btn primary" id="exportRecent">Download last 500 (CSV)</button>
-      </div>
-    </div>
+  <!-- GYM PAGE -->
+  <section id="gym">
+    <h2>Gym Health Integration</h2>
+    <p>Connect gym equipment and monitor heart rate for fitness tracking in real time.</p>
+    <img src="https://i.ibb.co/6XFm4mD/gym-workout.jpg" alt="Gym Health" width="70%" style="border-radius:10px;">
   </section>
 
-  <!-- Contact / Consultation -->
-  <section id="contact" class="reveal" style="margin-top:18px">
-    <div class="card">
-      <h3 style="margin-top:0; color:var(--accent)">Contact & Bookings</h3>
-      <p style="color:var(--muted)">For demos, gym integrations, or telehealth deployments contact us.</p>
-      <p style="margin-top:6px">Email: <strong><a href="mailto:thapelomokoa.projects@gmail.com">thapelomokoa.projects@gmail.com</a></strong></p>
-      <div style="margin-top:10px">
-        <button class="btn primary" onclick="openBooking()">Book Consultation</button>
-      </div>
-    </div>
+  <!-- CONSULT PAGE -->
+  <section id="consult">
+    <h2>Online Consultation</h2>
+    <p>Book a virtual appointment with your doctor and discuss your health results instantly.</p>
+    <img src="https://i.ibb.co/z8X7gCf/online-consult.jpg" alt="Consult" width="70%" style="border-radius:10px;">
   </section>
 
-  <footer>
-    <p>Developed by <strong>Thapelo Mokoa</strong> — IoT Health Monitor © 2025</p>
-  </footer>
-</div>
+  <!-- CONTACT PAGE -->
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p>📧 Email: support@iothealth.com</p>
+    <p>📞 Phone: +27 65 123 4567</p>
+    <p>🏢 Address: Mabopane, South Africa</p>
+  </section>
 
-<!-- Booking Modal -->
-<div id="bookingModal" class="modal-backdrop" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="bookTitle">
-    <h3 id="bookTitle">Book a Consultation</h3>
-    <p style="color:var(--muted)">Complete details and the mail client will open with your booking request.</p>
-    <form id="bookingForm" style="display:grid; gap:8px; margin-top:10px">
-      <input id="bkName" placeholder="Full name" required style="padding:10px;border-radius:8px;border:1px solid #e6eefc">
-      <input id="bkEmail" placeholder="Email" required style="padding:10px;border-radius:8px;border:1px solid #e6eefc">
-      <input id="bkPhone" placeholder="Phone (optional)" style="padding:10px;border-radius:8px;border:1px solid #e6eefc">
-      <select id="bkReason" style="padding:10px;border-radius:8px;border:1px solid #e6eefc">
-        <option>Remote patient monitoring</option>
-        <option>Gym integration / demo</option>
-        <option>Technical integration</option>
-      </select>
-      <textarea id="bkNotes" rows="4" placeholder="Notes (optional)" style="padding:10px;border-radius:8px;border:1px solid #e6eefc"></textarea>
-      <div style="display:flex; gap:8px; justify-content:flex-end">
-        <button type="button" class="btn ghost" onclick="closeBooking()">Cancel</button>
-        <button type="submit" class="btn primary">Send Booking</button>
-      </div>
-    </form>
-  </div>
-</div>
+  <footer>© 2025 IoT Health Monitoring | Designed by Thapelo Mokoa</footer>
 
-<!-- small alert banner -->
-<div id="alertBanner" style="position:fixed; left:50%; transform:translateX(-50%); top:14px; background:linear-gradient(90deg,var(--danger),#ff876f); color:white; padding:10px 14px; border-radius:999px; display:none; z-index:400"></div>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-/* -------------------------
-   Config (ThingSpeak)
-   ------------------------- */
-const CHANNEL_ID = "3128115";
-const READ_KEY = "K72OYJMYOJZN240T";
-
-/* Small DOM helpers */
-const $ = id => document.getElementById(id);
-function scrollToSection(id){
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.scrollIntoView({behavior:'smooth'});
-}
-
-/* Reveal animations on scroll */
-const reveals = document.querySelectorAll('.reveal');
-const obs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if(e.isIntersecting) e.target.classList.add('show');
-  });
-},{threshold:0.12});
-reveals.forEach(r => obs.observe(r));
-
-/* Booking modal */
-function openBooking(){ $('bookingModal').style.display = 'flex'; $('bookingModal').setAttribute('aria-hidden','false'); $('bkName').focus(); }
-function closeBooking(){ $('bookingModal').style.display = 'none'; $('bookingModal').setAttribute('aria-hidden','true'); }
-document.getElementById('bookingForm').addEventListener('submit', function(e){
-  e.preventDefault();
-  const name = $('bkName').value.trim();
-  const email = $('bkEmail').value.trim();
-  const phone = $('bkPhone').value.trim();
-  const reason = $('bkReason').value;
-  const notes = $('bkNotes').value.trim();
-  if(!name || !email) return alert('Please enter name and email');
-  const subject = encodeURIComponent(`Consultation booking: ${name}`);
-  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nReason: ${reason}\n\nNotes:\n${notes}`);
-  window.location.href = `mailto:thapelomokoa.projects@gmail.com?subject=${subject}&body=${body}`;
-  closeBooking();
-});
-
-/* Simulated consult */
-function simulateConsult(){ alert('Simulated consult — demo only. For production, integrate a secure telehealth/video SDK.'); }
-
-/* -------------------------
-   Charts & Gauges (Chart.js)
-   ------------------------- */
-let gaugeBPM, gaugeTemp, gaugeHum, lineChart;
-const pointsToShow = 12;
-$('pointsCount').innerText = pointsToShow;
-$('channelLabel').innerText = CHANNEL_ID;
-
-function createGauge(canvas, color){
-  return new Chart(canvas.getContext('2d'), {
-    type:'doughnut',
-    data:{ labels:['v','r'], datasets:[{ data:[0,100], backgroundColor:[color,'rgba(220,230,250,0.4)'], borderWidth:0 }] },
-    options:{ rotation:-1.1*Math.PI, circumference:1.2*Math.PI, cutout:'70%', plugins:{legend:{display:false}, tooltip:{enabled:false}}, animation:{duration:700} }
-  });
-}
-
-function createLineChart(canvas){
-  return new Chart(canvas.getContext('2d'), {
-    type:'line',
-    data:{ labels:[], datasets:[
-      { label:'BPM', data:[], borderColor:'rgba(255,70,70,0.95)', backgroundColor:'rgba(255,70,70,0.06)', tension:0.25, pointRadius:2 },
-      { label:'Temp (°C)', data:[], borderColor:'rgba(0,120,255,0.95)', backgroundColor:'rgba(0,120,255,0.06)', tension:0.25, pointRadius:2 },
-      { label:'Humidity (%)', data:[], borderColor:'rgba(0,180,160,0.95)', backgroundColor:'rgba(0,180,160,0.06)', tension:0.25, pointRadius:2 }
-    ]},
-    options:{ responsive:true, plugins:{legend:{position:'bottom'}}, scales:{x:{display:true}, y:{display:true}}}
-  });
-}
-
-/* init visuals */
-gaugeBPM = createGauge($('gaugeBPM'), 'rgba(255,80,80,0.95)');
-gaugeTemp = createGauge($('gaugeTemp'), 'rgba(0,120,255,0.95)');
-gaugeHum = createGauge($('gaugeHum'), 'rgba(0,180,160,0.95)');
-lineChart = createLineChart($('dataChart'));
-
-/* -------------------------
-   ThingSpeak fetch & update
-   ------------------------- */
-function toNumber(v){ const n = parseFloat(v); return isNaN(n) ? null : n; }
-
-async function fetchFeeds(results = pointsToShow){
-  const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_KEY}&results=${results}`;
-  try{
-    const r = await fetch(url);
-    if(!r.ok) throw new Error('Network response not ok');
-    const j = await r.json();
-    return j.feeds || [];
-  }catch(err){
-    console.error('ThingSpeak fetch error', err);
-    return [];
-  }
-}
-
-async function updateDashboard(limit = pointsToShow){
-  const feeds = await fetchFeeds(limit);
-  if(!feeds || feeds.length === 0) return;
-
-  const times = feeds.map(f => new Date(f.created_at).toLocaleTimeString());
-  const bpmArr = feeds.map(f => toNumber(f.field1));
-  const tempArr = feeds.map(f => toNumber(f.field2));
-  const humArr = feeds.map(f => toNumber(f.field3));
-
-  const last = feeds[feeds.length - 1];
-  const lastBPM = toNumber(last.field1);
-  const lastTemp = toNumber(last.field2);
-  const lastHum = toNumber(last.field3);
-
-  // stat cards
-  $('bpmValue').innerText = lastBPM !== null ? `${lastBPM} BPM` : '-- BPM';
-  $('tempValue').innerText = lastTemp !== null ? `${lastTemp} °C` : '-- °C';
-  $('humValue').innerText = lastHum !== null ? `${lastHum} %` : '-- %';
-
-  // mini values in intro (if present)
-  const miniBPM = document.querySelector('#intro .mini-bpm');
-  // gauge percentages
-  const bpmPct = lastBPM !== null ? Math.min(100, Math.round((lastBPM/200)*100)) : 0;
-  const tempPct = lastTemp !== null ? Math.min(100, Math.round(((lastTemp+10)/60)*100)) : 0;
-  const humPct = lastHum !== null ? Math.min(100, Math.round((lastHum/100)*100)) : 0;
-
-  // color zones - simple thresholds
-  function colorFor(metric, value){
-    if(value === null) return 'rgba(180,180,190,0.95)';
-    if(metric === 'bpm'){
-      if(value >= 130) return 'rgba(255,70,70,0.95)';
-      if(value >= 100) return 'rgba(255,170,60,0.95)';
-      return 'rgba(46,204,113,0.95)';
-    } else if(metric === 'temp'){
-      if(value >= 39) return 'rgba(255,70,70,0.95)';
-      if(value >= 37.5) return 'rgba(255,170,60,0.95)';
-      return 'rgba(0,120,255,0.95)';
-    } else {
-      if(value >= 85) return 'rgba(255,70,70,0.95)';
-      if(value >= 65) return 'rgba(255,170,60,0.95)';
-      return 'rgba(0,180,160,0.95)';
+  <script>
+    // Page Navigation
+    function showPage(pageId) {
+      document.querySelectorAll('section').forEach(section => section.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
     }
-  }
 
-  gaugeBPM.data.datasets[0].backgroundColor[0] = colorFor('bpm', lastBPM);
-  gaugeTemp.data.datasets[0].backgroundColor[0] = colorFor('temp', lastTemp);
-  gaugeHum.data.datasets[0].backgroundColor[0] = colorFor('hum', lastHum);
+    // Live Data Simulation (Replace with ThingSpeak API)
+    function updateData() {
+      document.getElementById("heartRate").textContent = Math.floor(60 + Math.random() * 40);
+      document.getElementById("temperature").textContent = (36 + Math.random() * 2).toFixed(1);
+      document.getElementById("humidity").textContent = (40 + Math.random() * 20).toFixed(1);
+    }
+    setInterval(updateData, 3000);
 
-  gaugeBPM.data.datasets[0].data = [bpmPct, 100 - bpmPct];
-  gaugeTemp.data.datasets[0].data = [tempPct, 100 - tempPct];
-  gaugeHum.data.datasets[0].data = [humPct, 100 - humPct];
+    // Chart
+    const ctx = document.getElementById('healthChart').getContext('2d');
+    const healthChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Heart Rate (BPM)',
+          data: [],
+          borderColor: '#007bff',
+          borderWidth: 2,
+          fill: false
+        }]
+      },
+      options: {
+        scales: { y: { beginAtZero: true } }
+      }
+    });
 
-  gaugeBPM.update(); gaugeTemp.update(); gaugeHum.update();
+    setInterval(() => {
+      const time = new Date().toLocaleTimeString();
+      const hr = Math.floor(60 + Math.random() * 40);
+      if (healthChart.data.labels.length > 10) {
+        healthChart.data.labels.shift();
+        healthChart.data.datasets[0].data.shift();
+      }
+      healthChart.data.labels.push(time);
+      healthChart.data.datasets[0].data.push(hr);
+      healthChart.update();
+    }, 3000);
 
-  $('gLabelBPM').innerText = lastBPM !== null ? `${lastBPM} BPM` : '--';
-  $('gLabelTemp').innerText = lastTemp !== null ? `${lastTemp} °C` : '--';
-  $('gLabelHum').innerText = lastHum !== null ? `${lastHum} %` : '--';
-
-  // line chart
-  lineChart.data.labels = times;
-  lineChart.data.datasets[0].data = bpmArr;
-  lineChart.data.datasets[1].data = tempArr;
-  lineChart.data.datasets[2].data = humArr;
-  lineChart.update();
-
-  // optional simple alerts (demo)
-  checkAlerts(lastBPM, lastTemp, lastHum);
-}
-
-/* manual refresh button */
-$('refreshNow').addEventListener('click', () => updateDashboard(pointsToShow));
-
-/* auto refresh */
-updateDashboard(pointsToShow);
-setInterval(() => updateDashboard(pointsToShow), 15000);
-
-/* export CSV */
-$('exportRecent').addEventListener('click', async () => {
-  const feeds = await fetchFeeds(500);
-  let csv = 'created_at,BPM,Temperature,Humidity\n';
-  feeds.forEach(f => csv += `${f.created_at},${f.field1||''},${f.field2||''},${f.field3||''}\n`);
-  const blob = new Blob([csv], {type:'text/csv'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'thingspeak_export.csv'; a.click();
-});
-
-/* Download CSV button inside dashboard (if present) */
-const dlBtn = document.getElementById('downloadCSV');
-if(dlBtn) dlBtn.addEventListener('click', async () => {
-  const feeds = await fetchFeeds(500);
-  let csv = 'created_at,BPM,Temperature,Humidity\n';
-  feeds.forEach(f => csv += `${f.created_at},${f.field1||''},${f.field2||''},${f.field3||''}\n`);
-  const blob = new Blob([csv], {type:'text/csv'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'thingspeak_data.csv'; a.click();
-});
-
-/* Simple alert banner logic (demo) */
-let lastAlertTime = 0;
-function showAlertBanner(msg){
-  const b = document.getElementById('alertBanner');
-  b.textContent = msg;
-  b.style.display = 'block';
-  setTimeout(()=> b.style.display = 'none', 18000);
-}
-function checkAlerts(bpm, temp, hum){
-  const now = Date.now();
-  if(now - lastAlertTime < 1000*60*3) return;
-  if(bpm !== null && bpm >= 130){ showAlertBanner(`ALERT: High heart rate ${bpm} BPM`); lastAlertTime = now; }
-  else if(temp !== null && temp >= 39){ showAlertBanner(`ALERT: High temperature ${temp} °C`); lastAlertTime = now; }
-}
-
-/* Utility fetch for other functions */
-async function fetchThingSpeak(count=12){ return await fetchFeeds(count); }
-
-/* Expose helper for debugging if needed */
-window._updateDashboard = updateDashboard;
-window._fetchThingSpeak = fetchFeeds;
-
-/* Ensure sections reveal on load */
-document.addEventListener('DOMContentLoaded', () => {
-  reveals.forEach(r => r.classList.add('show'));
-});
-</script>
+    // Download data
+    function downloadData() {
+      const data = `Heart Rate: ${document.getElementById("heartRate").textContent} BPM\nTemperature: ${document.getElementById("temperature").textContent} °C\nHumidity: ${document.getElementById("humidity").textContent} %`;
+      const blob = new Blob([data], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "iot_health_data.txt";
+      link.click();
+    }
+  </script>
 </body>
 </html>
