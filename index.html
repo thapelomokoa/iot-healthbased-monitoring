@@ -23,7 +23,6 @@ canvas { width:100% !important; max-width:100%; height:300px !important; }
 table { width:100%; border-collapse:collapse; margin-top:20px; }
 table th, table td { border:1px solid #ccc; padding:10px; text-align:center; }
 table th { background:#4facfe; color:#fff; }
-#alertBox { position:fixed; top:60px; right:20px; background:#ffdddd; padding:15px 20px; border-radius:8px; color:#d8000c; font-weight:bold; box-shadow:0 2px 8px rgba(0,0,0,0.2); display:none; z-index:1000; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -47,9 +46,9 @@ table th { background:#4facfe; color:#fff; }
 <section id="dashboard" class="section">
   <h2>Patient Dashboard</h2>
   <div class="widgets">
-    <div class="widget heartbeat" id="bpmWidget">❤️ <span id="bpmValue">--</span></div>
-    <div class="widget" id="tempWidget">🌡️ Temp: <span id="tempValue">--</span> °C</div>
-    <div class="widget" id="humWidget">💧 Humidity: <span id="humValue">--</span> %</div>
+    <div class="widget heartbeat">❤️ <span id="bpmValue">--</span></div>
+    <div class="widget">🌡️ Temp: <span id="tempValue">--</span> °C</div>
+    <div class="widget">💧 Humidity: <span id="humValue">--</span> %</div>
     <div class="widget">Health Score: <span id="healthScore">--</span></div>
   </div>
   <canvas id="combinedChart"></canvas>
@@ -75,17 +74,21 @@ table th { background:#4facfe; color:#fff; }
 <section id="gym" class="section">
   <h2>Gym Dashboard</h2>
   <p>Monitor multiple members' heart rates and performance here.</p>
+  
+  <div id="gymCharts" style="display:flex; flex-wrap:wrap; gap:20px;"></div>
+  
+  <h3>Live Gym Leaderboard</h3>
+  <ul id="gymLeaderboard" style="list-style:none; padding:0;"></ul>
 </section>
 
-<!-- Alert Box -->
-<div id="alertBox"></div>
+<footer style="text-align:center; padding:20px;">Contact info | Privacy Policy | Terms of Service</footer>
 
 <script>
 const CHANNEL_ID='3128115';
 const READ_KEY='K72OYJMYOJZN240T';
 let bpmData=[], tempData=[], humData=[];
 
-// Chart.js setup
+// Patient Chart
 const ctx = document.getElementById('combinedChart').getContext('2d');
 const combinedChart = new Chart(ctx, {
   type: 'line',
@@ -94,39 +97,10 @@ const combinedChart = new Chart(ctx, {
     { label:'Temperature 🌡️', data:[], borderColor:'orange', fill:false },
     { label:'Humidity 💧', data:[], borderColor:'blue', fill:false }
   ]},
-  options: {
-    responsive:true,
-    interaction:{mode:'index', intersect:false},
-    plugins:{legend:{display:true}},
-    scales:{y:{beginAtZero:true}}
-  }
+  options: { responsive:true, interaction:{mode:'index', intersect:false}, plugins:{legend:{display:true}}, scales:{y:{beginAtZero:true}} }
 });
 
-// Queued alerts setup
-const alertQueue = [];
-let alertActive = false;
-
-function showQueuedAlert(message){
-  alertQueue.push(message);
-  if(!alertActive) displayNextAlert();
-}
-
-function displayNextAlert(){
-  if(alertQueue.length === 0){
-    alertActive = false;
-    return;
-  }
-  alertActive = true;
-  const alertBox = document.getElementById('alertBox');
-  alertBox.textContent = alertQueue.shift();
-  alertBox.style.display = 'block';
-  setTimeout(()=>{
-    alertBox.style.display = 'none';
-    setTimeout(displayNextAlert, 500); // short pause
-  }, 5000);
-}
-
-// Function to fetch ThingSpeak data
+// Fetch ThingSpeak Data
 async function fetchThingSpeak(){
   try{
     const res = await fetch(`https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_KEY}&results=20`);
@@ -138,22 +112,19 @@ async function fetchThingSpeak(){
   }catch(e){console.error(e);}
 }
 
-// Update dashboard and alerts
+// Update Patient Dashboard
 function updateDashboard(){
   const bpm = bpmData[bpmData.length-1] || 0;
   const temp = tempData[tempData.length-1] || 0;
   const hum = humData[humData.length-1] || 0;
 
-  // Update widgets
   document.getElementById('bpmValue').textContent = bpm;
   document.getElementById('tempValue').textContent = temp;
   document.getElementById('humValue').textContent = hum;
 
-  // Health score example
   const healthScore = Math.round((bpm/120 + temp/40 + hum/100)/3*100);
   document.getElementById('healthScore').textContent = isNaN(healthScore)? '--' : healthScore;
 
-  // Doctor table
   document.getElementById('docBpm').textContent = bpm;
   document.getElementById('docTemp').textContent = temp;
   document.getElementById('docHum').textContent = hum;
@@ -162,14 +133,6 @@ function updateDashboard(){
   else if(bpm<60 || temp<36) status='🟡';
   document.getElementById('docStatus').textContent = status;
 
-  // Queue alerts
-  if(bpm>100) showQueuedAlert(`⚠️ High BPM detected: ${bpm}`);
-  if(bpm<60) showQueuedAlert(`⚠️ Low BPM detected: ${bpm}`);
-  if(temp>38) showQueuedAlert(`🌡️ High Temp: ${temp}°C`);
-  if(temp<36) showQueuedAlert(`🌡️ Low Temp: ${temp}°C`);
-  if(hum>70) showQueuedAlert(`💧 High Humidity: ${hum}%`);
-
-  // Update chart
   combinedChart.data.labels = bpmData.map((_,i)=>i+1);
   combinedChart.data.datasets[0].data = bpmData;
   combinedChart.data.datasets[1].data = tempData;
@@ -177,9 +140,112 @@ function updateDashboard(){
   combinedChart.update();
 }
 
-// Initial fetch and interval
+// Initial fetch & auto-refresh
 fetchThingSpeak();
 setInterval(fetchThingSpeak,15000);
+
+// Gym Dashboard
+const gymChartsContainer = document.getElementById('gymCharts');
+const gymLeaderboard = document.getElementById('gymLeaderboard');
+
+// Gym members example
+const gymMembers = [
+  { name: 'Member 1', bpmData: [], tempData: [], humData: [] },
+  { name: 'Member 2', bpmData: [], tempData: [], humData: [] },
+  { name: 'Member 3', bpmData: [], tempData: [], humData: [] }
+];
+
+// Create member charts
+gymMembers.forEach(member => {
+  const chartWrapper = document.createElement('div');
+  chartWrapper.style.width = '300px';
+  chartWrapper.style.minWidth = '300px';
+  chartWrapper.style.height = '220px';
+  chartWrapper.style.border = '2px solid #ccc';
+  chartWrapper.style.borderRadius = '12px';
+  chartWrapper.style.padding = '5px';
+  chartWrapper.style.position = 'relative';
+  chartWrapper.style.display = 'flex';
+  chartWrapper.style.flexDirection = 'column';
+  chartWrapper.style.alignItems = 'center';
+  chartWrapper.style.justifyContent = 'center';
+  gymChartsContainer.appendChild(chartWrapper);
+
+  const alertIcon = document.createElement('div');
+  alertIcon.textContent = '⚠️';
+  alertIcon.style.position = 'absolute';
+  alertIcon.style.top = '5px';
+  alertIcon.style.right = '5px';
+  alertIcon.style.display = 'none';
+  chartWrapper.appendChild(alertIcon);
+
+  const ctx = document.createElement('canvas');
+  chartWrapper.appendChild(ctx);
+
+  member.chart = new Chart(ctx.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        { label: 'BPM ❤️', data: [], borderColor: 'red', fill: false },
+        { label: 'Temp 🌡️', data: [], borderColor: 'orange', fill: false },
+        { label: 'Humidity 💧', data: [], borderColor: 'blue', fill: false }
+      ]
+    },
+    options: { responsive:true, interaction:{mode:'index', intersect:false}, plugins:{legend:{display:true}}, scales:{y:{beginAtZero:true}} }
+  });
+
+  member.wrapper = chartWrapper;
+  member.alertIcon = alertIcon;
+});
+
+// Update Gym Dashboard
+function updateGym() {
+  let leaderboardData = [];
+  gymMembers.forEach(member => {
+    const bpm = Math.floor(Math.random()*60)+60;
+    const temp = Math.floor(Math.random()*5)+36;
+    const hum = Math.floor(Math.random()*30)+40;
+
+    member.bpmData.push(bpm);
+    member.tempData.push(temp);
+    member.humData.push(hum);
+
+    if(member.bpmData.length>20) member.bpmData.shift();
+    if(member.tempData.length>20) member.tempData.shift();
+    if(member.humData.length>20) member.humData.shift();
+
+    member.chart.data.labels = member.bpmData.map((_,i)=>i+1);
+    member.chart.data.datasets[0].data = member.bpmData;
+    member.chart.data.datasets[1].data = member.tempData;
+    member.chart.data.datasets[2].data = member.humData;
+    member.chart.update();
+
+    if(bpm>100 || temp>38 || hum>70) {
+      member.wrapper.style.border = '3px solid red';
+      member.alertIcon.style.display = 'block';
+    } else {
+      member.wrapper.style.border = '2px solid #ccc';
+      member.alertIcon.style.display = 'none';
+    }
+
+    leaderboardData.push({ name: member.name, bpm, temp, hum, alert: bpm>100||temp>38||hum>70 });
+  });
+
+  leaderboardData.sort((a,b)=>b.bpm - a.bpm);
+  gymLeaderboard.innerHTML='';
+  leaderboardData.forEach(item=>{
+    const li = document.createElement('li');
+    li.style.padding='8px';
+    li.style.borderBottom='1px solid #ccc';
+    li.textContent = `${item.name} | BPM: ${item.bpm} | Temp: ${item.temp}°C | Humidity: ${item.hum}% ${item.alert?'⚠️':''}`;
+    gymLeaderboard.appendChild(li);
+  });
+}
+
+// Refresh gym dashboard every 15s
+updateGym();
+setInterval(updateGym,15000);
 </script>
 
 </body>
