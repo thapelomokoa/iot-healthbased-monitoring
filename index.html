@@ -1,188 +1,189 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>IoT Health Monitor — Professional Demo</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>IoT Health Monitor — Professional Demo</title>
 
-  <!-- Fonts & Chart.js -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <style>
-    :root{
-      --bg: #f6f9ff;
-      --card: #ffffff;
-      --accent: #0a74ff;
-      --accent2: #00c6ff;
-      --muted: #65748b;
-      --radius: 14px;
-      --danger: #ff4d4f;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:'Poppins',sans-serif;
-      background: linear-gradient(180deg,var(--bg), #eef4ff);
-      color:#0d2233;
-      -webkit-font-smoothing:antialiased;
-    }
+<style>
+  :root{
+    --bg:#f6f9ff;
+    --card:#ffffff;
+    --accent:#0a74ff;
+    --accent-2:#00c6ff;
+    --muted:#65748b;
+    --radius:12px;
+    --danger:#ff4d4f;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:var(--bg);
+    color:#0b2333;
+    -webkit-font-smoothing:antialiased;
+    scroll-behavior:smooth;
+  }
 
-    /* Header */
-    header{
-      display:flex; justify-content:space-between; align-items:center;
-      padding:14px 28px; background:linear-gradient(90deg,var(--accent),var(--accent2));
-      color:white; position:sticky; top:0; z-index:60; box-shadow:0 6px 18px rgba(10,116,255,0.12);
-    }
-    .brand { font-weight:600; font-size:1.05rem; }
-    nav{display:flex; gap:12px}
-    nav a{color:rgba(255,255,255,0.95); text-decoration:none; font-weight:600}
-    nav a:hover{text-decoration:underline; opacity:0.95}
+  /* STICKY NAV */
+  header{
+    position:sticky; top:0; z-index:120;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    padding:12px 20px; color:white; display:flex; align-items:center; justify-content:space-between;
+    box-shadow:0 6px 18px rgba(10,116,255,0.12);
+  }
+  .brand{font-weight:700; font-size:1.05rem}
+  nav{display:flex; gap:14px}
+  nav a{color:white; text-decoration:none; font-weight:600; padding:6px 8px; border-radius:8px}
+  nav a:hover{background:rgba(255,255,255,0.06)}
 
-    .container{max-width:1200px; margin:28px auto; padding:0 18px}
+  /* TOP BANNER IMAGE (only image, separated) */
+  .top-banner{
+    width:100%;
+    height:50vh; /* ~50% of viewport height */
+    background-image:url("https://images.pexels.com/photos/8376288/pexels-photo-8376288.jpeg");
+    background-size:cover;
+    background-position:center;
+    display:block;
+  }
 
-    /* Hero with Pexels background */
-    .hero {
-      height:86vh;
-      display:flex; align-items:center; gap:28px;
-      border-radius:16px; overflow:hidden; position:relative;
-      box-shadow:0 18px 60px rgba(10,116,255,0.06);
-      background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.12));
-    }
-    .hero .bg {
-      position:absolute; inset:0; background-image: url("https://images.pexels.com/photos/8376288/pexels-photo-8376288.jpeg");
-      background-size:cover; background-position:center; filter:brightness(0.8);
-    }
-    .hero .overlay { position:absolute; inset:0; background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06)); }
-    .hero-inner { position:relative; z-index:2; display:flex; width:100%; align-items:center; justify-content:space-between; padding:36px; }
-    .hero-left { max-width:620px; color:white; }
-    .hero h1 { font-size:2.6rem; margin:0 0 10px 0; text-shadow: 1px 2px 8px rgba(0,0,0,0.35); }
-    .hero p { color: #eaf2ff; font-size:1.05rem; margin:0 0 18px 0; max-width:520px; text-shadow: 1px 2px 6px rgba(0,0,0,0.25); }
-    .cta { display:flex; gap:12px; flex-wrap:wrap; }
-    .btn { padding:12px 18px; border-radius:999px; font-weight:700; border:none; cursor:pointer; }
-    .btn.primary { background:var(--accent2); color:white; box-shadow:0 10px 30px rgba(0,198,255,0.12); }
-    .btn.ghost { background:transparent; color:white; border:1px solid rgba(255,255,255,0.14); }
+  .container{max-width:1100px; margin:28px auto; padding:0 16px}
 
-    /* small hero card to right */
-    .hero-card { background:rgba(255,255,255,0.12); border-radius:12px; padding:16px; width:360px; color:white; box-shadow: 0 8px 30px rgba(0,0,0,0.18); }
-    .hero-card h4 { margin:0 0 8px 0; font-size:1.05rem; }
-    .hero-card p { margin:0; font-size:0.95rem; color:#f1f7ff; }
+  /* Intro area under banner */
+  .intro{
+    background:linear-gradient(180deg,#fff,#fbfdff);
+    border-radius:12px;
+    padding:28px;
+    box-shadow:0 10px 30px rgba(10,116,255,0.06);
+    transform:translateY(-36px);
+  }
+  .intro h1{margin:0; color:var(--accent); font-size:2rem}
+  .intro p{margin:10px 0 0; color:var(--muted); font-size:1rem}
 
-    /* Main sections */
-    .section { padding:42px 0; }
-    .card { background:var(--card); border-radius:12px; padding:16px; box-shadow:0 8px 24px rgba(11,59,121,0.04); }
+  .cta{margin-top:14px; display:flex; gap:10px; flex-wrap:wrap}
+  .btn{padding:10px 16px; border-radius:999px; font-weight:700; cursor:pointer; border:none}
+  .btn.primary{background:var(--accent-2); color:white}
+  .btn.ghost{background:transparent; color:var(--accent); border:1px solid rgba(10,116,255,0.12)}
 
-    /* Dashboard area */
-    .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:16px; }
-    .stat { padding:14px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfdff); text-align:center; }
-    .stat .value { font-size:1.6rem; font-weight:700; color:var(--accent); }
-    .stat .label { color:var(--muted); margin-top:6px; }
+  /* Sections */
+  section{margin-top:36px; padding-bottom:6px}
+  .card{background:var(--card); border-radius:12px; padding:16px; box-shadow:0 8px 24px rgba(11,59,121,0.04)}
 
-    .dashboard-row { display:grid; grid-template-columns:320px 1fr; gap:18px; margin-top:16px; align-items:start; }
-    .gauges { display:flex; gap:12px; justify-content:center; align-items:center; padding:10px; border-radius:10px; background:linear-gradient(180deg,#fff,#f7fbff); }
-    .gauge { width:96px; height:96px; position:relative; }
-    .gLabel { position:relative; z-index:3; font-weight:700; text-align:center; margin-top:6px; }
+  /* Dashboard stats */
+  .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:12px}
+  .stat{background:linear-gradient(180deg,#fff,#fbfdff); padding:12px; border-radius:10px; text-align:center}
+  .stat .value{font-size:1.4rem; font-weight:700; color:var(--accent)}
+  .stat .label{color:var(--muted); margin-top:6px}
 
-    .chart-wrap { padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfdff); }
+  .dashboard-grid{display:grid; grid-template-columns:320px 1fr; gap:16px; margin-top:12px}
+  .gauges{display:flex; gap:10px; justify-content:center; align-items:center; padding:8px; border-radius:10px}
+  .gauge{width:96px;height:96px; position:relative}
+  .gLabel{text-align:center; margin-top:6px; font-weight:700}
 
-    /* Teleconsultation section */
-    .tele { display:grid; grid-template-columns:1fr 420px; gap:18px; align-items:center; }
-    .tele .callout { padding:16px; border-radius:12px; background:linear-gradient(180deg,#fff,#f7fbff); }
+  .chart-wrap{padding:12px; border-radius:10px}
 
-    /* Gym section */
-    .gym { display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:center; }
-    .gym img { width:100%; border-radius:10px; }
+  /* Teleconsult / Gym */
+  .two-col{display:grid; grid-template-columns:1fr 420px; gap:16px; align-items:center}
+  .two-col img{width:100%; border-radius:10px}
 
-    /* Reports table */
-    table { width:100%; border-collapse:collapse; margin-top:12px; }
-    th,td { padding:10px; border-bottom:1px solid #eef3fb; text-align:left; font-size:0.95rem; }
-    th { color:var(--muted); }
+  /* Reports table */
+  table{width:100%; border-collapse:collapse; margin-top:12px}
+  th,td{padding:10px; border-bottom:1px solid #eef3fb; text-align:left}
+  th{color:var(--muted)}
 
-    /* Contact modal */
-    .modal-backdrop { position:fixed; inset:0; background:rgba(8,20,40,0.6); display:none; justify-content:center; align-items:center; z-index:200; }
-    .modal { width:100%; max-width:720px; background:white; border-radius:12px; padding:18px; box-shadow:0 20px 60px rgba(10,116,255,0.12); }
+  /* Modal booking */
+  .modal-backdrop{position:fixed; inset:0; background:rgba(8,20,40,0.55); display:none; z-index:300; align-items:center; justify-content:center}
+  .modal{width:100%; max-width:720px; background:white; border-radius:12px; padding:18px; box-shadow:0 20px 60px rgba(10,116,255,0.12)}
 
-    /* Footer */
-    footer { margin-top:22px; text-align:center; color:var(--muted); padding:20px 0; }
+  /* small footer */
+  footer{margin-top:28px; text-align:center; color:var(--muted); padding:18px 0}
 
-    /* Admin floating (optional) */
-    .admin-floating { position:fixed; right:18px; bottom:18px; background:var(--card); border-radius:12px; padding:10px; box-shadow:0 12px 40px rgba(10,116,255,0.08); z-index:100; font-size:0.85rem; }
+  /* Fade-in animation utilities */
+  .reveal{opacity:0; transform:translateY(12px); transition:all 600ms cubic-bezier(.2,.9,.2,1)}
+  .reveal.show{opacity:1; transform:none}
 
-    @media(max-width:980px){
-      .hero { height:auto; flex-direction:column; }
-      .hero-inner { flex-direction:column; align-items:flex-start; padding:22px; }
-      .hero-card { width:100%; margin-top:18px; }
-      .dashboard-row{grid-template-columns:1fr}
-      .tele{grid-template-columns:1fr}
-      .gym{grid-template-columns:1fr}
-    }
-  </style>
+  @media(max-width:980px){
+    .intro{transform:none}
+    .two-col{grid-template-columns:1fr}
+    .dashboard-grid{grid-template-columns:1fr}
+    nav{display:none} /* simple mobile behavior */
+  }
+</style>
 </head>
 <body>
 
 <header>
   <div class="brand">IoT Health Monitor</div>
-  <nav aria-label="Main">
-    <a href="#home" onclick="navigateTo('home')">Home</a>
-    <a href="#dashboard" onclick="navigateTo('dashboard')">Dashboard</a>
-    <a href="#tele" onclick="navigateTo('tele')">Doctor</a>
-    <a href="#gym" onclick="navigateTo('gym')">Gym</a>
-    <a href="#about" onclick="navigateTo('about')">About</a>
-    <a href="#contact" onclick="navigateTo('contact')">Contact</a>
+  <nav aria-label="Main navigation">
+    <a href="#home" onclick="scrollToSection('home')">Home</a>
+    <a href="#dashboard" onclick="scrollToSection('dashboard')">Dashboard</a>
+    <a href="#tele" onclick="scrollToSection('tele')">Doctor</a>
+    <a href="#gym" onclick="scrollToSection('gym')">Gym</a>
+    <a href="#consult" onclick="openBooking()">Consult</a>
+    <a href="#contact" onclick="scrollToSection('contact')">Contact</a>
   </nav>
 </header>
 
-<main class="container">
+<!-- TOP BANNER IMAGE ONLY -->
+<div class="top-banner" id="home" role="img" aria-label="Healthcare banner image"></div>
 
-  <!-- HERO -->
-  <section id="home" class="section">
-    <div class="hero" role="region" aria-label="Hero">
-      <div class="bg" aria-hidden="true"></div>
-      <div class="overlay" aria-hidden="true"></div>
+<!-- MAIN CONTAINER -->
+<div class="container">
+  <!-- INTRO (separate and below the image) -->
+  <div class="intro reveal" id="intro">
+    <h1>Stay connected to your health</h1>
+    <p>Monitor your heart rate, temperature and humidity in real-time from home or while training — powered by low-cost IoT devices and ThingSpeak. Doctors can remotely monitor patients and provide teleconsultations. Gyms can offer safer training with live heart-rate tracking.</p>
+    <div class="cta">
+      <button class="btn primary" onclick="scrollToSection('dashboard')">View Live Dashboard</button>
+      <button class="btn ghost" onclick="openBooking()">Book Consultation</button>
+    </div>
+  </div>
 
-      <div class="hero-inner">
-        <div class="hero-left">
-          <h1>Stay connected to your health — anywhere</h1>
-          <p>Real-time heart rate, temperature and humidity monitoring. Designed for remote patient monitoring, teleconsultations, and gym safety programs.</p>
-          <div class="cta">
-            <button class="btn primary" onclick="navigateTo('dashboard')">View Live Dashboard</button>
-            <button class="btn ghost" onclick="openBooking()">Book Consultation</button>
-          </div>
-
-          <div style="margin-top:18px" class="card">
-            <h4 style="margin:0 0 8px 0; color:#fff">Why this system?</h4>
-            <p style="color:#e8f5ff; margin:0">Secure, low-cost IoT hardware + ThingSpeak analytics — ideal for clinics and fitness centers who want live remote monitoring and quick intervention.</p>
+  <!-- DOCTOR / TELECONSULT SECTION -->
+  <section id="tele" class="reveal">
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap">
+        <div style="flex:1">
+          <h2 style="color:var(--accent); margin:0 0 8px 0">Doctor Monitoring & Teleconsultation</h2>
+          <p style="color:var(--muted)">Allow clinicians to monitor patients from home — view live vitals, export records, and arrange online consultations quickly. This demo includes booking and simulated consult flows.</p>
+          <ul style="color:var(--muted)"><li>Live vitals feed</li><li>CSV export for records</li><li>Book teleconsultation</li></ul>
+          <div style="margin-top:10px">
+            <button class="btn primary" onclick="openBooking()">Book a Consultation</button>
+            <button class="btn ghost" onclick="simulateConsult()">Simulate Consult</button>
           </div>
         </div>
-
-        <div class="hero-card" aria-hidden="false">
-          <h4 style="margin:0 0 8px 0">Live demo</h4>
-          <p style="margin:0 0 12px 0; color:#f1f7ff">BPM, Temp and Humidity display live below. Use the dashboard to monitor patients at home or members in a gym.</p>
-          <div style="display:flex; gap:10px; margin-top:10px">
-            <div style="text-align:center">
-              <div style="font-size:1.2rem; font-weight:700; color:#fff" id="miniBPM">--</div>
-              <div style="font-size:0.85rem; color:#e8f7ff">BPM</div>
-            </div>
-            <div style="text-align:center">
-              <div style="font-size:1.2rem; font-weight:700; color:#fff" id="miniTemp">--</div>
-              <div style="font-size:0.85rem; color:#e8f7ff">°C</div>
-            </div>
-            <div style="text-align:center">
-              <div style="font-size:1.2rem; font-weight:700; color:#fff" id="miniHum">--</div>
-              <div style="font-size:0.85rem; color:#e8f7ff">%</div>
-            </div>
-          </div>
+        <div style="width:420px">
+          <img src="https://images.pexels.com/photos/5450140/pexels-photo-5450140.jpeg" alt="Doctor teleconsultation" style="width:100%; border-radius:10px">
         </div>
       </div>
     </div>
   </section>
 
-  <!-- DASHBOARD -->
-  <section id="dashboard" class="section">
+  <!-- GYM SECTION -->
+  <section id="gym" class="reveal">
     <div class="card">
-      <h2 style="color:var(--accent); margin:0 0 8px 0">Real-Time Health Dashboard</h2>
-      <p style="color:var(--muted); margin:0 0 12px 0">Live readings from the IoT sensors (ThingSpeak channel). Refreshes automatically.</p>
+      <h2 style="color:var(--accent)">Gyms & Fitness Integration</h2>
+      <div class="two-col" style="margin-top:10px">
+        <div>
+          <p style="color:var(--muted)">Use wearable pulse sensors to track gym members during workout classes. Provide trainers a live dashboard, set safe heart rate zones, and export session reports.</p>
+          <ul style="color:var(--muted)"><li>Group dashboards for trainers</li><li>Automated alerts for extreme vitals</li><li>Exportable session CSVs</li></ul>
+        </div>
+        <div>
+          <img src="https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg" alt="Gym monitoring" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD (ThingSpeak integration) -->
+  <section id="dashboard" class="reveal" style="margin-top:18px">
+    <div class="card">
+      <h2 style="color:var(--accent); margin:0 0 8px 0">Real-Time Dashboard</h2>
+      <p style="color:var(--muted); margin:0 0 12px 0">Live readings (BPM, Temperature, Humidity) fetched from ThingSpeak. Dashboard auto-refreshes every 15 seconds.</p>
 
       <div class="stats" role="region" aria-label="Latest readings">
         <div class="stat">
@@ -199,24 +200,24 @@
         </div>
       </div>
 
-      <div class="dashboard-row">
-        <aside class="card">
+      <div class="dashboard-grid">
+        <aside class="card" style="min-height:220px">
           <div style="display:flex; justify-content:space-between; align-items:center">
-            <strong style="color:var(--muted)">Live Gauges</strong>
-            <small style="color:var(--muted)">Auto-refresh: 15s</small>
+            <strong style="color:var(--muted)">Gauges</strong>
+            <small style="color:var(--muted)">Auto-refresh 15s</small>
           </div>
 
           <div class="gauges" style="margin-top:12px">
-            <div class="gauge">
-              <canvas id="gaugeBPM" width="96" height="96"></canvas>
+            <div style="text-align:center">
+              <div class="gauge"><canvas id="gaugeBPM" width="96" height="96"></canvas></div>
               <div class="gLabel" id="gLabelBPM">--</div>
             </div>
-            <div class="gauge">
-              <canvas id="gaugeTemp" width="96" height="96"></canvas>
+            <div style="text-align:center">
+              <div class="gauge"><canvas id="gaugeTemp" width="96" height="96"></canvas></div>
               <div class="gLabel" id="gLabelTemp">--</div>
             </div>
-            <div class="gauge">
-              <canvas id="gaugeHum" width="96" height="96"></canvas>
+            <div style="text-align:center">
+              <div class="gauge"><canvas id="gaugeHum" width="96" height="96"></canvas></div>
               <div class="gLabel" id="gLabelHum">--</div>
             </div>
           </div>
@@ -227,8 +228,8 @@
           </div>
         </aside>
 
-        <div class="chart-wrap">
-          <h3 style="margin:0 0 8px 0; color:var(--accent)">History (latest readings)</h3>
+        <div class="chart-wrap card">
+          <h3 style="margin:0 0 8px 0; color:var(--accent)">History</h3>
           <canvas id="dataChart" style="width:100%; height:320px"></canvas>
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px">
             <div style="color:var(--muted)">Showing last <strong id="pointsCount">12</strong> readings</div>
@@ -239,81 +240,24 @@
     </div>
   </section>
 
-  <!-- TELECONSULTATION -->
-  <section id="tele" class="section">
-    <div class="tele card">
-      <div class="callout">
-        <h3 style="margin-top:0; color:var(--accent)">Doctor Monitoring & Teleconsultation</h3>
-        <p style="color:var(--muted)">Doctors can monitor patients remotely and start online consultations from the portal. The patient shares live vitals; the clinician can advise, schedule a video consult, or request escalation.</p>
-
-        <ul style="color:var(--muted)">
-          <li>Real-time vitals feed (BPM, Temp, Humidity)</li>
-          <li>Safe CSV export for medical records</li>
-          <li>Book and schedule teleconsultation with the built-in form</li>
-        </ul>
-
-        <div style="margin-top:12px">
-          <button class="btn primary" onclick="openBooking()">Book Consultation</button>
-          <button class="btn ghost" onclick="simulateConsult()">Start simulated consult</button>
-        </div>
-      </div>
-
-      <div>
-        <div style="border-radius:10px; overflow:hidden">
-          <img src="https://images.pexels.com/photos/5450140/pexels-photo-5450140.jpeg" alt="Doctor teleconsultation" style="width:100%; display:block">
-        </div>
+  <!-- REPORTS (optional small table) -->
+  <section id="reports" class="reveal" style="margin-top:18px">
+    <div class="card">
+      <h3 style="margin:0 0 8px 0; color:var(--accent)">Reports & Data</h3>
+      <p style="color:var(--muted)">Download recent readings as CSV for record keeping.</p>
+      <div style="margin-top:10px">
+        <button class="btn primary" id="exportRecent">Download last 500 (CSV)</button>
       </div>
     </div>
   </section>
 
-  <!-- GYM / FITNESS -->
-  <section id="gym" class="section">
+  <!-- Contact / Consultation -->
+  <section id="contact" class="reveal" style="margin-top:18px">
     <div class="card">
-      <h3 style="margin-top:0;color:var(--accent)">Gym & Fitness Monitoring</h3>
-      <p style="color:var(--muted)">Gyms can provide wearable sensors to track members' heart rate during workouts, enabling safer training, alerts if heart rate is dangerously high, and personalized training logs.</p>
-
-      <div class="gym" style="margin-top:12px">
-        <div>
-          <img src="https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg" alt="Gym wearable" />
-        </div>
-        <div>
-          <h4>Sell it to gyms</h4>
-          <p style="color:var(--muted)">Use the dashboard as a value-add for gym memberships: live group dashboards for trainers, automated alerts, and exportable session reports. Perfect for small boutique gyms and PT studios.</p>
-          <ul style="color:var(--muted)">
-            <li>Wearable integration (smartwatch/pulse sensor)</li>
-            <li>Group monitoring for classes</li>
-            <li>Downloadable session CSVs for member progress</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about" class="section">
-    <div class="card">
-      <h3 style="margin-top:0;color:var(--accent)">About The Project</h3>
-      <p style="color:var(--muted)">IoT Health Monitoring System uses NodeMCU/Arduino to collect sensor data and publishes to ThingSpeak. This professional demo visualizes and exports data and supports teleconsultation workflows.</p>
-
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px">
-        <div>
-          <h4>Hardware</h4>
-          <p style="color:var(--muted)">ESP8266 / NodeMCU, DHT22 (temp/humidity), Pulse sensor (heart rate).</p>
-        </div>
-        <div>
-          <h4>Software</h4>
-          <p style="color:var(--muted)">ThingSpeak used for data store; frontend uses Chart.js for visualizations. Server-side webhooks can be added for automated alerts (SendGrid/Twilio).</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact" class="section">
-    <div class="card">
-      <h3 style="margin-top:0;color:var(--accent)">Contact & Bookings</h3>
-      <p style="color:var(--muted)">Use the booking form (opens modal) to request a demo or schedule a consultation. The form uses mailto: to open your email client.</p>
-      <div style="margin-top:12px">
+      <h3 style="margin-top:0; color:var(--accent)">Contact & Bookings</h3>
+      <p style="color:var(--muted)">For demos, gym integrations, or telehealth deployments contact us.</p>
+      <p style="margin-top:6px">Email: <strong><a href="mailto:thapelomokoa.projects@gmail.com">thapelomokoa.projects@gmail.com</a></strong></p>
+      <div style="margin-top:10px">
         <button class="btn primary" onclick="openBooking()">Book Consultation</button>
       </div>
     </div>
@@ -322,26 +266,24 @@
   <footer>
     <p>Developed by <strong>Thapelo Mokoa</strong> — IoT Health Monitor © 2025</p>
   </footer>
-</main>
+</div>
 
-<!-- Booking / Contact Modal -->
-<div id="modal" class="modal-backdrop" style="display:none; align-items:center; justify-content:center;">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <h3 id="modalTitle" style="margin-top:0">Book Consultation</h3>
-    <p style="color:var(--muted)">Fill in details and we will contact you to arrange the teleconsultation. This opens your mail client with the booking info (demo behavior).</p>
-
-    <form id="bookingForm" style="display:grid; gap:8px; margin-top:12px">
-      <input id="bkName" placeholder="Your full name" required style="padding:10px; border-radius:8px; border:1px solid #e6eefc">
-      <input id="bkEmail" type="email" placeholder="Email" required style="padding:10px; border-radius:8px; border:1px solid #e6eefc">
-      <input id="bkPhone" placeholder="Phone (optional)" style="padding:10px; border-radius:8px; border:1px solid #e6eefc">
-      <select id="bkReason" style="padding:10px; border-radius:8px; border:1px solid #e6eefc">
-        <option>General check / remote monitoring</option>
-        <option>Gym member monitoring / demo</option>
-        <option>Technical integration / API</option>
+<!-- Booking Modal -->
+<div id="bookingModal" class="modal-backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="bookTitle">
+    <h3 id="bookTitle">Book a Consultation</h3>
+    <p style="color:var(--muted)">Complete details and the mail client will open with your booking request.</p>
+    <form id="bookingForm" style="display:grid; gap:8px; margin-top:10px">
+      <input id="bkName" placeholder="Full name" required style="padding:10px;border-radius:8px;border:1px solid #e6eefc">
+      <input id="bkEmail" placeholder="Email" required style="padding:10px;border-radius:8px;border:1px solid #e6eefc">
+      <input id="bkPhone" placeholder="Phone (optional)" style="padding:10px;border-radius:8px;border:1px solid #e6eefc">
+      <select id="bkReason" style="padding:10px;border-radius:8px;border:1px solid #e6eefc">
+        <option>Remote patient monitoring</option>
+        <option>Gym integration / demo</option>
+        <option>Technical integration</option>
       </select>
-      <textarea id="bkNotes" placeholder="Notes (optional)" rows="4" style="padding:10px; border-radius:8px; border:1px solid #e6eefc"></textarea>
-
-      <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <textarea id="bkNotes" rows="4" placeholder="Notes (optional)" style="padding:10px;border-radius:8px;border:1px solid #e6eefc"></textarea>
+      <div style="display:flex; gap:8px; justify-content:flex-end">
         <button type="button" class="btn ghost" onclick="closeBooking()">Cancel</button>
         <button type="submit" class="btn primary">Send Booking</button>
       </div>
@@ -349,42 +291,36 @@
   </div>
 </div>
 
-<!-- Optional admin floating note -->
-<div class="admin-floating" title="Demo settings">
-  Demo mode • ThingSpeak Channel: <strong id="miniChannel">3128115</strong>
-</div>
+<!-- small alert banner -->
+<div id="alertBanner" style="position:fixed; left:50%; transform:translateX(-50%); top:14px; background:linear-gradient(90deg,var(--danger),#ff876f); color:white; padding:10px 14px; border-radius:999px; display:none; z-index:400"></div>
 
 <script>
-/* ==========================
-   User-provided ThingSpeak info
-   ========================== */
+/* -------------------------
+   Config (ThingSpeak)
+   ------------------------- */
 const CHANNEL_ID = "3128115";
-const READ_API_KEY = "K72OYJMYOJZN240T";
+const READ_KEY = "K72OYJMYOJZN240T";
 
-/* Small helpers */
-function toNumber(v){ const n = parseFloat(v); return isNaN(n) ? null : n; }
-function $(id){ return document.getElementById(id); }
-
-/* Navigation helper (in-page) */
-function navigateTo(id){
-  document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+/* Small DOM helpers */
+const $ = id => document.getElementById(id);
+function scrollToSection(id){
   const el = document.getElementById(id);
-  if(el) el.style.display = 'block';
-  // smooth scroll top of section
+  if(!el) return;
   el.scrollIntoView({behavior:'smooth'});
 }
-/* Initialize page visibility */
-document.querySelectorAll('section').forEach(s => s.style.display = 'none');
-navigateTo('home');
 
-/* Modal booking functions */
-function openBooking(){
-  $('modal').style.display = 'flex';
-  $('bkName').focus();
-}
-function closeBooking(){
-  $('modal').style.display = 'none';
-}
+/* Reveal animations on scroll */
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) e.target.classList.add('show');
+  });
+},{threshold:0.12});
+reveals.forEach(r => obs.observe(r));
+
+/* Booking modal */
+function openBooking(){ $('bookingModal').style.display = 'flex'; $('bookingModal').setAttribute('aria-hidden','false'); $('bkName').focus(); }
+function closeBooking(){ $('bookingModal').style.display = 'none'; $('bookingModal').setAttribute('aria-hidden','true'); }
 document.getElementById('bookingForm').addEventListener('submit', function(e){
   e.preventDefault();
   const name = $('bkName').value.trim();
@@ -392,87 +328,72 @@ document.getElementById('bookingForm').addEventListener('submit', function(e){
   const phone = $('bkPhone').value.trim();
   const reason = $('bkReason').value;
   const notes = $('bkNotes').value.trim();
-  if(!name || !email){ alert('Please fill name and email'); return; }
+  if(!name || !email) return alert('Please enter name and email');
   const subject = encodeURIComponent(`Consultation booking: ${name}`);
   const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nReason: ${reason}\n\nNotes:\n${notes}`);
-  // opens user's mail client
   window.location.href = `mailto:thapelomokoa.projects@gmail.com?subject=${subject}&body=${body}`;
   closeBooking();
 });
 
-/* ==========================
-   Chart.js visuals: gauges + line chart
-   ========================== */
+/* Simulated consult */
+function simulateConsult(){ alert('Simulated consult — demo only. For production, integrate a secure telehealth/video SDK.'); }
+
+/* -------------------------
+   Charts & Gauges (Chart.js)
+   ------------------------- */
 let gaugeBPM, gaugeTemp, gaugeHum, lineChart;
 const pointsToShow = 12;
 $('pointsCount').innerText = pointsToShow;
 $('channelLabel').innerText = CHANNEL_ID;
-$('miniChannel').innerText = CHANNEL_ID;
 
-function createGauge(canvas, mainColor){
-  const ctx = canvas.getContext('2d');
-  return new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['v','r'],
-      datasets: [{ data: [0,100], backgroundColor: [mainColor, 'rgba(200,210,255,0.45)'], borderWidth: 0 }]
-    },
-    options: {
-      rotation: -1.1 * Math.PI,
-      circumference: 1.2 * Math.PI,
-      cutout: '70%',
-      plugins: { legend: { display: false }, tooltip: { enabled: false } },
-      animation: { duration: 600 }
-    }
+function createGauge(canvas, color){
+  return new Chart(canvas.getContext('2d'), {
+    type:'doughnut',
+    data:{ labels:['v','r'], datasets:[{ data:[0,100], backgroundColor:[color,'rgba(220,230,250,0.4)'], borderWidth:0 }] },
+    options:{ rotation:-1.1*Math.PI, circumference:1.2*Math.PI, cutout:'70%', plugins:{legend:{display:false}, tooltip:{enabled:false}}, animation:{duration:700} }
   });
 }
 
 function createLineChart(canvas){
-  const ctx = canvas.getContext('2d');
-  return new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [
-        { label: 'BPM', data: [], borderColor: 'rgba(255,70,70,0.95)', backgroundColor:'rgba(255,70,70,0.06)', tension:0.25, pointRadius:2 },
-        { label: 'Temp (°C)', data: [], borderColor: 'rgba(0,120,255,0.95)', backgroundColor:'rgba(0,120,255,0.06)', tension:0.25, pointRadius:2 },
-        { label: 'Humidity (%)', data: [], borderColor: 'rgba(0,180,160,0.95)', backgroundColor:'rgba(0,180,160,0.06)', tension:0.25, pointRadius:2 }
-      ]
-    },
-    options: { responsive:true, plugins:{legend:{position:'bottom'}}, scales:{ x:{ display:true }, y:{ display:true } } }
+  return new Chart(canvas.getContext('2d'), {
+    type:'line',
+    data:{ labels:[], datasets:[
+      { label:'BPM', data:[], borderColor:'rgba(255,70,70,0.95)', backgroundColor:'rgba(255,70,70,0.06)', tension:0.25, pointRadius:2 },
+      { label:'Temp (°C)', data:[], borderColor:'rgba(0,120,255,0.95)', backgroundColor:'rgba(0,120,255,0.06)', tension:0.25, pointRadius:2 },
+      { label:'Humidity (%)', data:[], borderColor:'rgba(0,180,160,0.95)', backgroundColor:'rgba(0,180,160,0.06)', tension:0.25, pointRadius:2 }
+    ]},
+    options:{ responsive:true, plugins:{legend:{position:'bottom'}}, scales:{x:{display:true}, y:{display:true}}}
   });
 }
 
-/* Initialize visuals */
-function initVisuals(){
-  gaugeBPM = createGauge($('gaugeBPM'), 'rgba(255,80,80,0.95)');
-  gaugeTemp = createGauge($('gaugeTemp'), 'rgba(0,120,255,0.95)');
-  gaugeHum = createGauge($('gaugeHum'), 'rgba(0,180,160,0.95)');
-  lineChart = createLineChart($('dataChart'));
-}
-initVisuals();
+/* init visuals */
+gaugeBPM = createGauge($('gaugeBPM'), 'rgba(255,80,80,0.95)');
+gaugeTemp = createGauge($('gaugeTemp'), 'rgba(0,120,255,0.95)');
+gaugeHum = createGauge($('gaugeHum'), 'rgba(0,180,160,0.95)');
+lineChart = createLineChart($('dataChart'));
 
-/* ==========================
-   ThingSpeak fetching and UI update
-   ========================== */
-async function fetchThingSpeak(results = pointsToShow){
-  const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_API_KEY}&results=${results}`;
-  try {
-    const res = await fetch(url);
-    if(!res.ok) throw new Error('Network response not OK');
-    const json = await res.json();
-    return json.feeds || [];
-  } catch (err) {
+/* -------------------------
+   ThingSpeak fetch & update
+   ------------------------- */
+function toNumber(v){ const n = parseFloat(v); return isNaN(n) ? null : n; }
+
+async function fetchFeeds(results = pointsToShow){
+  const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_KEY}&results=${results}`;
+  try{
+    const r = await fetch(url);
+    if(!r.ok) throw new Error('Network response not ok');
+    const j = await r.json();
+    return j.feeds || [];
+  }catch(err){
     console.error('ThingSpeak fetch error', err);
     return [];
   }
 }
 
-async function refreshData(n = pointsToShow){
-  const feeds = await fetchThingSpeak(n);
+async function updateDashboard(limit = pointsToShow){
+  const feeds = await fetchFeeds(limit);
   if(!feeds || feeds.length === 0) return;
 
-  // oldest -> newest
   const times = feeds.map(f => new Date(f.created_at).toLocaleTimeString());
   const bpmArr = feeds.map(f => toNumber(f.field1));
   const tempArr = feeds.map(f => toNumber(f.field2));
@@ -483,27 +404,21 @@ async function refreshData(n = pointsToShow){
   const lastTemp = toNumber(last.field2);
   const lastHum = toNumber(last.field3);
 
-  // update stat cards
+  // stat cards
   $('bpmValue').innerText = lastBPM !== null ? `${lastBPM} BPM` : '-- BPM';
   $('tempValue').innerText = lastTemp !== null ? `${lastTemp} °C` : '-- °C';
   $('humValue').innerText = lastHum !== null ? `${lastHum} %` : '-- %';
 
-  $('miniBPM').innerText = lastBPM !== null ? lastBPM : '--';
-  $('miniTemp').innerText = lastTemp !== null ? lastTemp : '--';
-  $('miniHum').innerText = lastHum !== null ? lastHum : '--';
+  // mini values in intro (if present)
+  const miniBPM = document.querySelector('#intro .mini-bpm');
+  // gauge percentages
+  const bpmPct = lastBPM !== null ? Math.min(100, Math.round((lastBPM/200)*100)) : 0;
+  const tempPct = lastTemp !== null ? Math.min(100, Math.round(((lastTemp+10)/60)*100)) : 0;
+  const humPct = lastHum !== null ? Math.min(100, Math.round((lastHum/100)*100)) : 0;
 
-  // update gauges (scale heuristics)
-  const bpmPct = lastBPM !== null ? Math.min(100, Math.round((lastBPM / 200) * 100)) : 0;
-  const tempPct = lastTemp !== null ? Math.min(100, Math.round(((lastTemp + 10) / 60) * 100)) : 0;
-  const humPct = lastHum !== null ? Math.min(100, Math.round((lastHum / 100) * 100)) : 0;
-
-  gaugeBPM.data.datasets[0].data = [bpmPct, 100 - bpmPct];
-  gaugeTemp.data.datasets[0].data = [tempPct, 100 - tempPct];
-  gaugeHum.data.datasets[0].data = [humPct, 100 - humPct];
-
-  // color zones (simple)
+  // color zones - simple thresholds
   function colorFor(metric, value){
-    if(value === null) return 'rgba(200,200,210,0.95)';
+    if(value === null) return 'rgba(180,180,190,0.95)';
     if(metric === 'bpm'){
       if(value >= 130) return 'rgba(255,70,70,0.95)';
       if(value >= 100) return 'rgba(255,170,60,0.95)';
@@ -523,101 +438,79 @@ async function refreshData(n = pointsToShow){
   gaugeTemp.data.datasets[0].backgroundColor[0] = colorFor('temp', lastTemp);
   gaugeHum.data.datasets[0].backgroundColor[0] = colorFor('hum', lastHum);
 
+  gaugeBPM.data.datasets[0].data = [bpmPct, 100 - bpmPct];
+  gaugeTemp.data.datasets[0].data = [tempPct, 100 - tempPct];
+  gaugeHum.data.datasets[0].data = [humPct, 100 - humPct];
+
   gaugeBPM.update(); gaugeTemp.update(); gaugeHum.update();
 
   $('gLabelBPM').innerText = lastBPM !== null ? `${lastBPM} BPM` : '--';
   $('gLabelTemp').innerText = lastTemp !== null ? `${lastTemp} °C` : '--';
   $('gLabelHum').innerText = lastHum !== null ? `${lastHum} %` : '--';
 
-  // update line chart
+  // line chart
   lineChart.data.labels = times;
   lineChart.data.datasets[0].data = bpmArr;
   lineChart.data.datasets[1].data = tempArr;
   lineChart.data.datasets[2].data = humArr;
   lineChart.update();
 
-  // optional: threshold check (for gym/doctor marketing you can expand)
-  checkSimpleThresholds(lastBPM, lastTemp, lastHum);
+  // optional simple alerts (demo)
+  checkAlerts(lastBPM, lastTemp, lastHum);
 }
 
-/* manual refresh */
-$('refreshNow').addEventListener('click', () => refreshData(pointsToShow));
+/* manual refresh button */
+$('refreshNow').addEventListener('click', () => updateDashboard(pointsToShow));
 
-/* auto refresh every 15s */
-refreshData(pointsToShow);
-setInterval(() => refreshData(pointsToShow), 15000);
+/* auto refresh */
+updateDashboard(pointsToShow);
+setInterval(() => updateDashboard(pointsToShow), 15000);
 
-/* CSV download */
-$('downloadCSV').addEventListener('click', async () => {
-  const feeds = await fetchThingSpeak(500);
+/* export CSV */
+$('exportRecent').addEventListener('click', async () => {
+  const feeds = await fetchFeeds(500);
+  let csv = 'created_at,BPM,Temperature,Humidity\n';
+  feeds.forEach(f => csv += `${f.created_at},${f.field1||''},${f.field2||''},${f.field3||''}\n`);
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'thingspeak_export.csv'; a.click();
+});
+
+/* Download CSV button inside dashboard (if present) */
+const dlBtn = document.getElementById('downloadCSV');
+if(dlBtn) dlBtn.addEventListener('click', async () => {
+  const feeds = await fetchFeeds(500);
   let csv = 'created_at,BPM,Temperature,Humidity\n';
   feeds.forEach(f => csv += `${f.created_at},${f.field1||''},${f.field2||''},${f.field3||''}\n`);
   const blob = new Blob([csv], {type:'text/csv'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'thingspeak_data.csv'; a.click();
 });
 
-/* Simple threshold checking — shows alert banner (demo only) */
+/* Simple alert banner logic (demo) */
 let lastAlertTime = 0;
-function showBanner(msg){
-  const banner = $('alertBanner');
-  banner.textContent = msg;
-  banner.style.display = 'block';
-  setTimeout(()=> banner.style.display = 'none', 15000);
+function showAlertBanner(msg){
+  const b = document.getElementById('alertBanner');
+  b.textContent = msg;
+  b.style.display = 'block';
+  setTimeout(()=> b.style.display = 'none', 18000);
 }
-function checkSimpleThresholds(bpm, temp, hum){
+function checkAlerts(bpm, temp, hum){
   const now = Date.now();
-  if(now - lastAlertTime < 1000 * 60 * 2) return; // 2min cooldown
-  if(bpm !== null && bpm >= 130){ showBanner('ALERT: High heart rate (' + bpm + ' BPM). Consider contacting a clinician.'); lastAlertTime = now; }
-  else if(temp !== null && temp >= 39){ showBanner('ALERT: High temperature (' + temp + ' °C).'); lastAlertTime = now; }
+  if(now - lastAlertTime < 1000*60*3) return;
+  if(bpm !== null && bpm >= 130){ showAlertBanner(`ALERT: High heart rate ${bpm} BPM`); lastAlertTime = now; }
+  else if(temp !== null && temp >= 39){ showAlertBanner(`ALERT: High temperature ${temp} °C`); lastAlertTime = now; }
 }
 
-/* Reports loading (for the Reports section) */
-async function loadReports(count = 100){
-  const tbody = document.querySelector('#reportsTableBody');
-  // if not present (small demo), skip
-  if(!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="4" style="color:var(--muted)">Loading…</td></tr>';
-  const feeds = await fetchThingSpeak(count);
-  tbody.innerHTML = '';
-  feeds.forEach(f => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${f.created_at}</td><td>${f.field1||''}</td><td>${f.field2||''}</td><td>${f.field3||''}</td>`;
-    tbody.appendChild(tr);
-  });
-}
+/* Utility fetch for other functions */
+async function fetchThingSpeak(count=12){ return await fetchFeeds(count); }
 
-/* Booking / simulated consult */
-function simulateConsult(){
-  alert('Simulated consult started (demo). In a real deployment you would open a secure video session or integrated telehealth tool.');
-}
+/* Expose helper for debugging if needed */
+window._updateDashboard = updateDashboard;
+window._fetchThingSpeak = fetchFeeds;
 
-/* Helper to safely get element */
-function $(id){ return document.getElementById(id); }
-
-/* simple fade-in of initially hidden sections for better UX (optional) */
+/* Ensure sections reveal on load */
 document.addEventListener('DOMContentLoaded', () => {
-  // show home mini-values placeholders until data loads
-  fetchThingSpeak(1).then(feeds => {
-    if(feeds && feeds.length){
-      const last = feeds[feeds.length - 1];
-      $('miniBPM').innerText = last.field1 || '--';
-      $('miniTemp').innerText = last.field2 || '--';
-      $('miniHum').innerText = last.field3 || '--';
-    }
-  });
+  reveals.forEach(r => r.classList.add('show'));
 });
-
-/* On small screens, ensure last-visible after navigation (basic) */
-window.addEventListener('hashchange', () => {
-  const target = location.hash.replace('#','') || 'home';
-  const el = document.getElementById(target);
-  if(el) el.scrollIntoView({behavior:'smooth'});
-});
-
-/* Expose helpers for debugging */
-window._refreshData = refreshData;
-window._fetchThingSpeak = fetchThingSpeak;
 </script>
-
 </body>
 </html>
