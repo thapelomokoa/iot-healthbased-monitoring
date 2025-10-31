@@ -23,8 +23,8 @@ canvas { width:100% !important; max-width:100%; height:300px !important; }
 table { width:100%; border-collapse:collapse; margin-top:20px; }
 table th, table td { border:1px solid #ccc; padding:10px; text-align:center; }
 table th { background:#4facfe; color:#fff; }
-form input, form textarea { width:100%; padding:8px; margin:5px 0; border-radius:5px; border:1px solid #ccc; }
-form button { padding:10px 20px; border:none; border-radius:8px; background:#007bff; color:#fff; cursor:pointer; }
+form input, form textarea { width:100%; padding:10px; margin:5px 0; border-radius:5px; border:1px solid #ccc; }
+form button { padding:10px 20px; border:none; background:#4facfe; color:#fff; border-radius:5px; cursor:pointer; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -34,22 +34,18 @@ form button { padding:10px 20px; border:none; border-radius:8px; background:#007
 <nav class="navbar">
   <a href="#hero">Home</a>
   <a href="#dashboard">Patient</a>
-  <a href="#doctor">Doctor</a>
+  <a href="#consultation">Online Consultation</a>
+  <a href="#doctor">Doctor Portal</a>
   <a href="#gym">Gym</a>
-  <a href="#about">About</a>
+  <a href="#about">About Us</a>
   <a href="#contact">Contact</a>
 </nav>
 
-<!-- Hero Section -->
 <section id="hero" class="hero">
   <h1>Monitor Your Health Anywhere</h1>
   <p>Real-Time ❤️ BPM, 🌡️ Temperature & 💧 Humidity</p>
-  <div style="margin:20px;">
-    <a class="btn" href="#dashboard">Patient Dashboard</a>
-    <a class="btn" href="#doctor">Doctor Portal</a>
-  </div>
-  <p>AI Health Insights | Alerts | Gym Integration | Telemedicine</p>
-  <p>Sensors → Arduino → Cloud → Website</p>
+  <a class="btn" href="#dashboard">View Dashboard</a>
+  <a class="btn" href="#consultation">Book Consultation</a>
 </section>
 
 <!-- Patient Dashboard -->
@@ -62,15 +58,13 @@ form button { padding:10px 20px; border:none; border-radius:8px; background:#007
     <div class="widget">Health Score: <span id="healthScore">--</span></div>
   </div>
   <canvas id="combinedChart"></canvas>
-  <!-- AI Suggestion -->
-  <p id="aiSuggestion" style="margin-top:15px; font-weight:bold;"></p>
-  <!-- Schedule Consultation -->
-  <div style="margin-top:30px; text-align:center;">
-    <h3>Schedule Online Consultation</h3>
-    <input type="datetime-local" id="consultDateTime">
-    <button class="btn" id="scheduleConsult">Schedule on Teams</button>
-    <p id="consultMsg"></p>
-  </div>
+</section>
+
+<!-- Online Consultation Section (Swapped above Doctor Portal) -->
+<section id="consultation" class="section">
+  <h2>Online Consultation</h2>
+  <p>Schedule a virtual meeting with your doctor through Microsoft Teams. Receive AI-driven health suggestions and alerts before your consultation.</p>
+  <a class="btn" href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_example" target="_blank">Join Consultation</a>
 </section>
 
 <!-- Doctor Portal -->
@@ -85,43 +79,53 @@ form button { padding:10px 20px; border:none; border-radius:8px; background:#007
         <td id="docTemp">--</td>
         <td id="docHum">--</td>
         <td id="docStatus">--</td>
-        <td><a href="https://zoom.us/j/123456789" target="_blank">Join</a></td>
+        <td><a href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_example" target="_blank">Join</a></td>
       </tr>
     </tbody>
-  </table>
-  <h3>Upcoming Consultations</h3>
-  <table id="consultTable">
-    <thead>
-      <tr><th>Patient</th><th>Date & Time</th><th>Join Teams</th></tr>
-    </thead>
-    <tbody></tbody>
   </table>
 </section>
 
 <!-- Gym Dashboard -->
 <section id="gym" class="section">
   <h2>Gym Dashboard</h2>
-  <p>Monitor multiple members' heart rates and performance here.</p>
-  <p>AI suggestions for training intensity based on heart rate.</p>
+  <p>
+    Our Gym Dashboard is designed to help trainers and fitness enthusiasts monitor the health and performance of multiple members in real-time. Using IoT health monitoring technology, gyms can track heart rate, body temperature, and humidity levels of each member during workouts, ensuring safety and optimizing training intensity. The dashboard provides visual insights through charts and alerts, allowing trainers to immediately identify any abnormal readings or health risks. With AI-powered suggestions, trainers receive guidance on how to adjust exercise routines for optimal results. Members can earn badges for maintaining healthy readings over time, promoting consistency and motivation. The leaderboard feature allows gyms to encourage friendly competition, tracking progress and highlighting top-performing members. This integration of technology, gamification, and data-driven insights enables gyms to offer a modern, safe, and engaging training experience while ensuring each member’s well-being.
+  </p>
+
+  <div class="widgets" id="gymWidgets">
+    <div class="widget">Member 1: ❤️ <span id="member1Bpm">--</span></div>
+    <div class="widget">Member 2: ❤️ <span id="member2Bpm">--</span></div>
+    <div class="widget">Member 3: ❤️ <span id="member3Bpm">--</span></div>
+  </div>
+
+  <div style="margin-top:20px; text-align:center;">
+    <h3>Gym Leaderboard</h3>
+    <div id="gymLeaderboard"></div>
+  </div>
+
+  <div style="margin-top:20px; text-align:center;">
+    <h3>Member Badges</h3>
+    <div id="gymBadges"></div>
+  </div>
 </section>
 
 <!-- About Us -->
 <section id="about" class="section">
   <h2>About Us</h2>
-  <p>IoT Health Monitoring System using Arduino, ESP8266, DHT22, Pulse Sensor, and ThingSpeak.</p>
-  <p>Mission: Make health monitoring accessible for homes, gyms, and clinics.</p>
+  <p>
+    IoT Health Monitoring System integrates Arduino, ESP8266, DHT22, Pulse Sensors, and ThingSpeak to provide real-time health tracking. Our mission is to make monitoring accessible at homes, gyms, and clinics while using AI-driven insights to maintain optimal health.
+  </p>
 </section>
 
 <!-- Contact Us -->
 <section id="contact" class="section">
   <h2>Contact Us</h2>
-  <form id="contactForm">
+  <form>
     <input type="text" placeholder="Name" required>
     <input type="email" placeholder="Email" required>
-    <textarea placeholder="Message" rows="4" required></textarea>
+    <textarea placeholder="Message" required></textarea>
     <button type="submit">Send Message</button>
   </form>
-  <p>Email: info@iothealth.com | Phone: +123456789</p>
 </section>
 
 <script>
@@ -146,7 +150,7 @@ const combinedChart = new Chart(ctx, {
   }
 });
 
-// Fetch ThingSpeak data
+// ThingSpeak Fetch
 async function fetchThingSpeak(){
   try{
     const res = await fetch(`https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_KEY}&results=20`);
@@ -158,7 +162,7 @@ async function fetchThingSpeak(){
   }catch(e){console.error(e);}
 }
 
-// Update dashboard, charts, AI suggestions
+// Update Patient & Doctor Dashboard
 function updateDashboard(){
   const bpm = bpmData[bpmData.length-1] || 0;
   const temp = tempData[tempData.length-1] || 0;
@@ -184,35 +188,51 @@ function updateDashboard(){
   combinedChart.data.datasets[1].data = tempData;
   combinedChart.data.datasets[2].data = humData;
   combinedChart.update();
-
-  // AI suggestion
-  const aiMsg = bpm>100 ? "⚠️ High heart rate detected! Take rest." :
-                bpm<60 ? "⚠️ Low heart rate! Monitor carefully." :
-                "✅ Heart rate normal.";
-  document.getElementById('aiSuggestion').textContent = aiMsg;
 }
 
-// Initial fetch
+// Gym Dashboard Example
+let memberData = [
+  {name: 'Member 1', bpm: 75, streak: 0},
+  {name: 'Member 2', bpm: 88, streak: 0},
+  {name: 'Member 3', bpm: 95, streak: 0}
+];
+
+function updateGymDashboard() {
+  memberData.forEach((member, index) => {
+    document.getElementById(`member${index+1}Bpm`).textContent = member.bpm;
+    if(member.bpm >= 60 && member.bpm <= 100) member.streak++;
+    else member.streak = 0;
+  });
+  const leaderboardDiv = document.getElementById('gymLeaderboard');
+  leaderboardDiv.innerHTML = '';
+  memberData.sort((a,b) => b.streak - a.streak);
+  memberData.forEach(member => {
+    const div = document.createElement('div');
+    div.textContent = `${member.name} - Streak: ${member.streak}`;
+    leaderboardDiv.appendChild(div);
+  });
+  const badgesDiv = document.getElementById('gymBadges');
+  badgesDiv.innerHTML = '';
+  memberData.forEach(member => {
+    if(member.streak >= 5){
+      const badge = document.createElement('div');
+      badge.style.display = 'inline-block';
+      badge.style.background = '#4caf50';
+      badge.style.color = '#fff';
+      badge.style.padding = '5px 10px';
+      badge.style.margin = '5px';
+      badge.style.borderRadius = '5px';
+      badge.textContent = `🏅 ${member.name} - Consistent Performer`;
+      badgesDiv.appendChild(badge);
+    }
+  });
+}
+
+// Initial Fetches
 fetchThingSpeak();
 setInterval(fetchThingSpeak,15000);
-
-// Schedule consultation (Teams)
-document.getElementById('scheduleConsult').onclick = function(){
-  const dateTime = document.getElementById('consultDateTime').value;
-  if(!dateTime){ alert('Select date and time'); return; }
-  const teamsLink = "https://teams.microsoft.com/l/meetup-join/placeholder-link";
-  const tableBody = document.getElementById('consultTable').querySelector('tbody');
-  const row = document.createElement('tr');
-  row.innerHTML = `<td>Demo Patient</td><td>${dateTime}</td><td><a href="${teamsLink}" target="_blank">Join Teams</a></td>`;
-  tableBody.appendChild(row);
-  document.getElementById('consultMsg').textContent = "Consultation scheduled successfully!";
-};
-
-// Contact form submit
-document.getElementById('contactForm').onsubmit = function(e){
-  e.preventDefault();
-  alert('Message sent! We will contact you soon.');
-};
+setInterval(updateGymDashboard,15000);
+updateGymDashboard();
 </script>
 
 </body>
