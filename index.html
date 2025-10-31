@@ -23,6 +23,7 @@ canvas { width:100% !important; max-width:100%; height:300px !important; }
 table { width:100%; border-collapse:collapse; margin-top:20px; }
 table th, table td { border:1px solid #ccc; padding:10px; text-align:center; }
 table th { background:#4facfe; color:#fff; }
+#alertBox { position:fixed; top:60px; right:20px; background:#ffdddd; padding:15px 20px; border-radius:8px; color:#d8000c; font-weight:bold; box-shadow:0 2px 8px rgba(0,0,0,0.2); display:none; z-index:1000; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -46,9 +47,9 @@ table th { background:#4facfe; color:#fff; }
 <section id="dashboard" class="section">
   <h2>Patient Dashboard</h2>
   <div class="widgets">
-    <div class="widget heartbeat">❤️ <span id="bpmValue">--</span></div>
-    <div class="widget">🌡️ Temp: <span id="tempValue">--</span> °C</div>
-    <div class="widget">💧 Humidity: <span id="humValue">--</span> %</div>
+    <div class="widget heartbeat" id="bpmWidget">❤️ <span id="bpmValue">--</span></div>
+    <div class="widget" id="tempWidget">🌡️ Temp: <span id="tempValue">--</span> °C</div>
+    <div class="widget" id="humWidget">💧 Humidity: <span id="humValue">--</span> %</div>
     <div class="widget">Health Score: <span id="healthScore">--</span></div>
   </div>
   <canvas id="combinedChart"></canvas>
@@ -76,6 +77,9 @@ table th { background:#4facfe; color:#fff; }
   <p>Monitor multiple members' heart rates and performance here.</p>
 </section>
 
+<!-- Alert Box -->
+<div id="alertBox"></div>
+
 <script>
 const CHANNEL_ID='3128115';
 const READ_KEY='K72OYJMYOJZN240T';
@@ -98,6 +102,30 @@ const combinedChart = new Chart(ctx, {
   }
 });
 
+// Queued alerts setup
+const alertQueue = [];
+let alertActive = false;
+
+function showQueuedAlert(message){
+  alertQueue.push(message);
+  if(!alertActive) displayNextAlert();
+}
+
+function displayNextAlert(){
+  if(alertQueue.length === 0){
+    alertActive = false;
+    return;
+  }
+  alertActive = true;
+  const alertBox = document.getElementById('alertBox');
+  alertBox.textContent = alertQueue.shift();
+  alertBox.style.display = 'block';
+  setTimeout(()=>{
+    alertBox.style.display = 'none';
+    setTimeout(displayNextAlert, 500); // short pause
+  }, 5000);
+}
+
 // Function to fetch ThingSpeak data
 async function fetchThingSpeak(){
   try{
@@ -110,12 +138,13 @@ async function fetchThingSpeak(){
   }catch(e){console.error(e);}
 }
 
-// Update widgets and chart
+// Update dashboard and alerts
 function updateDashboard(){
   const bpm = bpmData[bpmData.length-1] || 0;
   const temp = tempData[tempData.length-1] || 0;
   const hum = humData[humData.length-1] || 0;
 
+  // Update widgets
   document.getElementById('bpmValue').textContent = bpm;
   document.getElementById('tempValue').textContent = temp;
   document.getElementById('humValue').textContent = hum;
@@ -133,6 +162,13 @@ function updateDashboard(){
   else if(bpm<60 || temp<36) status='🟡';
   document.getElementById('docStatus').textContent = status;
 
+  // Queue alerts
+  if(bpm>100) showQueuedAlert(`⚠️ High BPM detected: ${bpm}`);
+  if(bpm<60) showQueuedAlert(`⚠️ Low BPM detected: ${bpm}`);
+  if(temp>38) showQueuedAlert(`🌡️ High Temp: ${temp}°C`);
+  if(temp<36) showQueuedAlert(`🌡️ Low Temp: ${temp}°C`);
+  if(hum>70) showQueuedAlert(`💧 High Humidity: ${hum}%`);
+
   // Update chart
   combinedChart.data.labels = bpmData.map((_,i)=>i+1);
   combinedChart.data.datasets[0].data = bpmData;
@@ -141,10 +177,8 @@ function updateDashboard(){
   combinedChart.update();
 }
 
-// Initial fetch
+// Initial fetch and interval
 fetchThingSpeak();
-
-// Auto-refresh every 15 seconds
 setInterval(fetchThingSpeak,15000);
 </script>
 
