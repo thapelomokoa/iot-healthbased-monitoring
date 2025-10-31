@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IoT Health Monitor</title>
+<title>IoT Health Monitoring System</title>
 <style>
 body { margin:0; font-family:'Arial',sans-serif; background:#f8f9fa; color:#333; scroll-behavior:smooth; }
 .navbar { position:fixed; top:0; width:100%; background:#4facfe; display:flex; justify-content:center; gap:20px; padding:10px; z-index:100; }
-.navbar a { color:#fff; text-decoration:none; font-weight:bold; }
-.section { padding:100px 20px 40px; }
-.hero { background:linear-gradient(90deg,#4facfe,#00f2fe); color:#fff; text-align:center; padding:140px 20px 80px; position:relative; }
+.navbar a { color:#fff; text-decoration:none; font-weight:bold; cursor:pointer; }
+.section { display:none; padding:120px 20px 40px; min-height:80vh; }
+.section.active { display:block; }
+.hero { background:linear-gradient(90deg,#4facfe,#00f2fe); color:#fff; text-align:center; padding:140px 20px 80px; }
 .hero h1 { font-size:3em; margin-bottom:10px; }
 .hero p { font-size:1.2em; margin-bottom:20px; }
 .btn { padding:10px 20px; margin:5px; border-radius:8px; border:none; cursor:pointer; color:#fff; background:#007bff; text-decoration:none; display:inline-block; }
@@ -23,27 +24,32 @@ canvas { width:100% !important; max-width:100%; height:300px !important; }
 table { width:100%; border-collapse:collapse; margin-top:20px; }
 table th, table td { border:1px solid #ccc; padding:10px; text-align:center; }
 table th { background:#4facfe; color:#fff; }
+input, textarea { padding:10px; width:100%; margin:5px 0; border-radius:6px; border:1px solid #ccc; }
+form { max-width:500px; margin:auto; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
 <nav class="navbar">
-  <a href="#hero">Home</a>
-  <a href="#dashboard">Dashboard</a>
-  <a href="#doctor">Doctor</a>
-  <a href="#gym">Gym</a>
+  <a onclick="showSection('hero')">Home</a>
+  <a onclick="showSection('patient')">Patient</a>
+  <a onclick="showSection('doctor')">Doctor</a>
+  <a onclick="showSection('gym')">Gym</a>
+  <a onclick="showSection('about')">About Us</a>
+  <a onclick="showSection('contact')">Contact</a>
 </nav>
 
-<section id="hero" class="hero">
+<!-- Hero Section -->
+<section id="hero" class="hero section active">
   <h1>Monitor Your Health Anywhere</h1>
   <p>Real-Time ❤️ BPM, 🌡️ Temperature & 💧 Humidity</p>
-  <a class="btn" href="#dashboard">View Dashboard</a>
-  <a class="btn" href="#doctor">Book Consultation</a>
+  <a class="btn" onclick="showSection('patient')">View Dashboard</a>
+  <a class="btn" onclick="showSection('doctor')">Book Consultation</a>
 </section>
 
-<section id="dashboard" class="section">
+<!-- Patient Section -->
+<section id="patient" class="section">
   <h2>Patient Dashboard</h2>
   <div class="widgets">
     <div class="widget heartbeat">❤️ <span id="bpmValue">--</span></div>
@@ -52,10 +58,16 @@ table th { background:#4facfe; color:#fff; }
     <div class="widget">Health Score: <span id="healthScore">--</span></div>
   </div>
   <canvas id="combinedChart"></canvas>
+  <h3>AI Health Tips 🤖</h3>
+  <ul id="aiTips">
+    <li>Loading AI insights...</li>
+  </ul>
 </section>
 
+<!-- Doctor Section -->
 <section id="doctor" class="section">
   <h2>Doctor Portal</h2>
+  <p>View patient data and schedule online consultations via Teams.</p>
   <table id="doctorTable">
     <thead><tr><th>Patient</th><th>BPM</th><th>Temp</th><th>Humidity</th><th>Status</th><th>Consult</th></tr></thead>
     <tbody>
@@ -65,30 +77,48 @@ table th { background:#4facfe; color:#fff; }
         <td id="docTemp">--</td>
         <td id="docHum">--</td>
         <td id="docStatus">--</td>
-        <td><a href="https://zoom.us/j/123456789" target="_blank">Join</a></td>
+        <td><a href="https://teams.microsoft.com/l/meetup-join/123456789" target="_blank">Join Teams</a></td>
       </tr>
     </tbody>
   </table>
 </section>
 
+<!-- Gym Section -->
 <section id="gym" class="section">
   <h2>Gym Dashboard</h2>
-  <p>Monitor multiple members' heart rates and performance here.</p>
-  
-  <div id="gymCharts" style="display:flex; flex-wrap:wrap; gap:20px;"></div>
-  
-  <h3>Live Gym Leaderboard</h3>
-  <ul id="gymLeaderboard" style="list-style:none; padding:0;"></ul>
+  <p>The IoT Health Monitoring System allows gyms to monitor multiple members in real-time. Track heart rate zones, detect overexertion, and optimize workouts. Alerts notify trainers of abnormal readings. Gamified leaderboards motivate members to maintain healthy streaks.</p>
 </section>
 
-<footer style="text-align:center; padding:20px;">Contact info | Privacy Policy | Terms of Service</footer>
+<!-- About Us -->
+<section id="about" class="section">
+  <h2>About IoT Health Monitoring</h2>
+  <p>This system combines IoT sensors (pulse, temperature, humidity) with Arduino and ESP8266 to provide live health monitoring. Doctors and gyms can track users remotely. AI insights predict health trends and provide personalized tips. Alerts prevent emergencies by notifying abnormal readings in real-time.</p>
+</section>
+
+<!-- Contact Us -->
+<section id="contact" class="section">
+  <h2>Contact Us</h2>
+  <form onsubmit="alert('Message sent!'); return false;">
+    <input type="text" placeholder="Your Name" required>
+    <input type="email" placeholder="Your Email" required>
+    <textarea placeholder="Your Message" rows="5" required></textarea>
+    <button class="btn" type="submit">Send Message</button>
+  </form>
+</section>
 
 <script>
+// Section navigation
+function showSection(id){
+  document.querySelectorAll('.section').forEach(sec=>sec.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ThingSpeak data
 const CHANNEL_ID='3128115';
 const READ_KEY='K72OYJMYOJZN240T';
 let bpmData=[], tempData=[], humData=[];
 
-// Patient Chart
+// Chart.js setup
 const ctx = document.getElementById('combinedChart').getContext('2d');
 const combinedChart = new Chart(ctx, {
   type: 'line',
@@ -97,10 +127,15 @@ const combinedChart = new Chart(ctx, {
     { label:'Temperature 🌡️', data:[], borderColor:'orange', fill:false },
     { label:'Humidity 💧', data:[], borderColor:'blue', fill:false }
   ]},
-  options: { responsive:true, interaction:{mode:'index', intersect:false}, plugins:{legend:{display:true}}, scales:{y:{beginAtZero:true}} }
+  options: {
+    responsive:true,
+    interaction:{mode:'index', intersect:false},
+    plugins:{legend:{display:true}},
+    scales:{y:{beginAtZero:true}}
+  }
 });
 
-// Fetch ThingSpeak Data
+// Fetch ThingSpeak data
 async function fetchThingSpeak(){
   try{
     const res = await fetch(`https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_KEY}&results=20`);
@@ -109,10 +144,11 @@ async function fetchThingSpeak(){
     tempData = data.feeds.map(f=>parseFloat(f.field2)||0);
     humData = data.feeds.map(f=>parseFloat(f.field3)||0);
     updateDashboard();
+    updateAIInsights();
   }catch(e){console.error(e);}
 }
 
-// Update Patient Dashboard
+// Update patient and doctor dashboards
 function updateDashboard(){
   const bpm = bpmData[bpmData.length-1] || 0;
   const temp = tempData[tempData.length-1] || 0;
@@ -140,112 +176,24 @@ function updateDashboard(){
   combinedChart.update();
 }
 
-// Initial fetch & auto-refresh
-fetchThingSpeak();
-setInterval(fetchThingSpeak,15000);
-
-// Gym Dashboard
-const gymChartsContainer = document.getElementById('gymCharts');
-const gymLeaderboard = document.getElementById('gymLeaderboard');
-
-// Gym members example
-const gymMembers = [
-  { name: 'Member 1', bpmData: [], tempData: [], humData: [] },
-  { name: 'Member 2', bpmData: [], tempData: [], humData: [] },
-  { name: 'Member 3', bpmData: [], tempData: [], humData: [] }
-];
-
-// Create member charts
-gymMembers.forEach(member => {
-  const chartWrapper = document.createElement('div');
-  chartWrapper.style.width = '300px';
-  chartWrapper.style.minWidth = '300px';
-  chartWrapper.style.height = '220px';
-  chartWrapper.style.border = '2px solid #ccc';
-  chartWrapper.style.borderRadius = '12px';
-  chartWrapper.style.padding = '5px';
-  chartWrapper.style.position = 'relative';
-  chartWrapper.style.display = 'flex';
-  chartWrapper.style.flexDirection = 'column';
-  chartWrapper.style.alignItems = 'center';
-  chartWrapper.style.justifyContent = 'center';
-  gymChartsContainer.appendChild(chartWrapper);
-
-  const alertIcon = document.createElement('div');
-  alertIcon.textContent = '⚠️';
-  alertIcon.style.position = 'absolute';
-  alertIcon.style.top = '5px';
-  alertIcon.style.right = '5px';
-  alertIcon.style.display = 'none';
-  chartWrapper.appendChild(alertIcon);
-
-  const ctx = document.createElement('canvas');
-  chartWrapper.appendChild(ctx);
-
-  member.chart = new Chart(ctx.getContext('2d'), {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [
-        { label: 'BPM ❤️', data: [], borderColor: 'red', fill: false },
-        { label: 'Temp 🌡️', data: [], borderColor: 'orange', fill: false },
-        { label: 'Humidity 💧', data: [], borderColor: 'blue', fill: false }
-      ]
-    },
-    options: { responsive:true, interaction:{mode:'index', intersect:false}, plugins:{legend:{display:true}}, scales:{y:{beginAtZero:true}} }
-  });
-
-  member.wrapper = chartWrapper;
-  member.alertIcon = alertIcon;
-});
-
-// Update Gym Dashboard
-function updateGym() {
-  let leaderboardData = [];
-  gymMembers.forEach(member => {
-    const bpm = Math.floor(Math.random()*60)+60;
-    const temp = Math.floor(Math.random()*5)+36;
-    const hum = Math.floor(Math.random()*30)+40;
-
-    member.bpmData.push(bpm);
-    member.tempData.push(temp);
-    member.humData.push(hum);
-
-    if(member.bpmData.length>20) member.bpmData.shift();
-    if(member.tempData.length>20) member.tempData.shift();
-    if(member.humData.length>20) member.humData.shift();
-
-    member.chart.data.labels = member.bpmData.map((_,i)=>i+1);
-    member.chart.data.datasets[0].data = member.bpmData;
-    member.chart.data.datasets[1].data = member.tempData;
-    member.chart.data.datasets[2].data = member.humData;
-    member.chart.update();
-
-    if(bpm>100 || temp>38 || hum>70) {
-      member.wrapper.style.border = '3px solid red';
-      member.alertIcon.style.display = 'block';
-    } else {
-      member.wrapper.style.border = '2px solid #ccc';
-      member.alertIcon.style.display = 'none';
-    }
-
-    leaderboardData.push({ name: member.name, bpm, temp, hum, alert: bpm>100||temp>38||hum>70 });
-  });
-
-  leaderboardData.sort((a,b)=>b.bpm - a.bpm);
-  gymLeaderboard.innerHTML='';
-  leaderboardData.forEach(item=>{
-    const li = document.createElement('li');
-    li.style.padding='8px';
-    li.style.borderBottom='1px solid #ccc';
-    li.textContent = `${item.name} | BPM: ${item.bpm} | Temp: ${item.temp}°C | Humidity: ${item.hum}% ${item.alert?'⚠️':''}`;
-    gymLeaderboard.appendChild(li);
-  });
+// AI insights (basic simulation)
+function updateAIInsights(){
+  const tips = [];
+  const bpm = bpmData[bpmData.length-1] || 0;
+  const temp = tempData[tempData.length-1] || 0;
+  const hum = humData[humData.length-1] || 0;
+  if(bpm>100) tips.push("Your heart rate is high ❤️. Consider resting.");
+  if(bpm<60) tips.push("Your heart rate is low ❤️. Light activity recommended.");
+  if(temp>37.5) tips.push("You may have a fever 🌡️. Monitor closely.");
+  if(hum>70) tips.push("High humidity 💧 detected. Stay hydrated.");
+  if(tips.length===0) tips.push("All readings are normal. Keep up the good work!");
+  const ul = document.getElementById('aiTips');
+  ul.innerHTML = tips.map(t=>`<li>${t}</li>`).join('');
 }
 
-// Refresh gym dashboard every 15s
-updateGym();
-setInterval(updateGym,15000);
+// Initial fetch and auto-refresh
+fetchThingSpeak();
+setInterval(fetchThingSpeak,15000);
 </script>
 
 </body>
