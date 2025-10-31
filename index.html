@@ -84,11 +84,11 @@
 </header>
 
 <main class="container">
-  <!-- HERO - generated doctor image (place the file in same folder) -->
+  <!-- HERO -->
   <section id="home" class="hero-wrap">
-    <!-- Use <img> so object-fit: contain will show full image not cropped -->
-    <!-- IMPORTANT: put A_website_screenshot_for_an_IoT_Health_Monitoring_.png in same folder as this HTML -->
-    <img class="hero-img" src="A_website_screenshot_for_an_IoT_Health_Monitoring_.png" alt="Doctor banner (generated)">
+    <img class="hero-img" 
+         src="https://images.pexels.com/photos/5450140/pexels-photo-5450140.jpeg" 
+         alt="Doctor banner (generated)">
     <div class="hero-text card">
       <div class="hero-left">
         <h1>Smart Health Dashboard</h1>
@@ -99,7 +99,6 @@
         </div>
       </div>
 
-      <!-- right side small preview (optional) -->
       <div style="min-width:260px;">
         <div style="background:#f8fbff;padding:12px;border-radius:10px;text-align:left">
           <strong style="color:var(--accent)">Live Now</strong>
@@ -161,7 +160,11 @@
           <h3>Remote Consultations</h3>
           <p style="color:var(--muted)">Clinicians can monitor patient vitals live and schedule teleconsultations based on alerts and trends.</p>
         </div>
-        <div style="width:360px"><img src="https://images.pexels.com/photos/5450140/pexels-photo-5450140.jpeg" style="width:100%;border-radius:10px" alt="Doctor teleconsult"></div>
+        <div style="width:360px">
+          <img src="https://images.pexels.com/photos/3786134/pexels-photo-3786134.jpeg" 
+               style="width:100%;border-radius:10px" 
+               alt="Doctor teleconsult">
+        </div>
       </div>
     </div>
   </section>
@@ -174,7 +177,11 @@
         <div>
           <p style="color:var(--muted)">Use wearables and live dashboards to monitor class participants and provide safer training with instant alerts when vitals exceed safe thresholds.</p>
         </div>
-        <div><img src="https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg" style="width:100%;border-radius:10px" alt="Gym monitoring"></div>
+        <div>
+          <img src="https://images.pexels.com/photos/4324027/pexels-photo-4324027.jpeg" 
+               style="width:100%;border-radius:10px" 
+               alt="Gym monitoring">
+        </div>
       </div>
     </div>
   </section>
@@ -220,7 +227,6 @@
     </div>
 
     <div id="adminContent" style="margin-top:12px">
-      <!-- login form -->
       <div id="adminLogin">
         <p style="color:var(--muted)">Enter admin credentials (demo): username <code>admin</code> / password <code>1234</code></p>
         <input id="adminUser" placeholder="Username" style="padding:10px;border-radius:8px;border:1px solid #e6eefc;margin-right:8px">
@@ -230,7 +236,6 @@
         </div>
       </div>
 
-      <!-- admin dashboard (hidden until login) -->
       <div id="adminDashboard" style="display:none">
         <h3 style="margin-top:10px">Recent ThingSpeak Feeds</h3>
         <div style="margin-bottom:8px">
@@ -254,21 +259,18 @@
    Config: ThingSpeak
    ======================== */
 const CHANNEL_ID = "3128115";
-const READ_KEY = "K72OYJMYOJZN240T"; // Read key
-const POLL_INTERVAL = 15000; // 15s
-const POINTS = 24; // history points to show on chart
+const READ_KEY = "K72OYJMYOJZN240T";
+const POLL_INTERVAL = 15000;
+const POINTS = 24;
 
-/* Helpers */
 const $ = id => document.getElementById(id);
 
-/* Smooth scroll helper */
 function scrollTo(id){
   const el = document.getElementById(id);
   if(!el) return;
   el.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-/* Booking form -> mailto */
 document.getElementById('bookingForm').addEventListener('submit', (e)=>{
   e.preventDefault();
   const name = $('bkName').value.trim();
@@ -282,10 +284,7 @@ document.getElementById('bookingForm').addEventListener('submit', (e)=>{
   window.location.href = `mailto:thapelomokoa.projects@gmail.com?subject=${subject}&body=${body}`;
 });
 
-/* ========================
-   Charts (Chart.js)
-   ======================== */
-/* Create doughnut "gauge" style charts and a line chart for history */
+/* Charts */
 const gaugeBPM = new Chart($('gaugeBPM').getContext('2d'), {
   type: 'doughnut',
   data: { labels:['value','rest'], datasets:[{ data:[0,100], backgroundColor:['#ff4d4f','#f0f4ff'], borderWidth:0 }] },
@@ -302,160 +301,91 @@ const gaugeHum = new Chart($('gaugeHum').getContext('2d'), {
   options:{ cutout:'80%', rotation:-Math.PI*1.1, circumference:Math.PI*1.2, plugins:{legend:{display:false}, tooltip:{enabled:false}}}
 });
 
-/* line chart */
 const lineCtx = $('lineChart').getContext('2d');
 const lineChart = new Chart(lineCtx, {
   type:'line',
   data:{ labels:[], datasets:[
-    { label:'BPM', data:[], borderColor:'#ff4d4f', tension:0.25, pointRadius:2 },
-    { label:'Temp (°C)', data:[], borderColor:'#ff9800', tension:0.25, pointRadius:2 },
-    { label:'Humidity (%)', data:[], borderColor:'#00bcd4', tension:0.25, pointRadius:2 }
+    {label:'BPM',data:[],borderColor:'#ff4d4f',fill:false,tension:0.3},
+    {label:'Temp °C',data:[],borderColor:'#ff9800',fill:false,tension:0.3},
+    {label:'Hum %',data:[],borderColor:'#00bcd4',fill:false,tension:0.3},
   ]},
-  options:{ responsive:true, plugins:{legend:{position:'bottom'}} , scales:{ y:{ beginAtZero:false } } }
+  options:{responsive:true,plugins:{legend:{display:true}}}
 });
 
-/* Update UI with latest feed */
-function updateUIFromFeed(feed){
-  // feed: object with field1, field2, field3, created_at
-  const bpm = feed && feed.field1 ? parseFloat(feed.field1) : null;
-  const temp = feed && feed.field2 ? parseFloat(feed.field2) : null;
-  const hum = feed && feed.field3 ? parseFloat(feed.field3) : null;
-
-  $('miniBPM').innerText = bpm !== null ? bpm : '--';
-  $('miniTemp').innerText = temp !== null ? temp : '--';
-  $('miniHum').innerText = hum !== null ? hum : '--';
-
-  // gauges: convert to 0-100 scale heuristics
-  function pct(val, metric){
-    if(val === null) return 0;
-    if(metric==='bpm') return Math.min(100, Math.round((val / 200) * 100));
-    if(metric==='temp') return Math.min(100, Math.round(((val+10) / 60) * 100));
-    return Math.min(100, Math.round((val / 100) * 100));
-  }
-  const bpmPct = pct(bpm,'bpm'), tempPct = pct(temp,'temp'), humPct = pct(hum,'hum');
-
-  gaugeBPM.data.datasets[0].data[0] = bpmPct; gaugeBPM.data.datasets[0].data[1] = 100 - bpmPct;
-  gaugeTemp.data.datasets[0].data[0] = tempPct; gaugeTemp.data.datasets[0].data[1] = 100 - tempPct;
-  gaugeHum.data.datasets[0].data[0] = humPct; gaugeHum.data.datasets[0].data[1] = 100 - humPct;
-
-  gaugeBPM.update(); gaugeTemp.update(); gaugeHum.update();
-
-  $('gLabelBPM').innerText = bpm !== null ? `${bpm} BPM` : '--';
-  $('gLabelTemp').innerText = temp !== null ? `${temp} °C` : '--';
-  $('gLabelHum').innerText = hum !== null ? `${hum} %` : '--';
-}
-
-/* Fetch ThingSpeak feeds (latest N) */
-async function fetchFeeds(results=POINTS){
-  const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_KEY}&results=${results}`;
+/* Fetch ThingSpeak */
+let lastData=[];
+async function fetchTS(){
   try{
-    const res = await fetch(url);
-    if(!res.ok) throw new Error('Network error');
-    const json = await res.json();
-    return json.feeds || [];
-  }catch(err){
-    console.error('Fetch error', err);
-    return [];
-  }
+    const res = await fetch(`https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_KEY}&results=${POINTS}`);
+    const data = await res.json();
+    const feeds = data.feeds||[];
+    if(feeds.length===0) return;
+    lastData = feeds.map(f=>({bpm:+f.field1, temp:+f.field2, hum:+f.field3, ts:f.created_at}));
+    updateUI();
+  }catch(err){console.error(err);}
 }
-
-/* Refresh full dashboard (gauges + line chart) */
-async function refreshDashboard(){
-  const feeds = await fetchFeeds(POINTS);
-  if(!feeds || feeds.length === 0) return;
-
-  // times oldest->newest
-  const times = feeds.map(f => new Date(f.created_at).toLocaleTimeString());
-  const bpmArr = feeds.map(f => f.field1 ? parseFloat(f.field1) : null);
-  const tempArr = feeds.map(f => f.field2 ? parseFloat(f.field2) : null);
-  const humArr = feeds.map(f => f.field3 ? parseFloat(f.field3) : null);
-
-  // recent feed
-  updateUIFromFeed(feeds[feeds.length - 1]);
-
-  // update line chart
-  lineChart.data.labels = times;
-  lineChart.data.datasets[0].data = bpmArr;
-  lineChart.data.datasets[1].data = tempArr;
-  lineChart.data.datasets[2].data = humArr;
+function updateUI(){
+  if(!lastData.length) return;
+  const latest = lastData[lastData.length-1];
+  $('miniBPM').textContent = latest.bpm;
+  $('miniTemp').textContent = latest.temp;
+  $('miniHum').textContent = latest.hum;
+  // Gauges
+  gaugeBPM.data.datasets[0].data=[latest.bpm,100-latest.bpm]; gaugeBPM.update();
+  gaugeTemp.data.datasets[0].data=[latest.temp,100-latest.temp]; gaugeTemp.update();
+  gaugeHum.data.datasets[0].data=[latest.hum,100-latest.hum]; gaugeHum.update();
+  // Line chart
+  lineChart.data.labels = lastData.map(d=>new Date(d.ts).toLocaleTimeString());
+  lineChart.data.datasets[0].data = lastData.map(d=>d.bpm);
+  lineChart.data.datasets[1].data = lastData.map(d=>d.temp);
+  lineChart.data.datasets[2].data = lastData.map(d=>d.hum);
   lineChart.update();
 }
+setInterval(fetchTS,POLL_INTERVAL);
+fetchTS();
 
-/* periodic refresh */
-refreshDashboard();
-setInterval(refreshDashboard, POLL_INTERVAL);
-
-/* Download CSV (recent N entries) */
-async function downloadCSV(){
-  const feeds = await fetchFeeds(500);
-  let csv = 'created_at,BPM,Temperature,Humidity\n';
-  feeds.forEach(f => csv += `${f.created_at},${f.field1||''},${f.field2||''},${f.field3||''}\n`);
-  const blob = new Blob([csv], {type:'text/csv'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'thingspeak_data.csv'; a.click();
+/* CSV Download */
+function downloadCSV(){
+  if(!lastData.length) return alert('No data yet');
+  const header = ['Time,BPM,Temp,Hum'];
+  const rows = lastData.map(d=>`${d.ts},${d.bpm},${d.temp},${d.hum}`);
+  const csv = header.concat(rows).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='health_data.csv'; a.click(); URL.revokeObjectURL(url);
 }
 
-/* Download PDF: snapshot chart + latest readings */
-async function downloadPDF(){
-  // capture chart as image
-  const chartDataURL = $('lineChart').toDataURL('image/png', 1.0);
-  // get latest values from UI
-  const bpm = $('miniBPM').innerText;
-  const temp = $('miniTemp').innerText;
-  const hum = $('miniHum').innerText;
-
-  // use jsPDF
+/* PDF */
+function downloadPDF(){
+  if(!lastData.length) return alert('No data yet');
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({orientation:'landscape'});
-  doc.setFontSize(18);
-  doc.text('IoT Health Monitoring Report', 14, 18);
-  doc.setFontSize(11);
-  doc.text(`Channel: ${CHANNEL_ID}`, 14, 26);
-  doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 32);
-
-  // add readings box
-  doc.setFillColor(240,248,255);
-  doc.rect(14,36,100,32,'F');
-  doc.setFontSize(12);
-  doc.text(`Heart Rate: ${bpm} BPM`, 18, 50);
-  doc.text(`Temperature: ${temp} °C`, 18, 58);
-  doc.text(`Humidity: ${hum} %`, 18, 66);
-
-  // add chart image
-  doc.addImage(chartDataURL, 'PNG', 120, 36, 160, 80);
-
-  doc.save(`iot_health_report_${new Date().toISOString().slice(0,19).replaceAll(':','-')}.pdf`);
-}
-
-/* Admin panel (client-side: demo credentials) */
-function openAdmin(){ $('adminOverlay').style.display = 'flex'; }
-function closeAdmin(){ $('adminOverlay').style.display = 'none'; }
-async function adminLogin(){
-  const user = $('adminUser').value.trim();
-  const pass = $('adminPass').value;
-  if(user === 'admin' && pass === '1234'){
-    $('adminLogin').style.display = 'none';
-    $('adminDashboard').style.display = 'block';
-    await adminFetch();
-  } else {
-    alert('Invalid credentials (demo: admin / 1234)');
-  }
-}
-async function adminFetch(){
-  const feeds = await fetchFeeds(200);
-  const tbody = document.querySelector('#feedsTable tbody');
-  tbody.innerHTML = '';
-  feeds.forEach(f => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td style="padding:8px;border-bottom:1px solid #eef3fb">${f.created_at}</td>
-                    <td style="padding:8px;border-bottom:1px solid #eef3fb">${f.field1||''}</td>
-                    <td style="padding:8px;border-bottom:1px solid #eef3fb">${f.field2||''}</td>
-                    <td style="padding:8px;border-bottom:1px solid #eef3fb">${f.field3||''}</td>`;
-    tbody.appendChild(tr);
+  const doc = new jsPDF();
+  doc.text("IoT Health Monitoring Report",14,14);
+  let y=20;
+  doc.setFontSize(10);
+  lastData.forEach(d=>{
+    if(y>280){doc.addPage();y=20;}
+    doc.text(`${d.ts} | BPM:${d.bpm} | Temp:${d.temp}°C | Hum:${d.hum}%`,14,y);
+    y+=6;
   });
+  doc.save("health_report.pdf");
 }
 
-/* initial admin state */
-document.addEventListener('DOMContentLoaded', ()=>{ /* nothing */ });
+/* Admin */
+function openAdmin(){$('adminOverlay').style.display='flex';}
+function closeAdmin(){$('adminOverlay').style.display='none';$('adminLogin').style.display='block';$('adminDashboard').style.display='none';}
+function adminLogin(){
+  const u=$('adminUser').value.trim();
+  const p=$('adminPass').value.trim();
+  if(u==='admin' && p==='1234'){ $('adminLogin').style.display='none'; $('adminDashboard').style.display='block'; adminFetch();}
+  else alert('Wrong credentials');
+}
+async function adminFetch(){ await fetchTS(); const tbody=$('feedsTable').querySelector('tbody'); tbody.innerHTML=''; lastData.forEach(d=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td>${d.ts}</td><td>${d.bpm}</td><td>${d.temp}</td><td>${d.hum}</td>`;
+  tbody.appendChild(tr);
+}); }
 </script>
+
 </body>
 </html>
