@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doctor Dashboard</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h2>Doctor Dashboard</h2>
+<p>Monitor your patients live from anywhere</p>
+
+<div id="patients-container">
+
+  <!-- Patient Card 1 -->
+  <div class="patient-card" id="patient-1">
+    <img src="images/doctor1.jpg" alt="Doctor consulting patient online" class="dashboard-img">
+    <h3>John Doe</h3>
+    <canvas id="chart-1" width="400" height="200"></canvas>
+    <button onclick="downloadPDF('John Doe')">Download PDF</button>
+    <p class="alert" style="color:red;"></p>
+  </div>
+
+  <!-- Patient Card 2 -->
+  <div class="patient-card" id="patient-2">
+    <img src="images/doctor2.jpg" alt="Online medical consultation" class="dashboard-img">
+    <h3>Jane Smith</h3>
+    <canvas id="chart-2" width="400" height="200"></canvas>
+    <button onclick="downloadPDF('Jane Smith')">Download PDF</button>
+    <p class="alert" style="color:red;"></p>
+  </div>
+
+</div>
+
+<script>
+const token = localStorage.getItem('token');
+
+async function fetchPatients(){
+  const res = await fetch('http://localhost:5000/api/dashboard/assignedPatients', {
+    headers:{'x-auth-token': token}
+  });
+  const patients = await res.json();
+  patients.forEach(p=>loadPatientData(p));
+}
+
+async function loadPatientData(patient){
+  const res = await fetch(`http://localhost:5000/api/dashboard/patient/${patient._id}`, {
+    headers:{'x-auth-token': token}
+  });
+  const data = await res.json();
+  const bpmData = data.feeds.map(f=>f.field1);
+  const tempData = data.feeds.map(f=>f.field2);
+  const humData = data.feeds.map(f=>f.field3);
+
+  const ctx = document.getElementById(`chart-${patient._id}`).getContext('2d');
+  new Chart(ctx,{
+    type:'line',
+    data:{
+      labels: data.feeds.map(f=>f.created_at),
+      datasets:[
+        {label:'BPM', data:bpmData, borderColor:'red'},
+        {label:'Temperature', data:tempData, borderColor:'orange'},
+        {label:'Humidity', data:humData, borderColor:'blue'}
+      ]
+    }
+  });
+
+  const alertP = document.querySelector(`#patient-${patient._id} .alert`);
+  if(Math.max(...bpmData)>120) alertP.innerText="⚠️ High BPM detected!";
+}
+
+function downloadPDF(patientName){
+  alert('PDF download feature for '+patientName+' coming soon!');
+}
+
+fetchPatients();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+const mongoose = require('mongoose');
+
+const PatientSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  unit: { type: String },
+  thingspeakChannel: { type: Number, required: true },
+  thingspeakAPIKey: { type: String, required: true }
+});
+
+module.exports = mongoose.model('Patient', PatientSchema);
