@@ -1,4546 +1,738 @@
-<nav id="navigation-main" class="navigation-wrapper">
-  <div class="navigation-container">
-    <!-- Logo with Brand Identity -->
-    <a href="/" class="navigation-logo" aria-label="HealthSync Homepage">
-      <div class="navigation-logo-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676a.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg>
-        <div class="navigation-logo-pulse"></div>
-      </div>
-      <span class="navigation-logo-text">HealthSync</span>
-    </a>
-
-    <!-- Desktop Navigation -->
-    <div class="navigation-links-desktop">
-      <a href="#monitoring" class="navigation-link">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>
-        <span>Live Monitoring</span>
-      </a>
-      <a href="#consultation" class="navigation-link">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M11 2v2M5 2v2m0-1H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></g></svg>
-        <span>Online Consultation</span>
-      </a>
-      <a href="#features" class="navigation-link">
-        <span>Features</span>
-      </a>
-      <a href="#data" class="navigation-link">
-        <span>Health Data</span>
-      </a>
-      <a href="#contact" class="navigation-link">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233a14 14 0 0 0 6.392 6.384"/></svg>
-        <span>Contact</span>
-      </a>
-    </div>
-
-    <!-- Call-to-Action Button -->
-    <div class="navigation-actions-desktop">
-      <button class="btn btn-primary navigation-cta">Get Started</button>
-    </div>
-
-    <!-- Mobile Menu Toggle -->
-    <button id="navigation-toggle" class="navigation-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
-      <svg id="navigation-icon-menu" class="navigation-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h16M4 12h16M4 19h16"/></svg>
-      <svg id="navigation-icon-close" class="navigation-toggle-icon navigation-toggle-icon-hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
-  </div>
-
-  <!-- Mobile Navigation Overlay -->
-  <div id="navigation-mobile" class="navigation-mobile">
-    <div class="navigation-mobile-content">
-      <a href="#monitoring" class="navigation-mobile-link">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>
-        <span>Live Monitoring</span>
-      </a>
-      <a href="#consultation" class="navigation-mobile-link">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M11 2v2M5 2v2m0-1H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></g></svg>
-        <span>Online Consultation</span>
-      </a>
-      <a href="#features" class="navigation-mobile-link">
-        <span>Features</span>
-      </a>
-      <a href="#data" class="navigation-mobile-link">
-        <span>Health Data</span>
-      </a>
-      <a href="#contact" class="navigation-mobile-link">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233a14 14 0 0 0 6.392 6.384"/></svg>
-        <span>Contact</span>
-      </a>
-      <div class="navigation-mobile-cta">
-        <button class="btn btn-primary btn-lg">Get Started</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Scroll Progress Indicator -->
-  <div class="navigation-scroll-indicator" aria-hidden="true"></div>
-</nav>
-<style>
-/* =========================================================================
-   NAVIGATION - Professional Healthcare Design
-   ========================================================================= */
-
-/* Main Navigation Wrapper */
-.navigation-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: color-mix(in srgb, var(--color-surface) 95%, transparent);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--color-border);
-  transition: all 0.4s var(--animation-curve-primary);
-}
-
-/* Navigation Container */
-.navigation-container {
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-  padding: var(--spacing-md) var(--spacing-lg);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-}
-
-/* =========================================================================
-   LOGO SECTION - Animated Brand Identity
-   ========================================================================= */
-
-.navigation-logo {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  text-decoration: none;
-  position: relative;
-  z-index: 2;
-  transition: transform 0.3s var(--animation-curve-primary);
-}
-
-.navigation-logo:hover {
-  transform: translateY(-2px);
-}
-
-.navigation-logo-icon {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-level-2);
-}
-
-.navigation-logo-icon svg {
-  position: relative;
-  z-index: 2;
-  color: var(--color-on-primary);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-/* Animated Pulse Effect */
-.navigation-logo-pulse {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  background: var(--color-primary);
-  border-radius: var(--border-radius-lg);
-  transform: translate(-50%, -50%);
-  opacity: 0.3;
-  animation: navigation-pulse 2s ease-in-out infinite;
-}
-
-@keyframes navigation-pulse {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.3;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.15);
-    opacity: 0;
-  }
-}
-
-.navigation-logo-text {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  letter-spacing: var(--letter-spacing-tight);
-  white-space: nowrap;
-}
-
-/* =========================================================================
-   DESKTOP NAVIGATION LINKS
-   ========================================================================= */
-
-.navigation-links-desktop {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  flex: 1;
-  justify-content: center;
-}
-
-.navigation-link {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface);
-  text-decoration: none;
-  white-space: nowrap;
-  border-radius: var(--border-radius-md);
-  position: relative;
-  transition: all 0.3s var(--animation-curve-primary);
-}
-
-.navigation-link svg {
-  transition: transform 0.3s var(--animation-curve-primary);
-  color: var(--color-primary);
-  opacity: 0.8;
-}
-
-.navigation-link::before {
-  content: '';
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
+z-index: 1000;
+width: 100%;
+position: relative;
+.dropdown-item:before {
+  font-family: Moririse2 !important;
+  content: "\e966";
+  display: inline-block;
   width: 0;
-  height: 2px;
-  background: var(--color-primary);
-  transform: translateX(-50%);
-  transition: width 0.3s var(--animation-curve-primary);
-  border-radius: var(--border-radius-full);
-}
-
-.navigation-link:hover {
-  color: var(--color-primary);
-  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
-}
-
-.navigation-link:hover::before {
-  width: 80%;
-}
-
-.navigation-link:hover svg {
-  transform: translateY(-2px);
-  opacity: 1;
-}
-
-.navigation-link:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-/* =========================================================================
-   DESKTOP ACTIONS
-   ========================================================================= */
-
-.navigation-actions-desktop {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.navigation-cta {
-  white-space: nowrap;
-  box-shadow: var(--shadow-level-2);
-}
-
-/* =========================================================================
-   MOBILE TOGGLE BUTTON
-   ========================================================================= */
-
-.navigation-toggle {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  border-radius: var(--border-radius-md);
-  transition: all 0.3s var(--animation-curve-primary);
-  position: relative;
-  z-index: 1001;
-}
-
-.navigation-toggle:hover {
-  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-}
-
-.navigation-toggle:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-.navigation-toggle-icon {
-  color: var(--color-on-surface);
-  transition: all 0.3s var(--animation-curve-primary);
   position: absolute;
-}
-
-.navigation-toggle-icon-hidden {
-  opacity: 0;
-  transform: rotate(90deg);
-}
-
-.navigation-toggle.navigation-active .navigation-toggle-icon:first-child {
-  opacity: 0;
-  transform: rotate(-90deg);
-}
-
-.navigation-toggle.navigation-active .navigation-toggle-icon-hidden {
-  opacity: 1;
-  transform: rotate(0deg);
-}
-
-/* =========================================================================
-   MOBILE NAVIGATION
-   ========================================================================= */
-
-.navigation-mobile {
-  position: fixed;
-  top: 76px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: color-mix(in srgb, var(--color-surface) 98%, transparent);
-  backdrop-filter: blur(16px);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-20px);
-  transition: all 0.4s var(--animation-curve-primary);
-  z-index: 999;
-  overflow-y: auto;
-}
-
-.navigation-mobile.navigation-open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.navigation-mobile-content {
-  padding: var(--spacing-xl) var(--spacing-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.navigation-mobile-link {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md) var(--spacing-lg);
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface);
-  text-decoration: none;
-  white-space: nowrap;
-  border-radius: var(--border-radius-lg);
-  background: var(--color-surface-elevated);
-  border: 1px solid var(--color-border);
-  transition: all 0.3s var(--animation-curve-primary);
-  box-shadow: var(--shadow-level-1);
-}
-
-.navigation-mobile-link svg {
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.navigation-mobile-link:hover {
-  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface-elevated));
-  border-color: var(--color-primary);
-  transform: translateX(4px);
-}
-
-.navigation-mobile-link:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-.navigation-mobile-cta {
-  margin-top: var(--spacing-lg);
-  padding-top: var(--spacing-lg);
-  border-top: 1px solid var(--color-border);
-}
-
-.navigation-mobile-cta .btn {
-  width: 100%;
-  justify-content: center;
-}
-
-/* =========================================================================
-   SCROLL PROGRESS INDICATOR
-   ========================================================================= */
-
-.navigation-scroll-indicator {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 3px;
-  width: 0%;
-  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-  transition: width 0.1s linear;
-  border-radius: var(--border-radius-full);
-}
-
-/* =========================================================================
-   SCROLLED STATE - Enhanced Shadow
-   ========================================================================= */
-
-.navigation-wrapper.navigation-scrolled {
-  box-shadow: var(--shadow-level-2);
-  background: var(--color-surface);
-}
-
-/* =========================================================================
-   RESPONSIVE DESIGN
-   ========================================================================= */
-
-@media (max-width: 991px) {
-  .navigation-links-desktop,
-  .navigation-actions-desktop {
-    display: none;
-  }
-
-  .navigation-toggle {
-    display: flex;
-  }
-
-  .navigation-container {
-    padding: var(--spacing-sm) var(--spacing-md);
-  }
-
-  .navigation-logo-text {
-    font-size: var(--font-size-base);
-  }
-
-  .navigation-logo-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .navigation-mobile {
-    top: 66px;
-  }
-}
-
-@media (max-width: 767px) {
-  .navigation-container {
-    padding: var(--spacing-sm) var(--spacing-md);
-  }
-
-  .navigation-mobile-content {
-    padding: var(--spacing-lg) var(--spacing-md);
-  }
-
-  .navigation-mobile-link {
-    font-size: var(--font-size-base);
-    padding: var(--spacing-sm) var(--spacing-md);
-  }
-}
-
-@media (max-width: 479px) {
-  .navigation-logo-icon {
-    width: 32px;
-    height: 32px;
-  }
-
-  .navigation-logo-icon svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .navigation-mobile-link svg {
-    width: 18px;
-    height: 18px;
-  }
-}
-
-/* =========================================================================
-   ACCESSIBILITY & REDUCED MOTION
-   ========================================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-  .navigation-wrapper,
-  .navigation-link,
-  .navigation-toggle,
-  .navigation-mobile,
-  .navigation-mobile-link {
-    transition: none;
-  }
-
-  .navigation-logo-pulse {
-    animation: none;
-  }
-
-  .navigation-link:hover svg {
-    transform: none;
-  }
-}
-
-/* Focus visible for keyboard navigation */
-.navigation-link:focus-visible,
-.navigation-mobile-link:focus-visible,
-.navigation-toggle:focus-visible,
-.navigation-logo:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-  border-radius: var(--border-radius-sm);
-}
-</style>
-<script defer data-name="navigation">
-// Mobile Menu Toggle
-const navToggle = document.getElementById('navigation-toggle');
-const navMobile = document.getElementById('navigation-mobile');
-const navWrapper = document.querySelector('.navigation-wrapper');
-const body = document.body;
-
-if (navToggle && navMobile) {
-  navToggle.addEventListener('click', function() {
-    const isOpen = navMobile.classList.contains('navigation-open');
-    
-    if (isOpen) {
-      navMobile.classList.remove('navigation-open');
-      navToggle.classList.remove('navigation-active');
-      navToggle.setAttribute('aria-expanded', 'false');
-      body.style.overflow = '';
-    } else {
-      navMobile.classList.add('navigation-open');
-      navToggle.classList.add('navigation-active');
-      navToggle.setAttribute('aria-expanded', 'true');
-      body.style.overflow = 'hidden';
-    }
-  });
-
-  // Close mobile menu when clicking on a link
-  const mobileLinks = navMobile.querySelectorAll('.navigation-mobile-link');
-  mobileLinks.forEach(function(link) {
-    link.addEventListener('click', function() {
-      navMobile.classList.remove('navigation-open');
-      navToggle.classList.remove('navigation-active');
-      navToggle.setAttribute('aria-expanded', 'false');
-      body.style.overflow = '';
-    });
-  });
-
-  // Close mobile menu on escape key
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && navMobile.classList.contains('navigation-open')) {
-      navMobile.classList.remove('navigation-open');
-      navToggle.classList.remove('navigation-active');
-      navToggle.setAttribute('aria-expanded', 'false');
-      body.style.overflow = '';
-    }
-  });
-}
-
-// Scroll Progress Indicator
-const scrollIndicator = document.querySelector('.navigation-scroll-indicator');
-
-function updateScrollProgress() {
-  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-  const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  const scrollPercentage = (scrollTop / scrollHeight) * 100;
-  
-  if (scrollIndicator) {
-    scrollIndicator.style.width = scrollPercentage + '%';
-  }
-}
-
-// Add scrolled class for shadow effect
-function handleScroll() {
-  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-  
-  if (scrollTop > 20) {
-    navWrapper.classList.add('navigation-scrolled');
-  } else {
-    navWrapper.classList.remove('navigation-scrolled');
-  }
-  
-  updateScrollProgress();
-}
-
-window.addEventListener('scroll', handleScroll, { passive: true });
-
-// Initialize scroll state
-handleScroll();
-</script><div id="healthsync-hero" class="healthsync-hero">
-  <div class="hero-container">
-    <div class="hero-left">
-      <h1 class="hero-title">Professional IoT Health Monitoring</h1>
-      <p class="hero-lead">Real-time home monitoring your doctor can trust. Securely stream heart rate, temperature, and humidity from our Arduino + ESP8266 devices to ThingSpeak for continuous oversight, live charts, and downloadable reports.</p>
-      
-      <div class="trust-row">
-        <div class="trust-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-          <span>HIPAA-aligned</span>
-        </div>
-        <div class="trust-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20h.01M2 8.82a15 15 0 0 1 20 0M5 12.859a10 10 0 0 1 14 0m-10.5 3.57a5 5 0 0 1 7 0"/></svg>
-          <span>Real-time sync</span>
-        </div>
-        <div class="trust-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/></svg>
-          <span>Clinically validated</span>
-        </div>
-      </div>
-
-      <div class="live-teaser" aria-live="polite" role="status">
-        <div class="live-metric">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676a.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg>
-          <span class="metric-value" id="hero-hr-value">78</span>
-          <span class="metric-unit">bpm</span>
-        </div>
-        <div class="live-metric">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0"/></svg>
-          <span class="metric-value" id="hero-temp-value">36.7</span>
-          <span class="metric-unit">°C</span>
-        </div>
-        <div class="live-metric">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5S5 13 5 15a7 7 0 0 0 7 7"/></svg>
-          <span class="metric-value" id="hero-humid-value">44</span>
-          <span class="metric-unit">%</span>
-        </div>
-      </div>
-
-      <div class="cta-row">
-        <button class="btn btn-primary" aria-label="Get started as doctor">Onboard as a Doctor</button>
-        <button class="btn btn-outline" aria-label="Get started as gym partner">Onboard as a Gym Partner</button>
-      </div>
-    </div>
-
-    <div class="hero-right">
-      <div class="snapshot" aria-live="polite" role="status">
-        <div class="snapshot-header">
-          <h3>Live Dashboard Preview</h3>
-          <span class="live-badge">
-            <span class="pulse-dot"></span>
-            Live
-          </span>
-        </div>
-        <div class="chart-preview">
-          <canvas id="hero-chart" width="400" height="240" aria-hidden="true"></canvas>
-          <div class="chart-overlay">
-            <div class="overlay-metric">
-              <span class="overlay-label">Heart Rate</span>
-              <span class="overlay-value" id="chart-hr">78 bpm</span>
-            </div>
-          </div>
-        </div>
-        <div class="snapshot-footer">
-          <div class="snapshot-stat">
-            <span class="stat-label">Temperature</span>
-            <span class="stat-value">36.7°C</span>
-          </div>
-          <div class="snapshot-stat">
-            <span class="stat-label">Humidity</span>
-            <span class="stat-value">44%</span>
-          </div>
-        </div>
-        <p class="update-note">Updates every 60 seconds from ThingSpeak</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="healthsync-dashboard" class="healthsync-dashboard">
-  <div class="dashboard-container">
-    <div class="section-header">
-      <h2 class="section-title">Real-Time Health Overview</h2>
-      <p class="section-subtitle">Stay connected to your patients and clients with live, clinician-grade telemetry</p>
-    </div>
-
-    <div class="featured-strip" role="region" aria-labelledby="featured-strip-title">
-      <h3 id="featured-strip-title" class="visually-hidden">Live Chart</h3>
-      <div class="featured-inner">
-        <div class="chart-card">
-          <div class="chart-header">
-            <div class="chart-info">
-              <h4>24-Hour Heart Rate Monitoring</h4>
-              <span class="chart-timestamp">Last update: <span id="chart-timestamp">2 minutes ago</span></span>
-            </div>
-            <div class="chart-controls">
-              <button class="control-btn" aria-label="Zoom in">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 7h6v6"/><path d="m22 7l-8.5 8.5l-5-5L2 17"/></g></svg>
-              </button>
-              <button class="control-btn" aria-label="Settings">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0a2.34 2.34 0 0 0 3.319 1.915a2.34 2.34 0 0 1 2.33 4.033a2.34 2.34 0 0 0 0 3.831a2.34 2.34 0 0 1-2.33 4.033a2.34 2.34 0 0 0-3.319 1.915a2.34 2.34 0 0 1-4.659 0a2.34 2.34 0 0 0-3.32-1.915a2.34 2.34 0 0 1-2.33-4.033a2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></g></svg>
-              </button>
-            </div>
-          </div>
-          <div class="chart-area">
-            <canvas id="dashboard-main-chart" width="800" height="320" role="img" aria-label="Live metric line chart, updates every 5 seconds"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="metrics-grid">
-      <div class="metric-card" role="region" aria-labelledby="hbm-title">
-        <div class="card-header">
-          <div class="card-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676a.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg>
-          </div>
-          <h2 id="hbm-title">Heart Beat Metric</h2>
-        </div>
-        <div class="card-body">
-          <div class="metric-display">
-            <span class="metric-number" id="hbm-value">78</span>
-            <span class="metric-label">bpm</span>
-          </div>
-          <div class="metric-trend">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 7h6v6"/><path d="m22 7l-8.5 8.5l-5-5L2 17"/></g></svg>
-            <span>Normal range</span>
-          </div>
-          <div class="metric-timestamp">Last reading: <span id="hbm-timestamp">15 seconds ago</span></div>
-        </div>
-        <div class="card-footer">
-          <span class="status-badge status-normal">Normal</span>
-        </div>
-      </div>
-
-      <div class="metric-card" role="region" aria-labelledby="temp-title">
-        <div class="card-header">
-          <div class="card-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0"/></svg>
-          </div>
-          <h2 id="temp-title">Temperature</h2>
-        </div>
-        <div class="card-body">
-          <div class="metric-display">
-            <span class="metric-number" id="temp-value">36.7</span>
-            <span class="metric-label">°C</span>
-          </div>
-          <div class="metric-trend">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 7h6v6"/><path d="m22 7l-8.5 8.5l-5-5L2 17"/></g></svg>
-            <span>Stable</span>
-          </div>
-          <div class="metric-timestamp">Last reading: <span id="temp-timestamp">15 seconds ago</span></div>
-        </div>
-        <div class="card-footer">
-          <span class="status-badge status-normal">Normal</span>
-        </div>
-      </div>
-
-      <div class="metric-card" role="region" aria-labelledby="humid-title">
-        <div class="card-header">
-          <div class="card-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5S5 13 5 15a7 7 0 0 0 7 7"/></svg>
-          </div>
-          <h2 id="humid-title">Humidity</h2>
-        </div>
-        <div class="card-body">
-          <div class="metric-display">
-            <span class="metric-number" id="humid-value">44</span>
-            <span class="metric-label">%</span>
-          </div>
-          <div class="metric-trend">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 7h6v6"/><path d="m22 7l-8.5 8.5l-5-5L2 17"/></g></svg>
-            <span>Comfortable</span>
-          </div>
-          <div class="metric-timestamp">Last reading: <span id="humid-timestamp">15 seconds ago</span></div>
-        </div>
-        <div class="card-footer">
-          <span class="status-badge status-normal">Optimal</span>
-        </div>
-      </div>
-
-      <div class="metric-card patient-snapshot" role="region" aria-labelledby="patient-title">
-        <div class="card-header">
-          <div class="card-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M16 3.128a4 4 0 0 1 0 7.744M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></g></svg>
-          </div>
-          <h2 id="patient-title">Patient Actions</h2>
-        </div>
-        <div class="card-body">
-          <div class="action-list">
-            <button class="action-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/></g></svg>
-              <span>Export PDF Report</span>
-            </button>
-            <button class="action-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
-              <span>Configure Alerts</span>
-            </button>
-            <button class="action-item">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11zm7.318-19.539l-10.94 10.939"/></svg>
-              <span>Start Consultation</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="dashboard-actions">
-      <button class="btn btn-primary">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 15V3m9 12v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10l5 5l5-5"/></g></svg>
-        Download Full Report
-      </button>
-      <button class="btn btn-outline">View Historical Data</button>
-    </div>
-  </div>
-</div>
-
-<div id="healthsync-charts" class="healthsync-charts">
-  <div class="charts-container">
-    <div class="section-header">
-      <h2 class="section-title">Charts & Trends</h2>
-      <p class="section-subtitle">Interactive, clinically focused charts that turn continuous monitoring into actionable insight</p>
-    </div>
-
-    <div class="charts-layout">
-      <div class="primary-chart-panel">
-        <div class="panel-header">
-          <h3>Live Stream & Historical Views</h3>
-          <div class="time-range-tabs" role="tablist">
-            <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="chart-panel-1h">1 Hour</button>
-            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="chart-panel-24h">24 Hours</button>
-            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="chart-panel-7d">7 Days</button>
-            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="chart-panel-30d">30 Days</button>
-          </div>
-        </div>
-        
-        <div class="chart-region" role="img" aria-label="Live metric line chart, updates every 5s" tabindex="0">
-          <canvas id="main-trends-chart" width="800" height="360"></canvas>
-          <div class="chart-annotations">
-            <button class="annotation-marker" style="left: 30%; top: 40%;" aria-label="View annotation at 2:30 PM">
-              <span class="marker-dot"></span>
-            </button>
-            <button class="annotation-marker" style="left: 65%; top: 55%;" aria-label="View annotation at 4:15 PM">
-              <span class="marker-dot"></span>
-            </button>
-          </div>
-        </div>
-
-        <div class="control-bar">
-          <div class="control-group">
-            <label class="control-label">
-              <input type="checkbox" id="smoothing-toggle" aria-pressed="false" />
-              <span>Smoothing</span>
-            </label>
-            <button class="btn-sm btn-outline" aria-haspopup="dialog">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/></g></svg>
-              Annotate
-            </button>
-            <button class="btn-sm btn-primary" aria-live="polite">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 15V3m9 12v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10l5 5l5-5"/></g></svg>
-              Export PDF
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="secondary-cards">
-        <div class="summary-card">
-          <h4>Daily Average</h4>
-          <div class="summary-value">76 <span>bpm</span></div>
-          <p class="summary-caption">Heart rate average over 24h</p>
-        </div>
-
-        <div class="summary-card">
-          <h4>Peak Reading</h4>
-          <div class="summary-value">102 <span>bpm</span></div>
-          <p class="summary-caption">Recorded at 3:45 PM</p>
-        </div>
-
-        <div class="summary-card">
-          <h4>Resting HR</h4>
-          <div class="summary-value">62 <span>bpm</span></div>
-          <p class="summary-caption">Morning baseline</p>
-        </div>
-
-        <div class="summary-card">
-          <h4>Variability</h4>
-          <div class="summary-value">12% <span>deviation</span></div>
-          <p class="summary-caption">Within normal range</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="analysis-tabs">
-      <div class="tabs-header" role="tablist">
-        <button class="analysis-tab active" role="tab" aria-selected="true">Automated Insights</button>
-        <button class="analysis-tab" role="tab" aria-selected="false">Comparative Analysis</button>
-        <button class="analysis-tab" role="tab" aria-selected="false">Export Schedule</button>
-      </div>
-      <div class="tab-panel active">
-        <div class="insight-grid">
-          <div class="insight-card">
-            <div class="insight-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 7h6v6"/><path d="m22 7l-8.5 8.5l-5-5L2 17"/></g></svg>
-            </div>
-            <h5>Trending Normal</h5>
-            <p>Heart rate patterns show consistent readings within healthy ranges over the past 7 days.</p>
-          </div>
-          <div class="insight-card">
-            <div class="insight-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
-            </div>
-            <h5>Activity Detected</h5>
-            <p>Elevated HR between 3-4 PM suggests physical activity. Consider scheduling follow-up if recurring.</p>
-          </div>
-          <div class="insight-card">
-            <div class="insight-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></g></svg>
-            </div>
-            <h5>Optimal Timing</h5>
-            <p>Resting heart rate lowest between 6-8 AM, ideal window for baseline measurements.</p>
-          </div>
-          <div class="insight-card">
-            <div class="insight-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-            </div>
-            <h5>No Alerts</h5>
-            <p>All metrics within safe thresholds. No immediate clinical action required.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="healthsync-doctor" class="healthsync-doctor">
-  <div class="doctor-container">
-    <div class="doctor-left">
-      <h2 class="section-title">Doctor Onboarding</h2>
-      <p class="section-subtitle">Secure, clinical-grade access to patient IoT data for remote monitoring and consultations</p>
-
-      <div class="benefits-list">
-        <div class="benefit-item">
-          <div class="benefit-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/></svg>
-          </div>
-          <div class="benefit-content">
-            <h4>Immediate Live Access</h4>
-            <p>Stream HBM, Temperature, and Humidity from ThingSpeak channel 3128115</p>
-          </div>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/></svg>
-          </div>
-          <div class="benefit-content">
-            <h4>Clinical Audit Trail</h4>
-            <p>Timestamped readings support decision-making and documentation</p>
-          </div>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/></svg>
-          </div>
-          <div class="benefit-content">
-            <h4>Integrated Teleconsultation</h4>
-            <p>Assessments and care plans in one secure workflow</p>
-          </div>
-        </div>
-        <div class="benefit-item">
-          <div class="benefit-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/></svg>
-          </div>
-          <div class="benefit-content">
-            <h4>Exportable Reports</h4>
-            <p>PDF exports for records, referrals, and billing</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="onboarding-form">
-        <h3>Request Clinical Access</h3>
-        <form>
-          <div class="form-group">
-            <label for="doctor-name">Full Name</label>
-            <input type="text" id="doctor-name" placeholder="Dr. Jane Smith" required />
-          </div>
-          <div class="form-group">
-            <label for="doctor-email">Professional Email</label>
-            <input type="email" id="doctor-email" placeholder="jane.smith@hospital.com" required />
-          </div>
-          <div class="form-group">
-            <label for="doctor-license">Medical License Number</label>
-            <input type="text" id="doctor-license" placeholder="License #" required />
-          </div>
-          <div class="form-group">
-            <label for="doctor-institution">Institution / Practice</label>
-            <input type="text" id="doctor-institution" placeholder="Hospital or Clinic Name" required />
-          </div>
-          <button type="submit" class="btn btn-primary" aria-label="Request clinical access">Request Access</button>
-        </form>
-        <p class="security-note">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></g></svg>
-          All credentials are verified and stored securely. HIPAA-compliant processing.
-        </p>
-      </div>
-    </div>
-
-    <div class="doctor-right">
-      <div class="patient-card">
-        <div class="patient-header">
-          <span class="role-badge">Clinical Tools</span>
-          <span class="live-indicator">
-            <span class="pulse-dot"></span>
-            Live
-          </span>
-        </div>
-        <div class="patient-content">
-          <h4>Live Patient Overview</h4>
-          <div class="patient-vitals">
-            <div class="vital-row">
-              <span class="vital-label">Heart Rate</span>
-              <span class="vital-value">78 bpm</span>
-            </div>
-            <div class="vital-row">
-              <span class="vital-label">Temperature</span>
-              <span class="vital-value">36.7°C</span>
-            </div>
-            <div class="vital-row">
-              <span class="vital-label">Humidity</span>
-              <span class="vital-value">44%</span>
-            </div>
-          </div>
-          <div class="patient-status">
-            <span class="status-badge status-normal">All metrics normal</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="checklist-card">
-        <h4>Quick Start Checklist</h4>
-        <div class="checklist-accordion">
-          <button class="accordion-header" aria-expanded="false">
-            <span>1. Request Institutional Access</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 7h6v6"/><path d="m22 7l-8.5 8.5l-5-5L2 17"/></g></svg>
-          </button>
-          <button class="accordion-header" aria-expanded="false">
-            <span>2. Assign Practitioner Roles</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 7h6v6"/><path d="m22 7l-8.5 8.5l-5-5L2 17"/></g></svg>
-          </button>
-          <button class="accordion-header" aria-expanded="false">
-            <span>3. Patient Enrollment</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 7h6v6"/><path d="m22 7l-8.5 8.5l-5-5L2 17"/></g></svg>
-          </button>
-          <button class="accordion-header" aria-expanded="false">
-            <span>4. Configure Alerts</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 7h6v6"/><path d="m22 7l-8.5 8.5l-5-5L2 17"/></g></svg>
-          </button>
-          <button class="accordion-header" aria-expanded="false">
-            <span>5. Start Consultations</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 7h6v6"/><path d="m22 7l-8.5 8.5l-5-5L2 17"/></g></svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="action-group">
-        <button class="btn btn-outline btn-sm">Assign Roles</button>
-        <button class="btn btn-outline btn-sm">Enroll Patient</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="healthsync-gym" class="healthsync-gym">
-  <div class="gym-container">
-    <div class="gym-grid">
-      <div class="gym-featured">
-        <div class="featured-content">
-          <span class="featured-badge">For Wellness Partners</span>
-          <h2>Elevate Member Safety & Performance</h2>
-          <p>Professional-grade monitoring using secure IoT telemetry — continuous heart-rate, live alerts, and downloadable session reports that empower trainers and protect members.</p>
-          <button class="btn btn-primary" aria-label="Schedule demo for gym">Schedule a Demo</button>
-        </div>
-        <div class="featured-image">
-          <img src="https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Man performing a deadlift exercise in a gym" loading="lazy" />
-        </div>
-      </div>
-
-      <div class="gym-dashboard">
-        <h3>Live Member Dashboard</h3>
-        <div class="mini-metrics">
-          <div class="mini-metric">
-            <div class="mini-metric-value">24</div>
-            <div class="mini-metric-label">Active Members</div>
-          </div>
-          <div class="mini-metric">
-            <div class="mini-metric-value">78</div>
-            <div class="mini-metric-label">Avg HR (bpm)</div>
-          </div>
-          <div class="mini-metric">
-            <div class="mini-metric-value">3</div>
-            <div class="mini-metric-label">Peak Alerts</div>
-          </div>
-          <div class="mini-metric">
-            <div class="mini-metric-value">98%</div>
-            <div class="mini-metric-label">Safe Range</div>
-          </div>
-        </div>
-        <div class="mini-chart">
-          <canvas id="gym-mini-chart" width="400" height="180" aria-hidden="true"></canvas>
-        </div>
-      </div>
-
-      <div class="gym-tools">
-        <h3>Trainer Tools</h3>
-        <div class="tools-accordion">
-          <details class="tool-item">
-            <summary>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M16 3.128a4 4 0 0 1 0 7.744M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></g></svg>
-              <span>Live Member List</span>
-            </summary>
-            <p>Real-time dashboard showing current heart rate for all connected members with color-coded risk indicators.</p>
-          </details>
-          <details class="tool-item">
-            <summary>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
-              <span>Instant Notifications</span>
-            </summary>
-            <p>Automatic alerts when member readings exceed personalized thresholds or show abnormal patterns.</p>
-          </details>
-          <details class="tool-item">
-            <summary>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/></g></svg>
-              <span>Session Export</span>
-            </summary>
-            <p>One-click PDF export of session summaries with charts for client review or medical follow-up.</p>
-          </details>
-          <details class="tool-item">
-            <summary>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 7h6v6"/><path d="m22 7l-8.5 8.5l-5-5L2 17"/></g></svg>
-              <span>Heart Rate Zones</span>
-            </summary>
-            <p>Data-driven training zones help members optimize workouts and track recovery progress.</p>
-          </details>
-        </div>
-      </div>
-
-      <div class="gym-onboarding">
-        <h3>Partner Onboarding Steps</h3>
-        <ol class="onboarding-steps">
-          <li>
-            <span class="step-number">1</span>
-            <div class="step-content">
-              <h4>Schedule Demo</h4>
-              <p>See live data from ThingSpeak Channel 3128115</p>
-            </div>
-          </li>
-          <li>
-            <span class="step-number">2</span>
-            <div class="step-content">
-              <h4>Install Hub</h4>
-              <p>Link member sensors to facility dashboard</p>
-            </div>
-          </li>
-          <li>
-            <span class="step-number">3</span>
-            <div class="step-content">
-              <h4>Staff Training</h4>
-              <p>Onboard trainers with monitoring protocols</p>
-            </div>
-          </li>
-          <li>
-            <span class="step-number">4</span>
-            <div class="step-content">
-              <h4>Go Live</h4>
-              <p>Start monitoring and exporting reports</p>
-            </div>
-          </li>
-        </ol>
-        <button class="btn btn-outline btn-sm">Contact Support</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="healthsync-data" class="healthsync-data">
-  <div class="data-container">
-    <div class="data-layout">
-      <div class="data-timeline">
-        <h2 class="section-title">Data Flow & Access Controls</h2>
-        <p class="section-subtitle">Secure, transparent, real-time data architecture built for clinical trust</p>
-
-        <div class="timeline-list">
-          <div class="timeline-item">
-            <div class="timeline-marker">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/></svg>
-            </div>
-            <div class="timeline-content">
-              <h3>Device Capture</h3>
-              <p>Arduino reads sensors (pulse sensor, DHT22, LCD display) and forwards packets to ESP8266 NodeMCU</p>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-marker">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/></svg>
-            </div>
-            <div class="timeline-content">
-              <h3>Secure Transmission</h3>
-              <p>NodeMCU authenticates to ThingSpeak and pushes HBM, TEMPERATURE, and HUMIDITY to Channel 3128115</p>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-marker">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/></svg>
-            </div>
-            <div class="timeline-content">
-              <h3>Web Portal Sync</h3>
-              <p>HealthSync reads ThingSpeak API to display live charts, downloadable reports, and alerts</p>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-marker">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/></svg>
-            </div>
-            <div class="timeline-content">
-              <h3>Role-Based Access</h3>
-              <p>Patients, Clinicians, and Partners receive scoped access with full audit trails and consent records</p>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-marker">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/></svg>
-            </div>
-            <div class="timeline-content">
-              <h3>Data Portability</h3>
-              <p>Secure PDF exports with tamper-evident signatures and full change logs for patient ownership</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="data-cards">
-        <div class="role-card">
-          <div class="role-header">
-            <span class="role-badge">Patient</span>
-            <button class="toggle-btn" aria-pressed="false" aria-label="Toggle live access">
-              <span class="toggle-track">
-                <span class="toggle-thumb"></span>
-              </span>
-            </button>
-          </div>
-          <ul class="permission-list">
-            <li>View and export personal data</li>
-            <li>Initiate consultations</li>
-            <li>Grant access to clinicians</li>
-            <li>Download health summaries</li>
-          </ul>
-        </div>
-
-        <div class="role-card">
-          <div class="role-header">
-            <span class="role-badge">Primary Clinician</span>
-            <button class="toggle-btn" aria-pressed="true" aria-label="Toggle live access">
-              <span class="toggle-track active">
-                <span class="toggle-thumb"></span>
-              </span>
-            </button>
-          </div>
-          <ul class="permission-list">
-            <li>View live and historical data</li>
-            <li>Annotate records</li>
-            <li>Start teleconsultations</li>
-            <li>Export clinical reports</li>
-          </ul>
-        </div>
-
-        <div class="role-card">
-          <div class="role-header">
-            <span class="role-badge">Partner (Gym)</span>
-            <button class="toggle-btn" aria-pressed="false" aria-label="Toggle live access">
-              <span class="toggle-track">
-                <span class="toggle-thumb"></span>
-              </span>
-            </button>
-          </div>
-          <ul class="permission-list">
-            <li>Aggregated or consented metrics</li>
-            <li>Group fitness monitoring</li>
-            <li>Session exports for coaching</li>
-            <li>Limited visibility per consent</li>
-          </ul>
-        </div>
-
-        <div class="alert-card">
-          <div class="alert-stripe"></div>
-          <div class="alert-content" aria-live="assertive">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
-            <div>
-              <h4>Emergency Protocol</h4>
-              <p>Critical readings trigger cascading alerts: device LCD → clinician push → patient SMS/call</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="healthsync-setup" class="healthsync-setup">
-  <div class="setup-container">
-    <div class="section-header">
-      <h2 class="section-title">Device Setup & How It Works</h2>
-      <p class="section-subtitle">Connect compact IoT hardware to secure cloud for real-time clinical monitoring</p>
-    </div>
-
-    <div class="setup-layout">
-      <nav class="setup-navigator" role="tablist">
-        <button class="nav-step active" role="tab" aria-selected="true" aria-controls="step-overview">
-          <span class="step-badge">1</span>
-          <span class="step-label">Overview</span>
-        </button>
-        <button class="nav-step" role="tab" aria-selected="false" aria-controls="step-hardware">
-          <span class="step-badge">2</span>
-          <span class="step-label">Hardware</span>
-        </button>
-        <button class="nav-step" role="tab" aria-selected="false" aria-controls="step-wiring">
-          <span class="step-badge">3</span>
-          <span class="step-label">Wiring</span>
-        </button>
-        <button class="nav-step" role="tab" aria-selected="false" aria-controls="step-firmware">
-          <span class="step-badge">4</span>
-          <span class="step-label">Firmware</span>
-        </button>
-        <button class="nav-step" role="tab" aria-selected="false" aria-controls="step-verify">
-          <span class="step-badge">5</span>
-          <span class="step-label">Verify</span>
-        </button>
-        <button class="nav-step" role="tab" aria-selected="false" aria-controls="step-troubleshoot">
-          <span class="step-badge">6</span>
-          <span class="step-label">Troubleshoot</span>
-        </button>
-      </nav>
-
-      <div class="setup-content" role="region" aria-labelledby="step-overview">
-        <div class="content-panel active" id="panel-overview">
-          <div class="panel-grid">
-            <div class="panel-text">
-              <h3>System Overview</h3>
-              <p>HealthSync connects Arduino Uno with sensors to ESP8266 NodeMCU for cloud relay. Data flows to ThingSpeak channel 3128115, then to our dashboard for live charts, PDF reports, and remote consultations.</p>
-              
-              <h4>What You'll Need</h4>
-              <ul class="component-list">
-                <li>Arduino Uno</li>
-                <li>ESP8266 NodeMCU</li>
-                <li>Pulse sensor (PPG)</li>
-                <li>DHT22 temperature & humidity sensor</li>
-                <li>16x2 or 20x4 LCD display</li>
-                <li>Breadboard and jumper wires</li>
-                <li>USB cable and power supply</li>
-                <li>Stable Wi‑Fi network</li>
-              </ul>
-
-              <div class="tech-badge">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-                <span>ThingSpeak Channel: 3128115</span>
-              </div>
-            </div>
-            <div class="panel-media">
-              <img src="https://images.pexels.com/photos/6755065/pexels-photo-6755065.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Detailed view of a circuit board with intricate gold traces" loading="lazy" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="utility-grid">
-        <div class="utility-card">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/></g></svg>
-          <h4>Download Code</h4>
-          <p>Arduino & ESP8266 sketches</p>
-        </div>
-        <div class="utility-card">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></g></svg>
-          <h4>API Reference</h4>
-          <p>ThingSpeak integration docs</p>
-        </div>
-        <div class="utility-card">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M16 3.128a4 4 0 0 1 0 7.744M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></g></svg>
-          <h4>Technical Support</h4>
-          <p>Live chat and community forum</p>
-        </div>
-        <div class="utility-card">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
-          <h4>Quick Start Video</h4>
-          <p>5-minute setup walkthrough</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<style>
-/* ============================================================================
-   HEALTHSYNC HOMEPAGE STYLES
-   Professional & Trustworthy Healthcare IoT Platform
-   ============================================================================ */
-
-/* Base Reset & Container */
-.healthsync-hero,
-.healthsync-dashboard,
-.healthsync-charts,
-.healthsync-doctor,
-.healthsync-gym,
-.healthsync-data,
-.healthsync-setup {
-  box-sizing: border-box;
-}
-
-.healthsync-hero *,
-.healthsync-dashboard *,
-.healthsync-charts *,
-.healthsync-doctor *,
-.healthsync-gym *,
-.healthsync-data *,
-.healthsync-setup * {
-  box-sizing: inherit;
-}
-
-/* ============================================================================
-   HERO SECTION
-   ============================================================================ */
-
-.healthsync-hero {
-  background: var(--color-surface);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  padding: var(--spacing-4xl) var(--spacing-3xl);
-  position: relative;
+  left: 1rem;
+  top: 0.5rem;
+  margin-right: 0.5rem;
+  line-height: 1;
+  font-size: inherit;
+  vertical-align: middle;
+  text-align: center;
   overflow: hidden;
+  transform: scale(0, 1);
+  transition: all 0.25s ease-in-out;
 }
-
-.healthsync-hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(135deg, transparent 0%, color-mix(in srgb, var(--color-primary) 5%, transparent) 100%);
-  z-index: 1;
-  pointer-events: none;
-}
-
-.hero-container {
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: var(--section-gap);
-  align-items: center;
-  position: relative;
-  z-index: 2;
-}
-
-.hero-left {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-  max-width: 72ch;
-}
-
-.hero-title {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-xxl);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-heading);
-  letter-spacing: var(--letter-spacing-tight);
-  color: var(--color-on-surface);
-  margin: 0;
-}
-
-.hero-lead {
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-base);
-  color: var(--color-on-surface-secondary);
-  margin: 0;
-}
-
-.trust-row {
-  display: flex;
-  gap: var(--spacing-lg);
-  flex-wrap: wrap;
-}
-
-.trust-item {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface);
-  font-weight: var(--font-weight-medium);
-}
-
-.trust-item svg {
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.live-teaser {
-  display: flex;
-  gap: var(--spacing-lg);
-  flex-wrap: wrap;
-  padding: var(--spacing-md);
-  background: var(--color-surface-elevated);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--color-border);
-}
-
-.live-metric {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface);
-}
-
-.live-metric svg {
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.metric-value {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  transition: transform var(--animation-duration-fast) var(--animation-curve-primary), color var(--animation-duration-fast) var(--animation-curve-primary);
-  will-change: transform, color;
-}
-
-.metric-unit {
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface-secondary);
-}
-
-.cta-row {
-  display: flex;
-  gap: var(--spacing-md);
-  flex-wrap: wrap;
-}
-
-.hero-right {
-  width: 100%;
-  max-width: 420px;
-}
-
-.snapshot {
-  background: var(--color-surface-elevated);
-  box-shadow: var(--shadow-level-2);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
-  border: 1px solid var(--color-border);
-}
-
-.snapshot-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-md);
-}
-
-.snapshot-header h3 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  margin: 0;
-}
-
-.live-badge {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: 4px var(--spacing-sm);
-  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  border-radius: var(--border-radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-primary);
-}
-
-.pulse-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--color-primary);
-  border-radius: var(--border-radius-full);
-  animation: pulse 2s var(--animation-curve-primary) infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
+@media (max-width: 767px) {
+  .navbar-toggler {
     transform: scale(0.8);
   }
 }
-
-.chart-preview {
-  position: relative;
-  margin-bottom: var(--spacing-md);
-}
-
-.chart-preview canvas {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: var(--border-radius-sm);
-  background: var(--color-backplate);
-}
-
-.chart-overlay {
-  position: absolute;
-  top: var(--spacing-sm);
-  right: var(--spacing-sm);
-  padding: var(--spacing-sm);
-  background: var(--color-scrim);
-  backdrop-filter: blur(8px);
-  border-radius: var(--border-radius-sm);
-}
-
-.overlay-metric {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.overlay-label {
-  font-size: var(--font-size-xs);
-  color: var(--color-on-surface-secondary);
-}
-
-.overlay-value {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-}
-
-.snapshot-footer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-}
-
-.snapshot-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.stat-label {
-  font-size: var(--font-size-xs);
-  color: var(--color-on-surface-secondary);
-}
-
-.stat-value {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-}
-
-.update-note {
-  font-size: var(--font-size-xs);
-  color: var(--color-on-surface-secondary);
-  text-align: center;
-  margin: 0;
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* ============================================================================
-   DASHBOARD SECTION
-   ============================================================================ */
-
-.healthsync-dashboard {
-  padding: var(--spacing-4xl) var(--spacing-3xl);
-  background: var(--color-surface);
-}
-
-.dashboard-container {
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-}
-
-.section-header {
-  text-align: center;
-  margin-bottom: var(--section-gap);
-}
-
-.section-title {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-xxl);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-heading);
-  color: var(--color-on-surface);
-  margin: 0 0 var(--spacing-sm) 0;
-}
-
-.section-subtitle {
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-base);
-  color: var(--color-on-surface-secondary);
-  margin: 0;
-  max-width: 65ch;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.featured-strip {
-  margin-bottom: var(--section-gap);
-  background: var(--color-surface-elevated);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-level-1);
-  border: 1px solid var(--color-border);
-}
-
-.featured-inner {
-  display: flex;
-  gap: var(--spacing-lg);
-}
-
-.chart-card {
-  flex: 1;
-}
-
-.chart-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: var(--spacing-md);
-}
-
-.chart-info h4 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  margin: 0 0 4px 0;
-}
-
-.chart-timestamp {
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface-secondary);
-}
-
-.chart-controls {
-  display: flex;
-  gap: var(--spacing-xs);
-}
-
-.control-btn {
-  padding: var(--spacing-xs);
-  background: transparent;
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-sm);
-  color: var(--color-on-surface);
-  cursor: pointer;
-  transition: background var(--animation-duration-fast) var(--animation-curve-primary), transform var(--animation-duration-fast) var(--animation-curve-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.control-btn:hover {
-  background: var(--color-backplate);
-  transform: scale(1.05);
-}
-
-.control-btn:focus-visible {
-  outline: 2px solid var(--color-outline);
-  outline-offset: 2px;
-}
-
-.chart-area {
-  background: var(--color-backplate);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-}
-
-.chart-area canvas {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.metrics-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--section-gap);
-  margin-bottom: var(--spacing-xl);
-}
-
-.metric-card {
-  background: var(--color-surface-elevated);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-level-1);
-  border: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-  transition: box-shadow var(--animation-duration-fast) var(--animation-curve-primary), transform var(--animation-duration-fast) var(--animation-curve-primary);
-}
-
-.metric-card:hover {
-  box-shadow: var(--shadow-level-2);
-  transform: translateY(-2px);
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.card-icon {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  border-radius: var(--border-radius-md);
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.card-header h2 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-heading);
-  color: var(--color-on-surface);
-  margin: 0;
-}
-
-.card-body {
-  flex: 1;
-}
-
-.metric-display {
-  display: flex;
-  align-items: baseline;
-  gap: var(--spacing-xs);
-  margin-bottom: var(--spacing-sm);
-}
-
-.metric-number {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-xxl);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--letter-spacing-tight);
-  color: var(--color-on-surface);
-}
-
-.metric-label {
-  font-size: var(--font-size-base);
-  color: var(--color-on-surface-secondary);
-}
-
-.metric-trend {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface-secondary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.metric-trend svg {
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.metric-timestamp {
-  font-size: var(--font-size-xs);
-  color: var(--color-on-surface-secondary);
-}
-
-.card-footer {
-  display: flex;
-  justify-content: flex-start;
-}
-
-.status-badge {
-  padding: 4px var(--spacing-sm);
-  border-radius: var(--border-radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-}
-
-.status-normal {
-  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  color: var(--color-primary);
-}
-
-.patient-snapshot {
-  grid-column: span 2;
-}
-
-.action-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.action-item {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: transparent;
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-sm);
-  color: var(--color-on-surface);
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
-  cursor: pointer;
-  transition: background var(--animation-duration-fast) var(--animation-curve-primary), transform var(--animation-duration-fast) var(--animation-curve-primary);
-  text-align: left;
-}
-
-.action-item:hover {
-  background: var(--color-backplate);
-  transform: translateX(4px);
-}
-
-.action-item:focus-visible {
-  outline: 2px solid var(--color-outline);
-  outline-offset: 2px;
-}
-
-.action-item svg {
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.dashboard-actions {
-  display: flex;
-  gap: var(--spacing-md);
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.dashboard-actions .btn {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-/* ============================================================================
-   CHARTS & TRENDS SECTION
-   ============================================================================ */
-
-.healthsync-charts {
-  padding: var(--spacing-4xl) var(--spacing-3xl);
-  background: var(--color-surface);
-}
-
-.charts-container {
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-}
-
-.charts-layout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: var(--spacing-lg);
-  margin-bottom: var(--section-gap);
-}
-
-.primary-chart-panel {
-  background: var(--color-surface-elevated);
-  box-shadow: var(--shadow-level-1);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--color-border);
-  padding: var(--spacing-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-}
-
-.panel-header h3 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  margin: 0;
-}
-
-.time-range-tabs {
-  display: flex;
-  gap: var(--spacing-xs);
-  background: var(--color-surface);
-  padding: 4px;
-  border-radius: var(--border-radius-sm);
-}
-
-.tab-btn {
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: transparent;
-  border: none;
-  border-radius: var(--border-radius-sm);
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface-secondary);
-  cursor: pointer;
-  transition: background var(--animation-duration-fast) var(--animation-curve-primary), color var(--animation-duration-fast) var(--animation-curve-primary);
-}
-
-.tab-btn:hover {
-  background: var(--color-backplate);
-  color: var(--color-on-surface);
-}
-
-.tab-btn.active {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-}
-
-.tab-btn:focus-visible {
-  outline: 2px solid var(--color-outline);
-  outline-offset: 2px;
-}
-
-.chart-region {
-  position: relative;
-  flex: 1;
-  min-height: 360px;
-  background: var(--color-backplate);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-}
-
-.chart-region canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.chart-annotations {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.annotation-marker {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  pointer-events: all;
-  background: var(--color-surface-elevated);
-  border: 2px solid var(--color-primary);
-  border-radius: var(--border-radius-full);
-  padding: 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform var(--animation-duration-fast) var(--animation-curve-primary);
-}
-
-.annotation-marker:hover {
-  transform: scale(1.2);
-}
-
-.marker-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--color-primary);
-  border-radius: var(--border-radius-full);
-}
-
-.control-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-}
-
-.control-group {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.control-label {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface);
-  cursor: pointer;
-}
-
-.control-label input[type="checkbox"] {
-  cursor: pointer;
-}
-
-.secondary-cards {
-  display: grid;
-  grid-auto-rows: min-content;
-  gap: var(--spacing-md);
-}
-
-.summary-card {
-  background: var(--color-surface);
-  color: var(--color-on-surface);
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-sm);
-  box-shadow: var(--shadow-level-1);
-  border: 1px solid var(--color-border);
-}
-
-.summary-card h4 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface-secondary);
-  margin: 0 0 var(--spacing-xs) 0;
-}
-
-.summary-value {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  margin-bottom: 4px;
-}
-
-.summary-value span {
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface-secondary);
-  font-weight: var(--font-weight-regular);
-}
-
-.summary-caption {
-  font-size: var(--font-size-xs);
-  color: var(--color-on-surface-secondary);
-  margin: 0;
-}
-
-.analysis-tabs {
-  background: var(--color-surface-elevated);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-level-2);
-  border: 1px solid var(--color-border);
-  overflow: hidden;
-}
-
-.tabs-header {
-  display: flex;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.analysis-tab {
-  flex: 1;
-  padding: var(--spacing-md) var(--spacing-lg);
-  background: transparent;
-  border: none;
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface-secondary);
-  cursor: pointer;
-  transition: background var(--animation-duration-fast) var(--animation-curve-primary), color var(--animation-duration-fast) var(--animation-curve-primary);
-  border-bottom: 2px solid transparent;
-}
-
-.analysis-tab:hover {
-  background: var(--color-backplate);
-  color: var(--color-on-surface);
-}
-
-.analysis-tab.active {
-  color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
-}
-
-.tab-panel {
-  padding: var(--spacing-lg);
-  display: none;
-}
-
-.tab-panel.active {
-  display: block;
-}
-
-.insight-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-md);
-}
-
-.insight-card {
-  padding: var(--spacing-md);
-  background: var(--color-surface);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--color-border);
-}
-
-.insight-icon {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  border-radius: var(--border-radius-md);
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-sm);
-}
-
-.insight-card h5 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  margin: 0 0 var(--spacing-xs) 0;
-}
-
-.insight-card p {
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface-secondary);
-  line-height: var(--line-height-base);
-  margin: 0;
-}
-
-/* ============================================================================
-   DOCTOR ONBOARDING SECTION
-   ============================================================================ */
-
-.healthsync-doctor {
-  padding: var(--spacing-3xl) var(--spacing-xl);
-  background: var(--color-surface);
-}
-
-.doctor-container {
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: var(--section-gap);
-  align-items: start;
-  background: var(--color-surface-elevated);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-3xl);
-  box-shadow: var(--shadow-level-1);
-  border: 1px solid var(--color-border);
-}
-
-.doctor-left {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-}
-
-.benefits-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.benefit-item {
-  display: flex;
-  gap: var(--spacing-md);
-  align-items: flex-start;
-}
-
-.benefit-icon {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  border-radius: var(--border-radius-full);
-  flex-shrink: 0;
-}
-
-.benefit-content h4 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  margin: 0 0 4px 0;
-}
-
-.benefit-content p {
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface-secondary);
-  margin: 0;
-}
-
-.onboarding-form {
-  background: var(--color-surface);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-lg);
-  border: 1px solid var(--color-border);
-}
-
-.onboarding-form h3 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface);
-  margin: 0 0 var(--spacing-md) 0;
-}
-
-.form-group {
-  margin-bottom: var(--spacing-md);
-}
-
-.form-group label {
-  display: block;
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface-secondary);
-  margin-bottom: var(--spacing-xs);
-  font-weight: var(--font-weight-medium);
-}
-
-.form-group input {
-  width: 100%;
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-sm);
-  border: 1px solid var(--color-outline);
-  background: var(--color-surface);
-  color: var(--color-on-surface);
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
-  transition: border-color var(--animation-duration-fast) var(--animation-curve-primary);
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-}
-
-.form-group input::placeholder {
-  color: var(--color-on-surface-secondary);
-  opacity: 0.6;
-}
-
-.security-note {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-xs);
-  color: var(--color-on-surface-secondary);
-  margin-top: var(--spacing-md);
-  padding: var(--spacing-sm);
-  background: var(--color-backplate);
-  border-radius: var(--border-radius-sm);
-}
-
-.security-note svg {
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.doctor-right {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.patient-card {
-  background: var(--color-backplate);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  box-shadow: var(--shadow-level-1);
-  border: 1px solid var(--color-border);
-}
-
-.patient-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-md);
-}
-
-.role-badge {
-  padding: 4px var(--spacing-sm);
-  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  color: var(--color-primary);
-  border-radius: var(--border-radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-}
-
-.live-indicator {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-xs);
-  color: var(--color-on-surface);
-}
-
-.patient-content h4 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  margin: 0 0 var(--spacing-sm) 0;
-}
-
-.patient-vitals {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-  margin-bottom: var(--spacing-md);
-}
-
-.vital-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: var(--font-size-sm);
-}
-
-.vital-label {
-  color: var(--color-on-surface-secondary);
-}
-
-.vital-value {
-  font-family: var(--font-family-heading);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-}
-
-.patient-status {
-  padding-top: var(--spacing-sm);
-  border-top: 1px solid var(--color-border);
-}
-
-.checklist-card {
-  background: var(--color-surface);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  border: 1px solid var(--color-border);
-}
-
-.checklist-card h4 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  margin: 0 0 var(--spacing-sm) 0;
-}
-
-.checklist-accordion {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.accordion-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-sm);
-  background: transparent;
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-sm);
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface);
-  text-align: left;
-  cursor: pointer;
-  transition: background var(--animation-duration-fast) var(--animation-curve-primary), transform var(--animation-duration-fast) var(--animation-curve-primary);
-}
-
-.accordion-header:hover {
-  background: var(--color-backplate);
-}
-
-.accordion-header:focus-visible {
-  outline: 2px solid var(--color-outline);
-  outline-offset: 2px;
-}
-
-.accordion-header svg {
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
-  color: var(--color-on-surface-secondary);
-}
-
-.action-group {
-  display: flex;
-  gap: var(--spacing-sm);
-}
-
-/* ============================================================================
-   GYM & WELLNESS PARTNERS SECTION
-   ============================================================================ */
-
-.healthsync-gym {
-  padding: var(--spacing-lg) var(--spacing-xl);
-  background: var(--color-surface);
-}
-
-.gym-container {
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-  background: var(--color-surface);
-  padding: var(--spacing-lg);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-level-1);
-}
-
-.gym-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
-  gap: var(--section-gap);
-}
-
-.gym-featured {
-  grid-area: 1 / 1 / 2 / 2;
-  background: var(--color-surface-elevated);
-  padding: var(--spacing-lg);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-level-2);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.featured-badge {
-  display: inline-block;
-  padding: 4px var(--spacing-sm);
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  border-radius: var(--border-radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  width: fit-content;
-}
-
-.featured-content h2 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-heading);
-  color: var(--color-on-surface);
-  margin: var(--spacing-sm) 0;
-}
-
-.featured-content p {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface-secondary);
-  margin-bottom: var(--spacing-md);
-}
-
-.featured-image {
-  margin-top: auto;
-  border-radius: var(--border-radius-md);
-  overflow: hidden;
-}
-
-.featured-image img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  display: block;
-}
-
-.gym-dashboard {
-  grid-area: 1 / 2 / 2 / 3;
-  background: var(--color-surface-elevated);
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-level-2);
-  border: 1px solid var(--color-border);
-}
-
-.gym-dashboard h3 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  margin: 0 0 var(--spacing-sm) 0;
-}
-
-.mini-metrics {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-}
-
-.mini-metric {
-  padding: var(--spacing-sm);
-  background: var(--color-surface);
-  border-radius: var(--border-radius-sm);
-  text-align: center;
-}
-
-.mini-metric-value {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-xxl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-}
-
-.mini-metric-label {
-  font-size: var(--font-size-xs);
-  color: var(--color-on-surface-secondary);
-  margin-top: 2px;
-}
-
-.mini-chart {
-  background: var(--color-backplate);
-  border-radius: var(--border-radius-sm);
-  padding: var(--spacing-sm);
-}
-
-.mini-chart canvas {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.gym-tools {
-  grid-area: 2 / 1 / 3 / 2;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-sm);
-  padding: var(--spacing-sm);
-}
-
-.gym-tools h3 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface);
-  margin: 0 0 var(--spacing-sm) 0;
-}
-
-.tools-accordion {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.tool-item {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-sm);
-  padding: var(--spacing-sm);
-}
-
-.tool-item summary {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface);
-  cursor: pointer;
-  list-style: none;
-}
-
-.tool-item summary::-webkit-details-marker {
-  display: none;
-}
-
-.tool-item summary svg {
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.tool-item p {
-  font-size: var(--font-size-xs);
-  color: var(--color-on-surface-secondary);
-  margin: var(--spacing-xs) 0 0 28px;
-}
-
-.gym-onboarding {
-  grid-area: 2 / 2 / 3 / 3;
-  background: var(--color-surface);
-  padding: var(--spacing-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-sm);
-}
-
-.gym-onboarding h3 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface);
-  margin: 0 0 var(--spacing-sm) 0;
-}
-
-.onboarding-steps {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 var(--spacing-md) 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.onboarding-steps li {
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: flex-start;
-}
-
-.step-number {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-primary-700);
-  color: var(--color-on-primary);
-  border-radius: var(--border-radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  flex-shrink: 0;
-}
-
-.step-content h4 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  margin: 0 0 2px 0;
-}
-
-.step-content p {
-  font-size: var(--font-size-xs);
-  color: var(--color-on-surface-secondary);
-  margin: 0;
-}
-
-/* ============================================================================
-   DATA & ACCESS SECTION
-   ============================================================================ */
-
-.healthsync-data {
-  padding: var(--spacing-3xl) var(--spacing-xl);
-  background: var(--color-surface);
-}
-
-.data-container {
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-}
-
-.data-layout {
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: var(--spacing-lg);
-  align-items: start;
-}
-
-.data-timeline {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-}
-
-.timeline-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-}
-
-.timeline-item {
-  display: flex;
-  gap: var(--spacing-md);
-  align-items: flex-start;
-}
-
-.timeline-marker {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-surface-elevated);
-  border-radius: var(--border-radius-full);
-  box-shadow: var(--shadow-level-1);
-  flex-shrink: 0;
-  color: var(--color-primary);
-}
-
-.timeline-content {
-  flex: 1;
-  max-width: 48ch;
-}
-
-.timeline-content h3 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-heading);
-  color: var(--color-on-surface);
-  margin: 0 0 var(--spacing-xs) 0;
-}
-
-.timeline-content p {
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-on-surface-secondary);
-  margin: 0;
-}
-
-.data-cards {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.role-card {
-  background: var(--color-surface-elevated);
-  padding: var(--spacing-lg);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-level-2);
-  border: 1px solid var(--color-border);
-}
-
-.role-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-md);
-}
-
-.toggle-btn {
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.toggle-btn:focus-visible {
-  outline: 2px solid var(--color-outline);
-  outline-offset: 2px;
-  border-radius: var(--border-radius-sm);
-}
-
-.toggle-track {
-  display: block;
-  width: 40px;
-  height: 20px;
-  background: var(--color-border);
-  border-radius: var(--border-radius-full);
-  position: relative;
-  transition: background var(--animation-duration-fast) var(--animation-curve-primary);
-}
-
-.toggle-track.active {
-  background: var(--color-primary);
-}
-
-.toggle-thumb {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 16px;
-  height: 16px;
-  background: var(--color-on-primary);
-  border-radius: var(--border-radius-full);
-  transition: transform var(--animation-duration-fast) var(--animation-curve-primary);
-}
-
-.toggle-track.active .toggle-thumb {
-  transform: translateX(20px);
-}
-
-.permission-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.permission-list li {
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface-secondary);
-  padding-left: 20px;
-  position: relative;
-}
-
-.permission-list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 8px;
-  width: 4px;
-  height: 4px;
-  background: var(--color-primary);
-  border-radius: var(--border-radius-full);
-}
-
-.alert-card {
-  background: var(--color-surface);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-level-2);
-  position: relative;
-  overflow: hidden;
-}
-
-.alert-stripe {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--color-accent);
-}
-
-.alert-content {
-  padding: var(--spacing-lg);
-  padding-left: calc(var(--spacing-lg) + 8px);
-  display: flex;
-  gap: var(--spacing-md);
-}
-
-.alert-content svg {
-  color: var(--color-accent);
-  flex-shrink: 0;
-}
-
-.alert-content h4 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  margin: 0 0 var(--spacing-xs) 0;
-}
-
-.alert-content p {
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface-secondary);
-  margin: 0;
-}
-
-/* ============================================================================
-   DEVICE SETUP SECTION
-   ============================================================================ */
-
-.healthsync-setup {
-  padding: var(--spacing-lg) var(--spacing-xl);
-  background: var(--color-surface);
-}
-
-.setup-container {
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-}
-
-.setup-layout {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: var(--spacing-lg);
-  background: var(--color-surface);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-level-1);
-  margin-bottom: var(--spacing-lg);
-}
-
-.setup-navigator {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-lg);
-  background: var(--color-surface-elevated);
-  border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
-}
-
-.nav-step {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: transparent;
-  color: var(--color-on-surface);
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--letter-spacing-tight);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-sm);
-  cursor: pointer;
-  transition: background var(--animation-duration-fast) var(--animation-curve-primary), box-shadow var(--animation-duration-fast) var(--animation-curve-primary), transform var(--animation-duration-fast) var(--animation-curve-primary);
-  text-align: left;
-}
-
-.nav-step:hover {
-  background: var(--color-backplate);
-}
-
-.nav-step.active {
-  background: var(--color-surface-elevated);
-  box-shadow: var(--shadow-level-2);
-  transform: scale(1.02);
-}
-
-.nav-step:focus-visible {
-  outline: 2px solid var(--color-outline);
-  outline-offset: var(--spacing-xs);
-}
-
-.step-badge {
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  border-radius: var(--border-radius-full);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  flex-shrink: 0;
-}
-
-.step-label {
-  flex: 1;
-}
-
-.setup-content {
-  padding: var(--spacing-lg);
-}
-
-.content-panel {
-  display: none;
-  opacity: 0;
-  transform: translateX(8px);
-  transition: opacity var(--animation-duration-fast) var(--animation-curve-primary), transform var(--animation-duration-fast) var(--animation-curve-primary);
-}
-
-.content-panel.active {
-  display: block;
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.panel-grid {
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: var(--spacing-lg);
-  background: var(--color-surface-elevated);
-  color: var(--color-on-surface);
-  padding: var(--spacing-lg);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-level-2);
-}
-
-.panel-text h3 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-heading);
-  color: var(--color-on-surface);
-  margin: 0 0 var(--spacing-sm) 0;
-}
-
-.panel-text p {
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-base);
-  color: var(--color-on-surface-secondary);
-  margin-bottom: var(--spacing-md);
-}
-
-.panel-text h4 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface);
-  margin: var(--spacing-lg) 0 var(--spacing-sm) 0;
-}
-
-.component-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 var(--spacing-lg) 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.component-list li {
-  font-size: var(--font-size-base);
-  color: var(--color-on-surface);
-  padding-left: 24px;
-  position: relative;
-}
-
-.component-list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 10px;
-  width: 6px;
-  height: 6px;
-  background: var(--color-primary);
-  border-radius: var(--border-radius-full);
-}
-
-.tech-badge {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--color-backplate);
-  border-radius: var(--border-radius-md);
-  width: fit-content;
-}
-
-.tech-badge svg {
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.tech-badge span {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface);
-}
-
-.panel-media {
-  border-radius: var(--border-radius-md);
-  overflow: hidden;
-  background: var(--color-backplate);
-}
-
-.panel-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.utility-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-sm);
-}
-
-.utility-card {
-  padding: var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-  align-items: center;
-  text-align: center;
-  transition: box-shadow var(--animation-duration-fast) var(--animation-curve-primary), transform var(--animation-duration-fast) var(--animation-curve-primary);
-}
-
-.utility-card:hover {
-  box-shadow: var(--shadow-level-1);
-  transform: translateY(-2px);
-}
-
-.utility-card svg {
-  color: var(--color-primary);
-}
-
-.utility-card h4 {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  margin: 0;
-}
-
-.utility-card p {
-  font-size: var(--font-size-xs);
-  color: var(--color-on-surface-secondary);
-  margin: 0;
-}
-
-/* ============================================================================
-   RESPONSIVE BREAKPOINTS
-   ============================================================================ */
-
-/* Tablet - max-width: 991px */
-@media (max-width: 991px) {
-  .hero-container,
-  .doctor-container,
-  .data-layout {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
-  }
-
-  .hero-right {
+.navbar-brand {
+  img {
     max-width: 100%;
+    max-height: 100%;
   }
-
-  .charts-layout {
-    grid-template-columns: 1.5fr 1fr;
+  flex-shrink: 0;
+  align-items: center;
+  margin-right: 0;
+  padding: 10px 0;
+  transition: all 0.3s;
+  word-break: break-word;
+  z-index: 1;
+  .navbar-caption {
+    line-height: inherit !important;
   }
-
-  .setup-layout {
-    grid-template-columns: 280px 1fr;
-  }
-
-  .panel-grid {
-    grid-template-columns: 1fr 360px;
-  }
-
-  .insight-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .gym-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-  }
-
-  .gym-featured {
-    grid-area: auto;
-  }
-
-  .gym-dashboard,
-  .gym-tools,
-  .gym-onboarding {
-    grid-area: auto;
+  .navbar-logo a {
+    outline: none;
   }
 }
-
-/* Mobile Landscape - max-width: 767px */
-@media (max-width: 767px) {
-  .healthsync-hero,
-  .healthsync-dashboard,
-  .healthsync-charts,
-  .healthsync-doctor,
-  .healthsync-gym,
-  .healthsync-data,
-  .healthsync-setup {
-    padding: var(--spacing-3xl) var(--spacing-md);
+.navbar-nav {
+  margin: auto;
+  margin-left: 0;
+  & when (@contentAlign = '2') {
+    margin-left: auto;
   }
-
-  .hero-title {
-    font-size: var(--font-size-xl);
+  & when (@contentAlign = '3') {
+    margin-left: auto;
+    margin-right: 0;
   }
-
-  .hero-lead {
-    font-size: var(--font-size-base);
-  }
-
-  .cta-row {
-    flex-direction: column;
-  }
-
-  .cta-row .btn {
-    width: 100%;
-  }
-
-  .metrics-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .patient-snapshot {
-    grid-column: span 1;
-  }
-
-  .charts-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .chart-region {
-    min-height: 300px;
-  }
-
-  .setup-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .setup-navigator {
-    flex-direction: row;
-    overflow-x: auto;
-    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
-  }
-
-  .panel-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .utility-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-/* Mobile - max-width: 479px */
-@media (max-width: 479px) {
-  .hero-title {
-    font-size: var(--font-size-lg);
-  }
-
-  .hero-lead {
-    font-size: var(--font-size-sm);
-  }
-
-  .live-teaser {
-    flex-direction: column;
-  }
-
-  .trust-row {
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
-
-  .chart-region {
-    min-height: 240px;
-  }
-
-  .control-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .control-group {
-    justify-content: space-between;
-  }
-
-  .dashboard-actions {
-    flex-direction: column;
-  }
-
-  .dashboard-actions .btn {
-    width: 100%;
-  }
-
-  .utility-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .mini-metrics {
-    grid-template-columns: 1fr;
-  }
-
-  .setup-navigator {
-    flex-direction: column;
-  }
-}
-
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-
-  .pulse-dot {
-    animation: none;
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-</style>
-<script defer data-name="healthsync-homepage">
-// ============================================================================
-// HEALTHSYNC HOMEPAGE INTERACTIVITY
-// Live data simulation, chart rendering, and UI interactions
-// ============================================================================
-
-// Simulated live data from ThingSpeak Channel 3128115
-let liveData = {
-  heartRate: 78,
-  temperature: 36.7,
-  humidity: 44,
-  timestamp: new Date()
-};
-
-// Update live metrics with animation
-function updateLiveMetrics() {
-  // Simulate data variation
-  liveData.heartRate = Math.floor(Math.random() * (85 - 70) + 70);
-  liveData.temperature = (Math.random() * (37.2 - 36.2) + 36.2).toFixed(1);
-  liveData.humidity = Math.floor(Math.random() * (50 - 40) + 40);
-  liveData.timestamp = new Date();
-
-  // Update hero metrics
-  const hrValue = document.getElementById('hero-hr-value');
-  const tempValue = document.getElementById('hero-temp-value');
-  const humidValue = document.getElementById('hero-humid-value');
-
-  if (hrValue) {
-    hrValue.style.transform = 'scale(1.1)';
-    hrValue.textContent = liveData.heartRate;
-    setTimeout(() => {
-      hrValue.style.transform = 'scale(1)';
-    }, 200);
-  }
-
-  if (tempValue) {
-    tempValue.style.transform = 'scale(1.1)';
-    tempValue.textContent = liveData.temperature;
-    setTimeout(() => {
-      tempValue.style.transform = 'scale(1)';
-    }, 200);
-  }
-
-  if (humidValue) {
-    humidValue.style.transform = 'scale(1.1)';
-    humidValue.textContent = liveData.humidity;
-    setTimeout(() => {
-      humidValue.style.transform = 'scale(1)';
-    }, 200);
-  }
-
-  // Update dashboard metrics
-  const hbmValue = document.getElementById('hbm-value');
-  const tempDashValue = document.getElementById('temp-value');
-  const humidDashValue = document.getElementById('humid-value');
-
-  if (hbmValue) hbmValue.textContent = liveData.heartRate;
-  if (tempDashValue) tempDashValue.textContent = liveData.temperature;
-  if (humidDashValue) humidDashValue.textContent = liveData.humidity;
-
-  // Update timestamps
-  const timestamps = document.querySelectorAll('[id$="-timestamp"]');
-  timestamps.forEach(ts => {
-    ts.textContent = 'just now';
-  });
-}
-
-// Hero chart rendering
-function renderHeroChart() {
-  const canvas = document.getElementById('hero-chart');
-  if (!canvas) return;
-
-  const ctx = canvas.getContext('2d');
-  const width = canvas.width;
-  const height = canvas.height;
-
-  // Clear canvas
-  ctx.clearRect(0, 0, width, height);
-
-  // Draw gradient background
-  const gradient = ctx.createLinearGradient(0, 0, 0, height);
-  gradient.addColorStop(0, 'rgba(52, 152, 219, 0.1)');
-  gradient.addColorStop(1, 'rgba(52, 152, 219, 0.01)');
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, width, height);
-
-  // Draw simulated heart rate line
-  ctx.strokeStyle = '#3498db';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-
-  const points = 50;
-  for (let i = 0; i < points; i++) {
-    const x = (i / points) * width;
-    const baseY = height / 2;
-    const variation = Math.sin(i * 0.3) * 30 + Math.random() * 20;
-    const y = baseY + variation;
-
-    if (i === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
+  .nav-item {
+    padding: 0 !important;
+    transition: 0.3s all !important;
+    .nav-link {
+      padding: 16px !important;
+      margin: 0 !important;
+      border-radius: 1rem !important;
+      transition: 0.3s all !important;
+      &:hover {
+        background-color: rgba(27, 31, 10, 0.06);
+      }
+      & when not (@isRoundedButtons) {
+        border-radius: 4px !important;
+      }
     }
   }
-
-  ctx.stroke();
-}
-
-// Dashboard main chart rendering
-function renderDashboardChart() {
-  const canvas = document.getElementById('dashboard-main-chart');
-  if (!canvas) return;
-
-  const ctx = canvas.getContext('2d');
-  const width = canvas.width;
-  const height = canvas.height;
-
-  // Clear canvas
-  ctx.clearRect(0, 0, width, height);
-
-  // Draw grid
-  ctx.strokeStyle = 'rgba(100, 100, 100, 0.1)';
-  ctx.lineWidth = 1;
-
-  // Vertical lines
-  for (let i = 0; i < 8; i++) {
-    const x = (i / 7) * width;
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, height);
-    ctx.stroke();
-  }
-
-  // Horizontal lines
-  for (let i = 0; i < 5; i++) {
-    const y = (i / 4) * height;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(width, y);
-    ctx.stroke();
-  }
-
-  // Draw chart line
-  ctx.strokeStyle = '#3498db';
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-
-  const dataPoints = 100;
-  for (let i = 0; i < dataPoints; i++) {
-    const x = (i / dataPoints) * width;
-    const baseY = height * 0.5;
-    const time = i * 0.1;
-    const variation = Math.sin(time) * 40 + Math.cos(time * 0.5) * 30 + Math.random() * 15;
-    const y = baseY + variation;
-
-    if (i === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
+  .open {
+    .nav-link {
+      &::after {
+        transform: rotate(180deg);
+      }
+      @media (min-width: 992px) {
+        &::before {
+          content: "";
+          width: 100%;
+          height: 20px;
+          top: 100%;
+          background: transparent;
+          position: absolute;
+        }
+      }
     }
   }
-
-  ctx.stroke();
-
-  // Draw gradient fill
-  ctx.lineTo(width, height);
-  ctx.lineTo(0, height);
-  ctx.closePath();
-
-  const fillGradient = ctx.createLinearGradient(0, 0, 0, height);
-  fillGradient.addColorStop(0, 'rgba(52, 152, 219, 0.2)');
-  fillGradient.addColorStop(1, 'rgba(52, 152, 219, 0)');
-  ctx.fillStyle = fillGradient;
-  ctx.fill();
-}
-
-// Trends chart rendering
-function renderTrendsChart() {
-  const canvas = document.getElementById('main-trends-chart');
-  if (!canvas) return;
-
-  const ctx = canvas.getContext('2d');
-  const width = canvas.width;
-  const height = canvas.height;
-
-  ctx.clearRect(0, 0, width, height);
-
-  // Similar to dashboard chart but with more detail
-  renderDashboardChart();
-}
-
-// Gym mini chart
-function renderGymChart() {
-  const canvas = document.getElementById('gym-mini-chart');
-  if (!canvas) return;
-
-  const ctx = canvas.getContext('2d');
-  const width = canvas.width;
-  const height = canvas.height;
-
-  ctx.clearRect(0, 0, width, height);
-
-  // Draw simple bar chart
-  const bars = 8;
-  const barWidth = width / bars * 0.7;
-  const gap = width / bars * 0.3;
-
-  ctx.fillStyle = '#3498db';
-
-  for (let i = 0; i < bars; i++) {
-    const x = i * (barWidth + gap) + gap / 2;
-    const barHeight = Math.random() * height * 0.8 + height * 0.1;
-    const y = height - barHeight;
-
-    ctx.fillRect(x, y, barWidth, barHeight);
+  .dropdown-item {
+    padding: 12px !important;
+    border-radius: 0.5rem !important;
+    margin: 0 8px !important;
+    transition: 0.3s all !important;
+    &:hover {
+      background-color: rgba(27, 31, 10, 0.06);
+    }
+    & when not (@isRoundedButtons) {
+      border-radius: 4px !important;
+    }
+  }
+  & when not (@showLogo), (@showBrand) {
+    @media (min-width: 992px) {
+      padding-left: 1.5rem;
+    }
+  }
+  & when not (@showBrand) {
+    @media (min-width: 992px) {
+      padding-left: 1.5rem;
+    }
   }
 }
-
-// Tab functionality
-function initializeTabs() {
-  const tabButtons = document.querySelectorAll('[role="tab"]');
-
-  tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const parent = button.closest('[role="tablist"]');
-      if (!parent) return;
-
-      // Deactivate all tabs in this group
-      parent.querySelectorAll('[role="tab"]').forEach(tab => {
-        tab.classList.remove('active');
-        tab.setAttribute('aria-selected', 'false');
-      });
-
-      // Activate clicked tab
-      button.classList.add('active');
-      button.setAttribute('aria-selected', 'true');
-
-      // Handle panel switching if setup navigator
-      if (parent.classList.contains('setup-navigator')) {
-        const allPanels = document.querySelectorAll('.content-panel');
-        allPanels.forEach(panel => {
-          panel.classList.remove('active');
-        });
-
-        const targetPanel = document.getElementById('panel-overview');
-        if (targetPanel) {
-          targetPanel.classList.add('active');
-        }
-      }
-    });
-  });
-}
-
-// Accordion functionality
-function initializeAccordions() {
-  const accordionHeaders = document.querySelectorAll('.accordion-header');
-
-  accordionHeaders.forEach(header => {
-    header.addEventListener('click', () => {
-      const isExpanded = header.getAttribute('aria-expanded') === 'true';
-      header.setAttribute('aria-expanded', !isExpanded);
-
-      // Simple visual feedback
-      if (!isExpanded) {
-        header.style.background = 'var(--color-backplate)';
-      } else {
-        header.style.background = 'transparent';
-      }
-    });
-  });
-}
-
-// Toggle buttons
-function initializeToggles() {
-  const toggleButtons = document.querySelectorAll('.toggle-btn');
-
-  toggleButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const track = button.querySelector('.toggle-track');
-      const isPressed = button.getAttribute('aria-pressed') === 'true';
-
-      button.setAttribute('aria-pressed', !isPressed);
-
-      if (track) {
-        if (!isPressed) {
-          track.classList.add('active');
-        } else {
-          track.classList.remove('active');
-        }
-      }
-    });
-  });
-}
-
-// Initialize all charts
-function initializeCharts() {
-  renderHeroChart();
-  renderDashboardChart();
-  renderTrendsChart();
-  renderGymChart();
-}
-
-// Start live updates
-function startLiveUpdates() {
-  // Update every 5 seconds
-  setInterval(updateLiveMetrics, 5000);
-
-  // Redraw charts periodically
-  setInterval(() => {
-    renderDashboardChart();
-    renderTrendsChart();
-  }, 10000);
-}
-
-// Initialize everything
-initializeCharts();
-initializeTabs();
-initializeAccordions();
-initializeToggles();
-startLiveUpdates();
-
-// Initial metrics update
-updateLiveMetrics();
-</script><footer class="footer" id="footer-main">
-  <div class="footer-container">
-    <!-- Main Footer Content -->
-    <div class="footer-content">
-      <!-- Brand Column -->
-      <div class="footer-column footer-brand">
-        <div class="footer-logo">
-          <div class="footer-logo-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676a.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg>
-          </div>
-          <span class="footer-logo-text">HealthSync</span>
-        </div>
-        <p class="footer-description">Advanced IoT-based health monitoring for real-time wellness tracking. Monitor heart rate, temperature, and humidity from anywhere with professional-grade sensors.</p>
-        <div class="footer-certifications">
-          <div class="footer-cert-badge">
-            <div class="footer-cert-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-            </div>
-            <span>Medical Grade IoT</span>
-          </div>
-          <div class="footer-cert-badge">
-            <div class="footer-cert-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-            </div>
-            <span>HIPAA Compliant</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Services Column -->
-      <div class="footer-column">
-        <h3 class="footer-column-title">Services</h3>
-        <ul class="footer-links">
-          <li><a href="#" class="footer-link">Remote Health Monitoring</a></li>
-          <li><a href="#" class="footer-link">Online Consultations</a></li>
-          <li><a href="#" class="footer-link">Heart Rate Tracking</a></li>
-          <li><a href="#" class="footer-link">Environmental Monitoring</a></li>
-          <li><a href="#" class="footer-link">Data Analytics</a></li>
-          <li><a href="#" class="footer-link">Gym Integration</a></li>
-        </ul>
-      </div>
-
-      <!-- Resources Column -->
-      <div class="footer-column">
-        <h3 class="footer-column-title">Resources</h3>
-        <ul class="footer-links">
-          <li><a href="#" class="footer-link">Dashboard Access</a></li>
-          <li><a href="#" class="footer-link">Live Charts</a></li>
-          <li><a href="#" class="footer-link">Download Reports</a></li>
-          <li><a href="#" class="footer-link">API Documentation</a></li>
-          <li><a href="#" class="footer-link">User Guide</a></li>
-          <li><a href="#" class="footer-link">Support Center</a></li>
-        </ul>
-      </div>
-
-      <!-- Company Column -->
-      <div class="footer-column">
-        <h3 class="footer-column-title">Company</h3>
-        <ul class="footer-links">
-          <li><a href="#" class="footer-link">About Us</a></li>
-          <li><a href="#" class="footer-link">Technology</a></li>
-          <li><a href="#" class="footer-link">Research</a></li>
-          <li><a href="#" class="footer-link">Partnerships</a></li>
-          <li><a href="#" class="footer-link">Careers</a></li>
-          <li><a href="#" class="footer-link">Contact</a></li>
-        </ul>
-      </div>
-
-      <!-- Contact Column -->
-      <div class="footer-column footer-contact">
-        <h3 class="footer-column-title">Contact Us</h3>
-        <div class="footer-contact-list">
-          <div class="footer-contact-item">
-            <div class="footer-contact-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233a14 14 0 0 0 6.392 6.384"/></svg>
-            </div>
-            <div class="footer-contact-details">
-              <span class="footer-contact-label">Phone</span>
-              <a href="tel:+1-800-HEALTH" class="footer-contact-value">+1 (800) HEALTH</a>
-            </div>
-          </div>
-          <div class="footer-contact-item">
-            <div class="footer-contact-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m22 7l-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect width="20" height="16" x="2" y="4" rx="2"/></g></svg>
-            </div>
-            <div class="footer-contact-details">
-              <span class="footer-contact-label">Email</span>
-              <a href="mailto:support@healthsync.com" class="footer-contact-value">support@healthsync.com</a>
-            </div>
-          </div>
-          <div class="footer-contact-item">
-            <div class="footer-contact-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M17.97 9.304A8 8 0 0 0 2 10c0 4.69 4.887 9.562 7.022 11.468m12.356-4.842a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/><circle cx="10" cy="10" r="3"/></g></svg>
-            </div>
-            <div class="footer-contact-details">
-              <span class="footer-contact-label">Address</span>
-              <span class="footer-contact-value">Medical Tech Center, Innovation District</span>
-            </div>
-          </div>
-          <div class="footer-contact-item">
-            <div class="footer-contact-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></g></svg>
-            </div>
-            <div class="footer-contact-details">
-              <span class="footer-contact-label">Support Hours</span>
-              <span class="footer-contact-value">24/7 Available</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Divider -->
-    <div class="footer-divider"></div>
-
-    <!-- Bottom Bar -->
-    <div class="footer-bottom">
-      <div class="footer-bottom-left">
-        <p class="footer-copyright">© 2025 HealthSync. All rights reserved.</p>
-        <div class="footer-legal-links">
-          <a href="#" class="footer-legal-link">Privacy Policy</a>
-          <span class="footer-legal-separator">•</span>
-          <a href="#" class="footer-legal-link">Terms of Service</a>
-          <span class="footer-legal-separator">•</span>
-          <a href="#" class="footer-legal-link">Cookie Policy</a>
-          <span class="footer-legal-separator">•</span>
-          <a href="#" class="footer-legal-link">Data Security</a>
-        </div>
-      </div>
-      <div class="footer-bottom-right">
-        <span class="footer-social-label">Follow Us</span>
-        <div class="footer-social">
-          <a href="#" class="footer-social-link" aria-label="Facebook">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-          </a>
-          <a href="#" class="footer-social-link" aria-label="Twitter">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6c2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4c-.9-4.2 4-6.6 7-3.8c1.1 0 3-1.2 3-1.2"/></svg>
-          </a>
-          <a href="#" class="footer-social-link" aria-label="LinkedIn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2a2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6M2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></g></svg>
-          </a>
-          <a href="#" class="footer-social-link" aria-label="Instagram">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8A4 4 0 0 1 16 11.37m1.5-4.87h.01"/></g></svg>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Decorative Background Elements -->
-  <div class="footer-bg-decoration" aria-hidden="true">
-    <div class="footer-bg-gradient"></div>
-    <div class="footer-bg-pattern"></div>
-  </div>
-</footer>
-<style>
-/* Footer Main Container */
-.footer {
-  position: relative;
-  background: var(--color-surface);
-  color: var(--color-on-surface);
-  padding: clamp(3rem, 6vw, 5rem) 0 var(--spacing-xl);
-  overflow: hidden;
-}
-
-.footer-container {
-  position: relative;
-  z-index: 3;
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-  padding: 0 var(--spacing-lg);
-}
-
-/* Footer Content Grid */
-.footer-content {
-  display: grid;
-  grid-template-columns: 2fr repeat(3, 1fr) 1.5fr;
-  gap: clamp(2rem, 4vw, 3.5rem);
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
-}
-
-/* Brand Column */
-.footer-brand {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-}
-
-.footer-logo {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-xs);
-}
-
-.footer-logo-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
-  border-radius: var(--border-radius-lg);
-  color: var(--color-primary);
-  transition: all var(--animation-duration-standard) var(--animation-curve-primary);
-}
-
-.footer-logo:hover .footer-logo-icon {
-  transform: scale(1.05);
-  background: color-mix(in srgb, var(--color-primary) 18%, transparent);
-}
-
-.footer-logo-text {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  letter-spacing: var(--letter-spacing-tight);
-}
-
-.footer-description {
-  color: var(--color-on-surface-secondary);
-  line-height: var(--line-height-base);
-  font-size: var(--font-size-sm);
-  margin: 0;
-}
-
-/* Certifications */
-.footer-certifications {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.footer-cert-badge {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  transition: all var(--animation-duration-standard) var(--animation-curve-primary);
-}
-
-.footer-cert-badge:hover {
-  background: color-mix(in srgb, var(--color-primary) 14%, transparent);
-  border-color: var(--color-primary);
-  transform: translateX(4px);
-}
-
-.footer-cert-icon {
-  display: flex;
-  align-items: center;
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.footer-cert-badge span {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface);
-  letter-spacing: var(--letter-spacing-normal);
-}
-
-/* Footer Columns */
-.footer-column {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.footer-column-title {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-on-surface);
-  letter-spacing: var(--letter-spacing-tight);
-  margin: 0 0 var(--spacing-xs);
-  line-height: var(--line-height-heading);
-}
-
-/* Footer Links */
-.footer-links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.footer-link {
-  color: var(--color-on-surface-secondary);
-  text-decoration: none;
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
-  transition: all var(--animation-duration-fast) var(--animation-curve-primary);
-  display: inline-block;
+.nav-link {
+  width: fit-content;
   position: relative;
 }
-
-.footer-link::before {
-  content: '';
-  position: absolute;
-  bottom: -2px;
+.navbar-logo {
+  margin: 0 !important;
+  @media (max-width: 767px) {
+    padding-left: 0;
+  }
+}
+.navbar-caption {
+  padding-left: 1rem;
+  padding-right: 0.5rem;
+  & when not (@showLogo) {
+    @media (min-width: 767px) {
+      padding-left: 2rem;
+    }
+  }
+}
+.nav-dropdown {
+  @media (max-width: 767px) {
+    padding-bottom: 0.5rem;
+  }
+}
+.nav-dropdown .link.dropdown-toggle::after {
+  margin-left: 0.5rem;
+  margin-top: 0.2rem;
+  transition: 0.3s all;
+}
+.container {
+  display: flex;
+  height: 90px;
+  padding: 0.5rem 0.6rem;
+  flex-wrap: nowrap;
+  & when not (@collapsed) {
+    @media (min-width: 992px) {
+    }
+    & when (@transparent) {
+      background: rgba(red(@menuBgColor), green(@menuBgColor), blue(@menuBgColor), @opacity) !important;
+    }
+  }
   left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--color-primary);
-  transition: width var(--animation-duration-standard) var(--animation-curve-primary);
-}
-
-.footer-link:hover {
-  color: var(--color-primary);
-  transform: translateX(4px);
-}
-
-.footer-link:hover::before {
-  width: 100%;
-}
-
-/* Contact Column */
-.footer-contact-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.footer-contact-item {
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: flex-start;
-  padding: var(--spacing-sm);
-  background: color-mix(in srgb, var(--color-surface-elevated) 50%, transparent);
-  border-radius: var(--border-radius-md);
-  border: 1px solid transparent;
-  transition: all var(--animation-duration-standard) var(--animation-curve-primary);
-}
-
-.footer-contact-item:hover {
-  background: var(--color-surface-elevated);
-  border-color: var(--color-border);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-level-1);
-}
-
-.footer-contact-icon {
-  display: flex;
+  right: 0;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: flex-end;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
   align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
-  border-radius: var(--border-radius-md);
-  color: var(--color-primary);
-}
-
-.footer-contact-details {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1;
-}
-
-.footer-contact-label {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.footer-contact-value {
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface);
-  text-decoration: none;
-  transition: color var(--animation-duration-fast) var(--animation-curve-primary);
-}
-
-a.footer-contact-value:hover {
-  color: var(--color-primary);
-}
-
-/* Divider */
-.footer-divider {
-  height: 1px;
-  background: var(--color-border);
-  margin: var(--spacing-2xl) 0 var(--spacing-xl);
-  position: relative;
-  overflow: hidden;
-}
-
-.footer-divider::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
-  animation: footer-divider-shine 3s infinite;
-}
-
-@keyframes footer-divider-shine {
-  0% {
-    left: -100%;
+  border-radius: 100vw;
+  margin-top: 1rem;
+  background-color: @menuBgColor;
+  box-shadow: 0 30px 60px 0 rgba(27, 31, 10, 0.08);
+  @media (max-width: 992px) {
+    padding-right: 2rem;
   }
-  50%, 100% {
-    left: 100%;
+  @media (max-width: 767px) {
+    width: 95%;
+    height: 56px !important;
+    padding-right: 1rem;
+    margin-top: 0rem;
+  }
+  & when not (@isRoundedButtons) {
+    border-radius: 4px !important;
   }
 }
-
-/* Bottom Bar */
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--spacing-xl);
+.iconfont-wrapper {
+  color: @iconsColor !important;
+  font-size: 1.5rem;
+  padding-right: 0.5rem;
+}
+.dropdown-menu {
   flex-wrap: wrap;
-}
-
-.footer-bottom-left {
-  display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.footer-copyright {
-  margin: 0;
-  font-size: var(--font-size-sm);
-  color: var(--color-on-surface-secondary);
-}
-
-.footer-legal-links {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  flex-wrap: wrap;
-}
-
-.footer-legal-link {
-  font-size: var(--font-size-xs);
-  color: var(--color-on-surface-secondary);
-  text-decoration: none;
-  transition: color var(--animation-duration-fast) var(--animation-curve-primary);
-}
-
-.footer-legal-link:hover {
-  color: var(--color-primary);
-}
-
-.footer-legal-separator {
-  color: var(--color-border);
-  font-size: var(--font-size-xs);
-}
-
-.footer-bottom-right {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.footer-social-label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-on-surface);
-  letter-spacing: var(--letter-spacing-normal);
-}
-
-/* Social Links */
-.footer-social {
-  display: flex;
-  gap: var(--spacing-sm);
-}
-
-.footer-social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  border-radius: var(--border-radius-md);
-  color: var(--color-primary);
-  text-decoration: none;
-  transition: all var(--animation-duration-standard) var(--animation-curve-primary);
-  position: relative;
-  overflow: hidden;
-}
-
-.footer-social-link::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width var(--animation-duration-standard) var(--animation-curve-primary), 
-              height var(--animation-duration-standard) var(--animation-curve-primary);
-}
-
-.footer-social-link:hover::before {
-  width: 100%;
-  height: 100%;
-}
-
-.footer-social-link:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-level-2);
-}
-
-.footer-social-link svg {
-  position: relative;
-  z-index: 1;
-}
-
-/* Background Decoration */
-.footer-bg-decoration {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.footer-bg-gradient {
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 60%;
-  height: 100%;
-  background: radial-gradient(circle at center, 
-    color-mix(in srgb, var(--color-primary) 6%, transparent) 0%, 
-    transparent 70%);
-  opacity: 0.4;
-  animation: footer-bg-pulse 8s ease-in-out infinite;
-}
-
-@keyframes footer-bg-pulse {
-  0%, 100% {
-    transform: scale(1) translateY(0);
-    opacity: 0.4;
+  max-width: 100%;
+  padding: 12px 4px !important;
+  border-radius: 1.5rem;
+  transition: 0.3s all !important;
+  min-width: auto;
+  background: @menuBgColor;
+  & when (@transparent) {
+    background: rgba(red(@menuBgColor), green(@menuBgColor), blue(@menuBgColor), @opacity) !important;
   }
-  50% {
-    transform: scale(1.1) translateY(-20px);
-    opacity: 0.6;
+  & when not (@isRoundedButtons) {
+    border-radius: 4px !important;
   }
 }
-
-.footer-bg-pattern {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 200px;
-  background-image: 
-    linear-gradient(90deg, var(--color-border) 1px, transparent 1px),
-    linear-gradient(0deg, var(--color-border) 1px, transparent 1px);
-  background-size: 40px 40px;
-  opacity: 0.1;
-  mask-image: linear-gradient(to top, transparent, black);
+.nav-item:focus, .nav-link:focus {
+  outline: none;
 }
-
-/* Responsive Design */
-@media (max-width: 991px) {
-  .footer-content {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-xl);
+.dropdown .dropdown-menu .dropdown-item {
+  width: auto;
+  transition: all 0.25s ease-in-out;
+  &::after {
+    right: 0.5rem;
   }
-
-  .footer-brand {
-    grid-column: 1 / -1;
-  }
-
-  .footer-contact {
-    grid-column: 1 / -1;
+  .mbr-iconfont {
+    margin-right: 0.5rem;
+    vertical-align: sub;
+    &:before {
+      display: inline-block;
+      transform: scale(1, 1);
+      transition: all 0.25s ease-in-out;
+    }
   }
 }
-
-@media (max-width: 767px) {
-  .footer {
-    padding: var(--spacing-2xl) 0 var(--spacing-lg);
-  }
-
-  .footer-content {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-lg);
-  }
-
-  .footer-brand {
-    grid-column: 1 / -1;
-  }
-
-  .footer-contact {
-    grid-column: 1 / -1;
-  }
-
-  .footer-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-lg);
-  }
-
-  .footer-bottom-right {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .footer-legal-links {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-xs);
-  }
-
-  .footer-legal-separator {
+.collapsed {
+  .dropdown-menu .dropdown-item:before {
     display: none;
   }
-
-  .footer-certifications {
-    flex-direction: row;
-  }
-
-  .footer-cert-badge {
-    flex: 1;
-  }
-}
-
-@media (max-width: 479px) {
-  .footer-container {
-    padding: 0 var(--spacing-md);
-  }
-
-  .footer-content {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-xl);
-  }
-
-  .footer-logo {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .footer-certifications {
-    flex-direction: column;
-  }
-
-  .footer-social {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .footer-social-label {
-    display: none;
-  }
-
-  .footer-bottom-right {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-/* Accessibility - Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  .footer-link,
-  .footer-social-link,
-  .footer-contact-item,
-  .footer-cert-badge,
-  .footer-logo-icon {
+  .dropdown .dropdown-menu .dropdown-item {
+    padding: 0.235em 1.5em 0.235em 1.5em !important;
     transition: none;
-  }
-
-  .footer-bg-gradient,
-  .footer-divider::before {
-    animation: none;
-  }
-
-  .footer-link:hover,
-  .footer-social-link:hover,
-  .footer-contact-item:hover,
-  .footer-cert-badge:hover {
-    transform: none;
+    margin: 0 !important;
   }
 }
-</style>
-<script defer data-name="footer">
-// Enhanced footer interactivity with professional animations
-
-// Intersection Observer for fade-in animations
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: '0px 0px -50px 0px'
-};
-
-const footerObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry, index) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-      }, index * 50);
-      footerObserver.unobserve(entry.target);
-    }
-  });
-}, observerOptions);
-
-// Animate footer columns on load
-const footerColumns = document.querySelectorAll('.footer-column');
-footerColumns.forEach((column) => {
-  column.style.opacity = '0';
-  column.style.transform = 'translateY(20px)';
-  column.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-  footerObserver.observe(column);
-});
-
-// Animate contact items on hover with stagger effect
-const contactItems = document.querySelectorAll('.footer-contact-item');
-contactItems.forEach((item, index) => {
-  item.style.transitionDelay = `${index * 0.05}s`;
-});
-
-// Add ripple effect to social links
-const socialLinks = document.querySelectorAll('.footer-social-link');
-socialLinks.forEach(link => {
-  link.addEventListener('click', function(e) {
-    const ripple = document.createElement('span');
-    const rect = this.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    const x = e.clientX - rect.left - size / 2;
-    const y = e.clientY - rect.top - size / 2;
-    
-    ripple.style.width = ripple.style.height = size + 'px';
-    ripple.style.left = x + 'px';
-    ripple.style.top = y + 'px';
-    ripple.style.position = 'absolute';
-    ripple.style.borderRadius = '50%';
-    ripple.style.background = 'rgba(255, 255, 255, 0.6)';
-    ripple.style.transform = 'scale(0)';
-    ripple.style.animation = 'footer-ripple 0.6s ease-out';
-    ripple.style.pointerEvents = 'none';
-    
-    this.appendChild(ripple);
-    
-    setTimeout(() => ripple.remove(), 600);
-  });
-});
-
-// Add ripple animation to stylesheet
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes footer-ripple {
-    to {
-      transform: scale(2);
-      opacity: 0;
-    }
+.navbar {
+  min-height: 90px;
+  transition: all 0.3s;
+  border-bottom: 1px solid transparent;
+  background: transparent !important;
+  &:not(.navbar-short) {
   }
-`;
-document.head.appendChild(style);
-
-// Track link clicks for analytics (placeholder)
-const footerLinks = document.querySelectorAll('.footer-link, .footer-legal-link');
-footerLinks.forEach(link => {
-  link.addEventListener('click', function(e) {
-    const linkText = this.textContent.trim();
-    console.log('Footer link clicked:', linkText);
-    // Analytics tracking would go here
-  });
-});
-
-// Smooth scroll for anchor links
-document.querySelectorAll('.footer a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
-    const targetId = this.getAttribute('href');
-    if (targetId !== '#') {
-      const targetElement = document.querySelector(targetId);
-      if (targetElement) {
-        e.preventDefault();
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
+  &.opened {
+    transition: all 0.3s;
+  }
+  .dropdown-item {
+    padding: 0.5rem 1.8rem;
+  }
+  .navbar-logo img {
+    min-width: 6rem;
+    object-fit: cover;
+  }
+  .navbar-collapse {
+    z-index: 1;
+    justify-content: flex-end;
+  }
+  &.collapsed {
+    justify-content: center;
+    .nav-item .nav-link::before {
+      display: none;
+    }
+    &.opened {
+      .dropdown-menu {
+        top: 0;
+      }
+      @media (min-width: 992px) {
+        &:not(.navbar-short) .navbar-collapse when (@showLogo) {
+          max-height: ~"calc(98.5vh - @{logoSize}rem)";
+        }
       }
     }
-  });
-});
-
-// Accessibility: Add keyboard navigation enhancements
-const focusableElements = document.querySelectorAll('.footer a, .footer button');
-focusableElements.forEach(element => {
-  element.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      this.click();
+    .dropdown-menu {
+      .dropdown-submenu {
+        left: 0 !important;
+      }
+      .dropdown-item:after {
+        right: auto;
+      }
+      .dropdown-toggle[data-toggle="dropdown-submenu"]:after {
+        margin-left: 0.5rem;
+        margin-top: 0.2rem;
+        border-top: 0.35em solid;
+        border-right: 0.35em solid transparent;
+        border-left: 0.35em solid transparent;
+        border-bottom: 0;
+        top: 41%;
+      }
     }
-  });
-});
-
-// Dynamic copyright year update
-const copyrightElement = document.querySelector('.footer-copyright');
-if (copyrightElement) {
-  const currentYear = new Date().getFullYear();
-  copyrightElement.textContent = copyrightElement.textContent.replace('2025', currentYear);
+    ul.navbar-nav {
+      li {
+        margin: auto;
+      }
+    }
+    .dropdown-menu .dropdown-item {
+      padding: 0.25rem 1.5rem;
+      text-align: center;
+    }
+    .icons-menu {
+      padding-left: 0;
+      padding-right: 0;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+  }
+  @media (max-width: 767px) {
+    .navbar-logo {
+      img {
+        height: 2.5rem !important;
+        min-width: 2.5rem !important;
+      }
+    }
+    min-height: 72px;
+  }
+  @media (max-width: 991px) {
+    .nav-item .nav-link::before {
+      display: none;
+    }
+    &.opened {
+      .dropdown-menu {
+        top: 0;
+      }
+    }
+    .dropdown-menu {
+      .dropdown-submenu {
+        left: 0 !important;
+      }
+      .dropdown-item:after {
+        right: auto;
+      }
+      .dropdown-toggle[data-toggle="dropdown-submenu"]:after {
+        margin-left: 0.5rem;
+        margin-top: 0.2rem;
+        border-top: 0.35em solid;
+        border-right: 0.35em solid transparent;
+        border-left: 0.35em solid transparent;
+        border-bottom: 0;
+        top: 40%;
+      }
+    }
+    ul.navbar-nav {
+      li {
+      }
+    }
+    .dropdown-menu .dropdown-item {
+      padding: 0.25rem 1.5rem !important;
+      text-align: center;
+    }
+    .navbar-brand {
+      flex-shrink: initial;
+      flex-basis: auto;
+      word-break: break-word;
+      padding-right: 10px;
+    }
+    .navbar-toggler {
+      flex-basis: auto;
+    }
+    .icons-menu {
+      padding-left: 0;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+  }
+  &.navbar-short {
+    .navbar-logo {
+      img {
+        height: 2rem;
+      }
+    }
+  }
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
 }
-
-// Add hover effect timing for certification badges
-const certBadges = document.querySelectorAll('.footer-cert-badge');
-certBadges.forEach((badge, index) => {
-  badge.style.transitionDelay = `${index * 0.05}s`;
-});
-
-// Performance optimization: Lazy load background animations
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (!prefersReducedMotion) {
-  const bgGradient = document.querySelector('.footer-bg-gradient');
-  if (bgGradient) {
-    setTimeout(() => {
-      bgGradient.style.opacity = '1';
-    }, 300);
+.dropdown-item.active, .dropdown-item:active {
+  background-color: transparent;
+}
+.navbar-expand-lg .navbar-nav .nav-link {
+  padding: 0;
+}
+.nav-dropdown .link.dropdown-toggle {
+  margin-right: 1.667em;
+  &[aria-expanded="true"] {
+    margin-right: 0;
+    padding: 0.667em 1.667em;
   }
 }
-</script>
+.navbar.navbar-expand-lg .dropdown {
+  .dropdown-menu {
+    background: @menuBgColor;
+    .dropdown-submenu {
+      margin: 0;
+      left: 105%;
+      transform: none;
+      top: -12px;
+    }
+  }
+}
+.navbar .dropdown.open > .dropdown-menu {
+  display: flex;
+}
+ul.navbar-nav {
+  flex-wrap: wrap;
+}
+.navbar-buttons {
+  text-align: center;
+  min-width: 140px;
+  @media (max-width: 992px) {
+    text-align: left;
+  }
+}
+button.navbar-toggler {
+  outline: none;
+  width: 31px;
+  height: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  align-self: center;
+  .hamburger span {
+    position: absolute;
+    right: 0;
+    width: 30px;
+    height: 2px;
+    border-right: 5px;
+    background-color: @hamburgerColor;
+    &:nth-child(1) {
+      top: 0;
+      transition: all 0.2s;
+    }
+    &:nth-child(2) {
+      top: 8px;
+      transition: all 0.15s;
+    }
+    &:nth-child(3) {
+      top: 8px;
+      transition: all 0.15s;
+    }
+    &:nth-child(4) {
+      top: 16px;
+      transition: all 0.2s;
+    }
+  }
+}
+nav.opened .hamburger span {
+  &:nth-child(1) {
+    top: 8px;
+    width: 0;
+    opacity: 0;
+    right: 50%;
+    transition: all 0.2s;
+  }
+  &:nth-child(2) {
+    transform: rotate(45deg);
+    transition: all 0.25s;
+  }
+  &:nth-child(3) {
+    transform: rotate(-45deg);
+    transition: all 0.25s;
+  }
+  &:nth-child(4) {
+    top: 8px;
+    width: 0;
+    opacity: 0;
+    right: 50%;
+    transition: all 0.2s;
+  }
+}
+.navbar-dropdown {
+  padding: 0 1rem;
+}
+a.nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icons-menu {
+  flex-wrap: nowrap;
+  display: flex;
+  justify-content: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.3rem;
+  text-align: center;
+  @media (max-width: 992px) {
+    justify-content: flex-start;
+    margin-bottom: 0.5rem;
+  }
+}
+@media screen and (~'-ms-high-contrast: active'), (~'-ms-high-contrast: none') {
+  .navbar {
+    height: 70px;
+    &.opened {
+      height: auto;
+    }
+  }
+  .nav-item .nav-link:hover::before {
+    width: 175%;
+    max-width: calc(100% ~"+" 2rem);
+    left: -1rem;
+  }
+}
+.navbar .dropdown > .dropdown-menu {
+  display: none;
+  width: max-content;
+  max-width: 500px !important;
+  transform: translateX(-50%);
+  top: calc(~'100% + 20px');
+  left: 50%;
+  .dropdown-item {
+    line-height: 1 !important;
+  }
+  .dropdown {
+    .dropdown-item {
+      align-items: center;
+      display: flex;
+      height: max-content !important;
+      min-height: max-content !important;
+      &::after {
+        display: inline-block;
+        position: static;
+        margin-left: 0.5rem;
+        margin-top: 0;
+        margin-right: 0;
+        margin-bottom: 0;
+        transition: 0.3s all;
+        transform: rotate(-90deg);
+      }
+    }
+  }
+  .dropdown.open {
+    .dropdown-item {
+      &::after {
+        transform: rotate(0deg);
+      }
+    }
+  }
+}
+.mbr-section-btn {
+  margin: -0.6rem -0.6rem;
+}
+.navbar-toggler {
+  margin-left: 12px;
+  margin-right: 8px;
+  order: 1000;
+}
+& when (@collapsed) {
+  .navbar-brand {
+    margin-right: auto;
+  }
+  .navbar-collapse {
+    z-index: -1 !important;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 1.5rem;
+    background: @menuBgColor;
+    & when (@transparent) {
+      border-color: rgba(red(@menuBgColor), green(@menuBgColor), blue(@menuBgColor), @opacity) !important;
+      opacity: 1;
+      background: rgba(red(@menuBgColor), green(@menuBgColor), blue(@menuBgColor), @opacity) !important;
+    }
+    backdrop-filter: blur(8px);
+    @media (max-width: 575px) {
+      padding: 1rem;
+    }
+    & when not (@isRoundedButtons) {
+      border-radius: 4px !important;
+    }
+  }
+  .navbar-nav {
+    .nav-item {
+      .nav-link {
+        &::after {
+          margin-left: 10px;
+        }
+      }
+    }
+    .dropdown-item {
+      &:hover {
+        background-color: rgba(27, 31, 10, 0.06);
+      }
+    }
+  }
+  .navbar .dropdown > .dropdown-menu {
+    display: none;
+    max-width: 100% !important;
+    transform: translateX(0);
+    top: 10px;
+    left: 0;
+    padding: 8px !important;
+    border-radius: 0.5rem;
+    background-color: rgba(27, 31, 10, 0.04) !important;
+    .dropdown-item {
+      padding: 8px !important;
+      line-height: 1 !important;
+      margin-bottom: 4px !important;
+    }
+    .dropdown {
+      .dropdown-item {
+        align-items: center;
+        display: flex;
+        height: max-content !important;
+        min-height: max-content !important;
+        &::after {
+          display: inline-block;
+          position: static;
+          margin-left: 0.5rem;
+          margin-top: 0;
+          margin-right: 0;
+          margin-bottom: 0;
+          transition: 0.3s all;
+          transform: rotate(0deg);
+        }
+      }
+    }
+    .dropdown.open {
+      .dropdown-item {
+        &::after {
+          transform: rotate(180deg);
+        }
+      }
+    }
+    .dropdown-submenu {
+      position: static;
+      width: 100%;
+      max-width: 100% !important;
+      transform: translateX(0) !important;
+      top: 0;
+      left: 0;
+      padding: 8px !important;
+      border-radius: 0.5rem;
+      background-color: rgba(27, 31, 10, 0.04) !important;
+    }
+  }
+  .navbar .dropdown.open > .dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .navbar .dropdown > .dropdown-submenu.show {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+@media (max-width: 991px) {
+  .navbar-brand {
+    margin-right: auto;
+  }
+  .navbar-collapse {
+    z-index: -1 !important;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 1.5rem;
+    background: @menuBgColor;
+    & when (@transparent) {
+      opacity: 1;
+      border-color: rgba(red(@menuBgColor), green(@menuBgColor), blue(@menuBgColor), @opacity) !important;
+      background: rgba(red(@menuBgColor), green(@menuBgColor), blue(@menuBgColor), @opacity) !important;
+    }
+    backdrop-filter: blur(8px);
+    & when not (@isRoundedButtons) {
+      border-radius: 4px !important;
+    }
+  }
+  .navbar-nav {
+    .nav-item {
+      .nav-link {
+        &::after {
+          margin-left: 10px;
+        }
+      }
+    }
+    .dropdown-item {
+      &:hover {
+        background-color: rgba(27, 31, 10, 0.06);
+      }
+    }
+  }
+  .navbar .dropdown > .dropdown-menu {
+    max-width: 100% !important;
+    transform: translateX(0);
+    top: 10px;
+    left: 0;
+    padding: 8px !important;
+    border-radius: 1rem;
+    background-color: rgba(27, 31, 10, 0.04) !important;
+    .dropdown-item {
+      padding: 8px !important;
+      line-height: 1 !important;
+      margin-bottom: 4px !important;
+    }
+    .dropdown {
+      .dropdown-item {
+        align-items: center;
+        display: flex;
+        height: max-content !important;
+        min-height: max-content !important;
+        &::after {
+          display: inline-block;
+          position: static;
+          margin-left: 0.5rem;
+          margin-top: 0;
+          margin-right: 0;
+          margin-bottom: 0;
+          transition: 0.3s all;
+          transform: rotate(0deg);
+        }
+      }
+    }
+    .dropdown.open {
+      .dropdown-item {
+        &::after {
+          transform: rotate(180deg);
+        }
+      }
+    }
+    .dropdown-submenu {
+      position: static;
+      width: 100%;
+      max-width: 100% !important;
+      transform: translateX(0) !important;
+      top: 0;
+      left: 0;
+      padding: 8px !important;
+      border-radius: 1rem;
+      background-color: rgba(27, 31, 10, 0.04) !important;
+    }
+  }
+  .navbar .dropdown.open > .dropdown-menu {
+    display: flex !important;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.navbar-collapse {
+  @media (max-width: 575px) {
+    padding: 1rem;
+  }
+}
