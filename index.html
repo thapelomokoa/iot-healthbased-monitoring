@@ -1,84 +1,1036 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>IoT Health Monitoring System</title>
-<link rel="stylesheet" href="css/style.css">
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --blue:#1e90ff;
+    --blue-dark:#0d6efd;
+    --white:#ffffff;
+    --muted:#6b7280;
+    --success:#198754;
+    --warning:#ffb020;
+    --danger:#ff4d4f;
+    --card-shadow: 0 10px 30px rgba(14,75,160,0.06);
+  }
+  *{box-sizing:border-box;font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#f7fbff,#ffffff);color:#111}
+  header{position:fixed;top:0;left:0;right:0;height:72px;background:linear-gradient(90deg,var(--blue),var(--blue-dark));display:flex;align-items:center;justify-content:space-between;padding:10px 22px;color:var(--white);z-index:200}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand img{width:44px;height:44px;object-fit:contain;border-radius:8px;background:var(--blue);padding:6px}
+  .brand h1{font-size:1.05rem;margin:0;font-weight:600;letter-spacing:0.2px}
+  nav{display:flex;gap:10px;align-items:center}
+  nav a{color:rgba(255,255,255,0.92);text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:600;cursor:pointer}
+  nav a.active{background:rgba(255,255,255,0.12)}
+  .top-actions{display:flex;gap:8px;align-items:center}
+  .btn{background:var(--white);color:var(--blue-dark);padding:8px 12px;border-radius:8px;border:none;font-weight:600;cursor:pointer}
+  .ghost{background:transparent;border:1px solid rgba(255,255,255,0.12);color:var(--white);padding:8px 12px;border-radius:8px;cursor:pointer}
+
+  main{ margin-top:72px; transition:all .35s ease; }
+  section.page { min-height:calc(100vh - 72px); padding:32px 6vw; display:none; opacity:0; transform:translateY(10px); transition:opacity .35s, transform .35s; }
+  section.page.active { display:block; opacity:1; transform:none; }
+
+  /* HERO */
+  .hero {
+    width:100vw;
+    height:58vh;            /* reduced height but fills width */
+    background-position:center;
+    background-size:cover; /* single image, not tiled */
+    background-repeat:no-repeat;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    color:var(--white);
+    position:relative;
+    padding-left:6vw;
+    border-bottom-left-radius:18px;
+    border-bottom-right-radius:18px;
+    overflow:hidden;
+  }
+  .hero .overlay { position:absolute; inset:0; background:linear-gradient(180deg, rgba(6,34,102,0.45), rgba(6,34,102,0.24)); }
+  .hero .hero-inner{ position:relative; z-index:2; max-width:980px; padding:20px 24px; }
+  .hero h2{ font-size:2.4rem; margin:0 0 6px 0; font-weight:600; }
+  .hero p{ font-size:1.05rem; margin:0 0 12px 0; color:rgba(255,255,255,0.92) }
+  .hero .welcome { font-size:1rem; opacity:0.95; margin-top:10px; }
+
+  /* landing extra layout */
+  .landing-grid { max-width:1100px; margin:26px auto; display:grid; grid-template-columns: 1fr 1fr; gap:18px; align-items:start; }
+  .card { background:var(--white); border-radius:12px; padding:16px; box-shadow:var(--card-shadow); }
+  .big { padding:22px; }
+
+  /* stacked unique landing sections for 5s scroll */
+  .feature-list{ display:flex; flex-direction:column; gap:14px; }
+  .feature-item { display:flex; gap:12px; align-items:flex-start; }
+  .feature-item h4 { margin:0; color:var(--blue-dark); }
+  .feature-item p { margin:0; color:var(--muted); }
+
+  /* Dashboard */
+  .cards { display:flex; gap:18px; flex-wrap:wrap; align-items:stretch; margin-top:18px; }
+  .stat { flex:1 1 260px; min-width:220px; background:var(--white); padding:16px; border-radius:12px; box-shadow:var(--card-shadow); text-align:center; }
+  .stat .icon { font-size:36px; display:inline-block; padding:12px; border-radius:12px; }
+  .stat .value { font-size:2rem; font-weight:700; margin-top:8px; }
+  .pulse { animation:pulseScale 1s infinite; }
+  @keyframes pulseScale { 0%{transform:scale(1)} 50%{transform:scale(1.12)} 100%{transform:scale(1)} }
+
+  .chartbox { background:var(--white); padding:14px; border-radius:12px; box-shadow:var(--card-shadow); margin-top:18px; }
+  /* smaller chart */
+  #trendChart { width:100% !important; height:280px !important; display:block; }
+
+  /* doctor portal layout */
+  .two-col { display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap; }
+  .left { flex: 0 0 320px; }
+  .right { flex:1; }
+
+  /* forms */
+  label{ display:block; font-weight:600; margin:8px 0 6px 0; color:var(--muted) }
+  input,select,textarea{ width:100%; padding:10px;border-radius:8px;border:1px solid #e8eefb;background:#fff; }
+  textarea{ min-height:100px; resize:vertical; }
+
+  /* consultation layout with left placeholder image */
+  .consult-wrap { display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap; }
+  .consult-left { flex:0 0 360px; min-width:220px; }
+  .consult-right { flex:1; }
+
+  /* about page stacked vertically */
+  .about-stack { display:flex; flex-direction:column; gap:14px; max-width:900px; margin:12px auto; }
+
+  /* login page with left image holder */
+  .auth-wrap { display:flex; gap:18px; align-items:flex-start; }
+  .auth-left { flex:0 0 340px; min-width:220px; }
+  .auth-right { flex:1; }
+
+  /* footer */
+  footer{ padding:22px 6vw; text-align:center; color:var(--muted); font-size:0.95rem; background:transparent }
+
+  /* chatbot */
+  .chat-bubble { position:fixed; right:20px; bottom:22px; width:58px; height:58px; border-radius:50%; background:var(--blue); color:white; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 18px 48px rgba(13,110,253,0.14); z-index:9999; }
+  .chat-window { position:fixed; right:20px; bottom:96px; width:360px; max-width:94vw; height:420px; background:white; border-radius:12px; box-shadow:0 24px 80px rgba(16,24,40,0.12); overflow:hidden; display:none; flex-direction:column; z-index:9999; }
+  .chat-window.show { display:flex; animation:chatOpen .28s ease; }
+  @keyframes chatOpen { from{ transform:translateY(12px) scale(.98); opacity:0 } to{ transform:none; opacity:1 } }
+  .chat-window header { background:linear-gradient(90deg,var(--blue),var(--blue-dark)); color:white; padding:12px 14px; font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:8px }
+  .chat-window header .info { font-size:0.95rem; opacity:0.95; }
+  .chat-messages { padding:12px; flex:1; overflow:auto; background:linear-gradient(180deg,#fbfdff,#fff); display:flex; flex-direction:column; gap:8px; }
+  .chat-input { display:flex; gap:8px; padding:10px; border-top:1px solid #eef6ff; }
+  .msg { max-width:84%; padding:8px 12px; border-radius:12px; }
+  .msg.user { align-self:flex-end; background:linear-gradient(180deg,var(--blue),var(--blue-dark)); color:white; }
+  .msg.bot { align-self:flex-start; background:#f1f5ff; color:#0b2f55; }
+  .typing { display:flex; gap:4px; align-items:center; justify-content:flex-start; }
+  .dot { width:8px; height:8px; background:#cbd5ff; border-radius:50%; animation:dot 1s infinite; }
+  .dot:nth-child(2){ animation-delay:.12s } .dot:nth-child(3){ animation-delay:.24s }
+  @keyframes dot { 0%{ transform:translateY(0) } 50%{ transform:translateY(-6px) } 100%{ transform:translateY(0) } }
+
+  /* small screens */
+  @media(max-width:900px){
+    .two-col, .landing-grid, .consult-wrap, .auth-wrap { flex-direction:column; }
+    header{ padding:8px 12px }
+    .hero{ padding-left:5vw; height:52vh }
+  }
+</style>
 </head>
 <body>
 
-<!-- ======= HERO SECTION ======= -->
-<section class="hero">
-  <div class="hero-content">
-    <h1>IoT Based Health Monitoring System</h1>
-    <p>Monitor heart rate, temperature, and humidity in real time — anytime, anywhere.</p>
-    <div class="hero-buttons">
-      <a href="login.html" class="btn">Login</a>
-      <a href="#about" class="btn-outline">Learn More</a>
-    </div>
+<!-- =============== HEADER =============== -->
+<header>
+  <div class="brand">
+    <img id="logoImg" src="images/Untitled design (4).png" alt="logo">
+    <h1>IoT Health Monitoring System</h1>
   </div>
-  <img src="images/doctor1.jpg" alt="Doctor monitoring patient online" class="hero-img">
-</section>
 
-<!-- ======= ABOUT SECTION ======= -->
-<section id="about" class="about">
-  <h2>About the Project</h2>
-  <p>
-    This IoT-based Health Monitoring System uses Arduino Uno, ESP8266 NodeMCU, Pulse Sensor, DHT22 Sensor, and LCD Display. 
-    The system collects heart rate (BPM), temperature, and humidity readings, sends them to ThingSpeak, and displays real-time data on a professional dashboard.
-    Doctors can monitor patients remotely and provide online consultations, while gyms can track members' heart performance during workouts.
-  </p>
-  <div class="about-images">
-    <img src="images/doctor2.jpg" alt="Online consultation" class="about-img">
-    <img src="images/gym1.jpg" alt="Gym monitoring heart rate" class="about-img">
+  <nav>
+    <a id="nav-home" onclick="navigate('home')" class="active">Home</a>
+    <a id="nav-login" onclick="navigate('login')">Login / Register</a>
+    <a id="nav-dashboard" onclick="navigate('dashboard')">Dashboard</a>
+    <a id="nav-doctor" onclick="navigate('doctor')">Doctor Portal</a>
+    <a id="nav-consult" onclick="navigate('consult')">Consultation</a>
+    <a id="nav-about" onclick="navigate('about')">About</a>
+  </nav>
+
+  <style>
+  nav {
+    padding-left: 50px; /* moves all items to the right */
+  }
+  nav a {
+    margin-left: 20px; /* spacing between links */
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 500;
+  }
+  nav a:hover {
+    color: #013e80; /* hover effect */
+  }
+</style>
+
+  <div class="top-actions">
+    <button class="ghost" id="demoBtn" onclick="toggleDemo()">Demo: Off</button>
+    <button class="btn" onclick="requestNotif()">Enable Alerts</button>
   </div>
-</section>
+</header>
 
-<!-- ======= FEATURES SECTION ======= -->
-<section class="features">
-  <h2>Key Features</h2>
-  <div class="feature-grid">
-    <div class="feature-card">
-      <h3>👩‍⚕️ Doctor Monitoring</h3>
-      <p>Doctors can view live patient health data and download reports for consultation.</p>
-      <a href="doctor_dashboard.html" class="feature-link">Go to Doctor Dashboard →</a>
-    </div>
-    <div class="feature-card">
-      <h3>🏋️ Gym Integration</h3>
-      <p>Gyms can monitor members’ heart rates and performance metrics during exercise.</p>
-      <a href="gym_dashboard.html" class="feature-link">Go to Gym Dashboard →</a>
-    </div>
-    <div class="feature-card">
-      <h3>📊 Real-Time Charts</h3>
-      <p>Live ThingSpeak charts display BPM, Temperature, and Humidity data instantly.</p>
-    </div>
-    <div class="feature-card">
-      <h3>📄 Data Reports</h3>
-      <p>Download health data as PDF for offline storage or medical records.</p>
-    </div>
-  </div>
-</section>
+<main>
 
-<!-- ======= FOOTER SECTION ======= -->
-<section class="footer2" style="background-color:#111; color:white; padding:40px 0; text-align:center;">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 col-lg-6 center mt-2 mb-3">
-        <p class="copyright">HealthMonitor.com © 2025</p>
+  <!-- =============== HOME =============== -->
+  <section id="home" class="page active" aria-hidden="false">
+    <div class="hero" style="background-image:url('images/hero.jpg')">
+      <div class="overlay"></div>
+      <div class="hero-inner">
+        <h2>Welcome — IoT Health Monitoring</h2>
+        <p class="welcome">Monitor your vitals in real time, connect with healthcare professionals, and get intelligent insights — all from one secure dashboard.</p>
+        <div style="margin-top:12px;">
+          <button class="btn" onclick="navigate('dashboard')">Open Dashboard</button>
+          <button class="btn" onclick="navigate('consult')">Book a Consultation</button>
+        </div>
       </div>
-      <div class="col-12 col-lg-6 center">
-        <ul class="footer-links">
-          <li><a href="index.html" class="text-white">Home</a></li>
-          <li><a href="#about" class="text-white">About</a></li>
-          <li><a href="doctor_dashboard.html" class="text-white">Doctor</a></li>
-          <li><a href="gym_dashboard.html" class="text-white">Gym</a></li>
-          <li><a href="login.html" class="text-white">Login</a></li>
+    </div>
+
+    <!-- Unique landing content (scrolly) -->
+    <div class="landing-grid" aria-hidden="false">
+      <div class="card big">
+        <h3 style="color:var(--blue-dark)">Live Care, Anywhere</h3>
+        <p style="color:var(--muted)">This platform shows live heartbeat, temperature and humidity captured by your hardware (Arduino + ESP8266 + sensors). Data is sent to ThingSpeak and shown here with alerts and AI summaries.</p>
+        <div class="feature-list" style="margin-top:12px;">
+          <div class="feature-item"><div style="font-size:20px">✅</div><div><h4>Immediate Alerts</h4><p>When readings go abnormal the system highlights them and notifies clinicians (demo triggers simulated alerts).</p></div></div>
+          <div class="feature-item"><div style="font-size:20px">🔒</div><div><h4>Patient Privacy</h4><p>Design intended for secure doctor-patient workflows and exportable reports for clinical review.</p></div></div>
+          <div class="feature-item"><div style="font-size:20px">📱</div><div><h4>Remote Consultations</h4><p>Schedule and join online Microsoft Teams consultations directly from the site.</p></div></div>
+        </div>
+      </div>
+
+      <div class="card big">
+        <h3 style="color:var(--blue-dark)">Why it matters</h3>
+        <p style="color:var(--muted)">Continuous monitoring reduces response time in medical events and helps gyms track member exertion safely. The system is ideal for home-care, elderly monitoring, and premium gym services.</p>
+        <ul style="color:var(--muted)">
+          <li>Reduce preventable complications through early alerts</li>
+          <li>Offer trainers live BPM analytics during classes</li>
+          <li>Provide doctors with exportable patient reports</li>
         </ul>
       </div>
     </div>
+
+    <!-- deeper info sections to scroll ~5s -->
+    <div style="max-width:1100px;margin:22px auto;display:flex;flex-direction:column;gap:18px;">
+      <div class="card">
+        <h3 style="color:var(--blue-dark)">How it works</h3>
+        <p style="color:var(--muted)">Sensors capture data → Arduino processes → ESP8266 uploads to ThingSpeak → Dashboard retrieves & displays. AI gives concise summaries and recommendations.</p>
+      </div>
+
+      <div class="card">
+        <h3 style="color:var(--blue-dark)">Commercial & Gym Use</h3>
+        <p style="color:var(--muted)">Gyms can integrate this to monitor participants, prevent overexertion, and offer health-based membership tiers (heatmaps, alerts, trends).</p>
+      </div>
+
+      <div class="card">
+        <h3 style="color:var(--blue-dark)">Our Mission</h3>
+        <p style="color:var(--muted)">Our goal is to make healthcare accessible, reliable, and data-driven through innovative IoT technology.
+    We empower patients to take control of their health and enable doctors to provide timely, informed care from anywhere.
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== DASHBOARD =============== -->
+  <section id="dashboard" class="page" aria-hidden="true">
+    <div style="max-width:1200px;margin:0 auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div>
+          <h2 style="color:var(--blue-dark)">Patient Dashboard</h2>
+          <div style="color:var(--muted)">Live vitals — animated & prioritized with alerts</div>
+        </div>
+        <div style="text-align:right">
+          <div id="lastUpdate" style="color:var(--muted)">Last update: —</div>
+        </div>
+      </div>
+
+      <div id="alertArea" style="margin-top:12px;"></div>
+
+      <div class="cards" style="margin-top:18px;">
+        <div class="stat">
+          <div class="icon">❤️</div>
+          <div class="value" id="bpmVal">-- BPM</div>
+          <div style="color:var(--muted);margin-top:6px;">Heart Rate — place finger on pulse sensor</div>
+        </div>
+
+        <div class="stat">
+          <div class="icon">🌡️</div>
+          <div class="value" id="tempVal">-- °C</div>
+          <div style="color:var(--muted);margin-top:6px;">Temperature</div>
+        </div>
+
+        <div class="stat">
+          <div class="icon">💧</div>
+          <div class="value" id="humVal">-- %</div>
+          <div style="color:var(--muted);margin-top:6px;">Humidity</div>
+        </div>
+      </div>
+
+      <div class="chartbox" style="margin-top:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 style="margin:0;color:var(--blue-dark)">Trends & Analytics</h3>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="fetchCount" style="padding:8px;border-radius:8px;border:1px solid #e6eefb;">
+              <option value="20">Last 20</option>
+              <option value="50">Last 50</option>
+              <option value="100">Last 100</option>
+            </select>
+            <button class="btn" onclick="exportCSV()">Export CSV</button>
+            <button class="ghost" onclick="window.print()">Print</button>
+          </div>
+        </div>
+        <canvas id="trendChart"></canvas>
+      </div>
+
+      <div style="display:flex;gap:18px;margin-top:18px;flex-wrap:wrap;">
+        <div class="card" style="flex:1;min-width:280px;">
+          <h3 style="color:var(--blue-dark)">AI Health Advisor</h3>
+          <div id="aiInsight" style="color:#15395b">Quick insights will show here once data is available.</div>
+          <div style="margin-top:12px;display:flex;gap:8px;">
+            <button class="btn" onclick="generateAISummary()">Generate Summary</button>
+            <button class="ghost" onclick="shareWithDoctor()">Share with Doctor</button>
+          </div>
+        </div>
+
+        <div class="card" style="flex:1;min-width:280px;">
+          <h3 style="color:var(--blue-dark)">Patient Notes & Actions</h3>
+          <p style="color:var(--muted)">Doctors can save notes and start Teams consultations from the Doctor Portal.</p>
+          <div style="margin-top:8px"><button class="btn" onclick="navigate('doctor')">Open Doctor Portal</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== DOCTOR PORTAL =============== -->
+<section id="doctor" class="page" aria-hidden="true">
+  <div style="max-width:1200px;margin:0 auto">
+    <h2 style="color:darkblue">Doctor Portal</h2>
+    <div class="two-col" style="display:flex;gap:12px;flex-wrap:wrap">
+
+      <!-- Left Column: Patient Table -->
+      <div class="left card" style="padding:12px;border:1px solid #ccc;border-radius:8px;background:#f9f9f9;flex:1;min-width:300px;">
+        <h3>Patient</h3>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>BPM</th>
+              <th>Temp (°C)</th>
+              <th>Hum (%)</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="livePatientRow" style="color:black">
+              <td>Amaka N.</td>
+              <td>--</td>
+              <td>--</td>
+              <td>--</td>
+              <td>Loading...</td>
+              <td><button class="btn" onclick="viewPatient()">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Right Column: Selected Patient Details -->
+      <div class="right card" style="padding:12px;border:1px solid #ccc;border-radius:8px;background:#f9f9f9;flex:1;min-width:300px;">
+        <h3>Selected Patient: <span id="selPatient">—</span></h3>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:120px"><strong>BPM:</strong> <span id="selBpm">--</span></div>
+          <div style="flex:1;min-width:120px"><strong>Temp:</strong> <span id="selTemp">--</span></div>
+          <div style="flex:1;min-width:120px"><strong>Hum:</strong> <span id="selHum">--</span></div>
+        </div>
+
+        <p>Last Update: <span id="lastUpdate">--:--</span></p>
+
+        <h4 style="margin-top:12px">Vitals History</h4>
+        <table style="width:100%;border-collapse:collapse;font-size:0.9em;">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>BPM</th>
+              <th>Temp</th>
+              <th>Hum</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="historyTable">
+            <tr><td colspan="5">No history yet.</td></tr>
+          </tbody>
+        </table>
+
+        <h4 style="margin-top:12px">AI Summary / Alerts</h4>
+        <div id="doctorAISummary" class="small-muted">Select the patient to view details.</div>
+        <button class="btn" style="margin-top:4px;" onclick="sendAlert()">Send Alert</button>
+
+        <label style="margin-top:12px">Doctor's Notes</label>
+        <textarea id="doctorNotes" placeholder="Write notes here..." style="width:100%;height:80px;"></textarea>
+        
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <button class="btn" onclick="saveDoctorNotes()">Save Notes</button>
+          <button class="ghost" onclick="startTeamsMeeting()">Start Teams Consultation</button>
+          <button class="btn" onclick="prescribeMedicine()">Prescribe Medicine</button>
+          <button class="ghost" onclick="scheduleFollowUp()">Schedule Follow-up</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  const liveRow = document.getElementById("livePatientRow");
+  const historyTable = document.getElementById("historyTable");
+
+  function viewPatient(){
+    const bpm = liveRow.dataset.bpm || "--";
+    const temp = liveRow.dataset.temp || "--";
+    const hum = liveRow.dataset.hum || "--";
+    const status = liveRow.dataset.status || "Loading...";
+
+    document.getElementById("selPatient").textContent = "Amaka N.";
+    document.getElementById("selBpm").textContent = bpm;
+    document.getElementById("selTemp").textContent = temp;
+    document.getElementById("selHum").textContent = hum;
+
+    const summary = document.getElementById("doctorAISummary");
+    summary.textContent = status === "Critical" ? "Abnormal vitals. Immediate attention required." :
+                          status === "Warning" ? "Slight irregularities. Monitor closely." :
+                          status === "Normal" ? "Patient is stable." :
+                          status;
+    
+    document.getElementById("doctorNotes").value = localStorage.getItem("AmakaNotes") || "";
+  }
+
+  async function updateLivePatient(){
+    try{
+      const url = `https://api.thingspeak.com/channels/YOUR_CHANNEL_ID/feeds.json?api_key=YOUR_READ_API_KEY&results=1`;
+      const resp = await fetch(url);
+      const data = await resp.json();
+      if(data.feeds.length > 0){
+        const feed = data.feeds[0];
+        const bpm = parseFloat(feed.field1) || "--";
+        const temp = parseFloat(feed.field2) || "--";
+        const hum = parseFloat(feed.field3) || "--";
+        let status = "Normal";
+        if(bpm > 120 || temp > 38) status = "Critical";
+        else if(bpm > 100 || temp > 37.5) status = "Warning";
+
+        // Update live patient row
+        liveRow.cells[1].textContent = bpm;
+        liveRow.cells[2].textContent = temp;
+        liveRow.cells[3].textContent = hum;
+        liveRow.cells[4].textContent = status;
+        liveRow.style.color = status==="Critical" ? "red" : status==="Warning" ? "orange" : "black";
+
+        liveRow.dataset.bpm = bpm;
+        liveRow.dataset.temp = temp;
+        liveRow.dataset.hum = hum;
+        liveRow.dataset.status = status;
+
+        if(document.getElementById("selPatient").textContent==="Amaka N.") viewPatient();
+
+        document.getElementById("lastUpdate").textContent = new Date(feed.created_at).toLocaleTimeString();
+
+        // Update history (keep last 5)
+        if(!historyTable.dataset.entries) historyTable.dataset.entries = "0";
+        let tr = document.createElement("tr");
+        tr.innerHTML = `<td>${new Date(feed.created_at).toLocaleTimeString()}</td>
+                        <td>${bpm}</td>
+                        <td>${temp}</td>
+                        <td>${hum}</td>
+                        <td>${status}</td>`;
+        historyTable.prepend(tr);
+        let rows = historyTable.querySelectorAll("tr");
+        if(rows.length > 5) rows[rows.length-1].remove();
+      }
+    }catch(e){ console.error(e); }
+  }
+
+  function saveDoctorNotes(){
+    const notes = document.getElementById("doctorNotes").value;
+    localStorage.setItem("AmakaNotes", notes);
+    alert("Notes saved for Amaka N.");
+  }
+
+  function startTeamsMeeting(){
+    alert("Teams consultation started (demo)");
+  }
+
+  function sendAlert(){
+    const status = liveRow.dataset.status;
+    if(status === "Critical") alert("Alert: Patient is Critical!");
+    else if(status === "Warning") alert("Alert: Patient requires attention.");
+    else alert("Patient is stable. No alert sent.");
+  }
+
+  // --- New Feature: Prescribe Medicine ---
+  function prescribeMedicine(){
+    const med = prompt("Enter medicine prescription for Amaka N.:");
+    if(med){
+      const notesArea = document.getElementById("doctorNotes");
+      notesArea.value += `\nPrescription: ${med}`;
+      saveDoctorNotes();
+      alert(`Prescription saved: ${med}`);
+    }
+  }
+
+  // --- New Feature: Schedule Follow-up ---
+  function scheduleFollowUp(){
+    const date = prompt("Enter follow-up date and time (e.g., 2025-11-12 14:00):");
+    if(date){
+      const notesArea = document.getElementById("doctorNotes");
+      notesArea.value += `\nFollow-up scheduled: ${date}`;
+      saveDoctorNotes();
+      alert(`Follow-up scheduled for: ${date}`);
+    }
+  }
+
+  // Initial setup
+  setInterval(updateLivePatient, 15000);
+  </script>
+</section>
+
+
+  <!-- =============== CONSULTATION =============== -->
+  <section id="consult" class="page" aria-hidden="true">
+    <div class="consult-wrap" style="max-width:980px;margin:0 auto">
+      <div class="consult-left card">
+        <!-- placeholder image for left -->
+        <img src="images/doctor1.jpg" alt="Consultation" style="width:100%;border-radius:8px;object-fit:cover;height:260px">
+        <p style="color:var(--muted);margin-top:10px">Online consultations are done using Microsoft Teams. Provide your details to schedule — you'll receive the meeting link here.</p>
+      </div>
+
+      <div class="consult-right card">
+        <h3>Schedule Online Consultation</h3>
+        <form id="apptForm">
+          <label>Full name</label>
+          <input id="apptName" required>
+          <label>Email</label>
+          <input id="apptEmail" type="email" required>
+          <label>Preferred date & time</label>
+          <input id="apptDate" type="datetime-local" required>
+          <label>Reason</label>
+          <textarea id="apptReason" required></textarea>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="btn" type="submit">Schedule Appointment</button>
+            <button class="ghost" type="button" onclick="viewAppointments()">View Appointments</button>
+          </div>
+        </form>
+
+        <div id="appointmentsList" style="margin-top:12px"></div>
+
+        <div style="margin-top:12px">
+          <h4>Join Demo Teams Meeting</h4>
+          <a id="teamsJoin" href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_dummy_link_2025@thread.v2" target="_blank" class="btn">Join Microsoft Teams Meeting</a>
+          <button class="ghost" onclick="copyTeams()">Copy Meeting Link</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== ABOUT =============== -->
+  <section id="about" class="page" aria-hidden="true">
+    <div style="max-width:900px;margin:0 auto">
+      <h2 style="color:var(--blue-dark)">About the Project & Gym Use Case</h2>
+
+      <div class="about-stack" style="margin-top:12px">
+        <div class="card">
+          <h3>Hardware</h3>
+          <ul>
+            <li>Arduino Uno — sensor reading</li>
+            <li>ESP8266 NodeMCU — WiFi uploader</li>
+            <li>Pulse Sensor — BPM</li>
+            <li>DHT22 — Temp & Humidity</li>
+            <li>LCD & LED indicators</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>How it Works</h3>
+          <p class="small-muted">Sensors → Arduino → ESP8266 → ThingSpeak → Dashboard. Alerts and AI insights run in the web app to help decisions.</p>
+        </div>
+
+        <div class="card">
+          <h3>Gym & Commercial Pitch</h3>
+          <p>Gyms can monitor members in classes: trainers receive live BPM heatmaps, alerts for overexertion, and member progress reports — a premium membership add-on.</p>
+          <img src="images/gym1.jpg" alt="Gym" style="width:100%;border-radius:10px;margin-top:8px;object-fit:cover;height:200px">
+        </div>
+
+        <div class="card">
+          <h3>Future Enhancements</h3>
+          <ul>
+            <li>SpO₂ & blood-pressure sensors</li>
+            <li>Server-side auth & secure storage</li>
+            <li>Automated SMS/Email emergency alerts</li>
+            <li>Machine-learning trend predictor</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== LOGIN / REGISTER =============== -->
+  <!-- =============== LOGIN / REGISTER =============== -->
+<section id="login" class="page" aria-hidden="true">
+  <div class="auth-wrap" style="max-width:980px;margin:0 auto;">
+    <div class="auth-left card">
+      <img src="images/Home.webp" alt="patient" style="width:100%;border-radius:12px;object-fit:cover;height:360px">
+      <p style="color:var(--muted);margin-top:10px;">Please log in or register to access your account. Patients can monitor their health in real time, while doctors can manage patient data and provide care insights securely.</p>
+    </div>
+
+    <div class="auth-right">
+      <div class="card">
+        <h3>Login</h3>
+        <form id="loginForm">
+          <label>Email</label>
+          <input id="loginEmail" type="email" required>
+          <label>Password</label>
+          <input id="loginPwd" type="password" required>
+          <label>Role</label>
+          <select id="loginRole">
+            <option>Patient</option>
+            <option>Doctor</option>
+          </select>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn" type="submit">Login</button>
+            <button class="ghost" type="button" onclick="demoLogin()">Demo Login</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h3>Register</h3>
+        <form id="regForm">
+          <label>Name</label>
+          <input id="regName" required>
+          <label>Email</label>
+          <input id="regEmail" type="email" required>
+          <label>Phone</label>
+          <input id="regPhone" placeholder="0791409847">
+          <label>Role</label>
+          <select id="regRole">
+            <option>Patient</option>
+            <option>Doctor</option>
+          </select>
+          <label>Password</label>
+          <input id="regPwd" type="password" required>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn" type="submit">Register</button>
+            <button class="ghost" type="button" onclick="clearReg()">Clear</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </section>
+
+<script>
+  // Login form submission
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPwd').value;
+    const role = document.getElementById('loginRole').value;
+
+    // Simple check (replace with real authentication in production)
+    if (email && password) {
+      if (role === 'Doctor') {
+        window.location.href = 'http://127.0.0.1:5500/Project/index.html#doctor'; // Doctor portal
+      } else if (role === 'Patient') {
+        window.location.href = 'http://127.0.0.1:5500/Project/index.html#dashboard'; // Patient dashboard
+      } else {
+        alert('Invalid role selected!');
+      }
+    } else {
+      alert('Please fill in all fields!');
+    }
+  });
+
+  // Demo login
+  function demoLogin() {
+    const role = document.getElementById('loginRole').value;
+    if (role === 'Doctor') {
+  navigate('doctor');
+} else if (role === 'Patient') {
+  navigate('dashboard');
+}
+  }
+
+  // Clear registration form
+  function clearReg() {
+    document.getElementById('regForm').reset();
+  }
+</script>
+
+
+
+</main>
+
+<footer>
+  <!-- ======= FOOTER ======= -->
+<style>
+  /* Reset default body margins */
+  body, html {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Full-width footer */
+  footer {
+    width: 100%;
+    background: #007BFF;
+    color: #fff;
+    text-align: center;
+    padding: 25px 0;
+  }
+
+  footer p {
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>
+
+<footer>
+  <p>
+    © <span id="year"></span> IoT Health Monitoring System — Contact: 079&nbsp;140&nbsp;9847 • 221568710@tut4life.ac.za
+  </p>
+</footer>
+
+</footer>
+
+<!-- =============== CHATBOT =============== -->
+<div class="chat-bubble" id="chatBubble" title="Chat with AI" onclick="toggleChat()">
+  💬
+</div>
+
+<div class="chat-window" id="chatWindow" role="dialog" aria-hidden="true" aria-label="AI Health Assistant">
+  <header>
+    <div class="info">AI Health Assistant</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="ghost" style="background:transparent;border:none;color:white;font-weight:700;cursor:pointer" onclick="closeChat()">Close</button>
+    </div>
+  </header>
+
+  <div class="chat-messages" id="chatMessages">
+    <div class="msg bot"><strong>AI:</strong> Hi — I can explain readings, help schedule consultations, and give tips. Try: "What does my BPM mean?"</div>
+  </div>
+
+  <div class="chat-input">
+    <input id="chatBoxInput" placeholder="Ask the assistant..." onkeydown="if(event.key==='Enter'){sendChat();}" style="flex:1;padding:10px;border-radius:8px;border:1px solid #eef6ff">
+    <button class="btn" onclick="sendChat()">Send</button>
+  </div>
+</div>
+
+<script>
+
+/* ================= CONFIG & STATE ================= */
+const channelID = '3128115';
+const readAPIKey = 'K72OYJMYOJZN240T';
+let DEMO = false;
+let pollingInterval = null;
+let chartInstance = null;
+
+/* ================ NAV ================ */
+function navigate(page){
+  document.querySelectorAll('section.page').forEach(s => { s.classList.remove('active'); s.setAttribute('aria-hidden','true'); });
+  const el = document.getElementById(page);
+  if(el){ el.classList.add('active'); el.setAttribute('aria-hidden','false'); }
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  const navMap = {home:'nav-home', dashboard:'nav-dashboard', doctor:'nav-doctor', consult:'nav-consult', about:'nav-about', login:'nav-login'};
+  if(navMap[page]) document.getElementById(navMap[page]).classList.add('active');
+  history.replaceState(null,null,'#' + page);
+}
+(function(){ const h=location.hash.replace('#','')||'home'; navigate(h); })();
+
+/* ================ DEMO, NOTIFICATIONS, POLLING ================ */
+function toggleDemo(){ DEMO = !DEMO; document.getElementById('demoBtn').textContent = 'Demo: ' + (DEMO ? 'On' : 'Off'); if(DEMO) seedSimulatedData(); startPolling(); }
+function requestNotif(){ if(!('Notification' in window)){ alert('Notifications not supported'); return; } Notification.requestPermission().then(p=>alert('Notification permission: '+p)); }
+async function fetchThingSpeak(limit = parseInt(document.getElementById('fetchCount')?.value || 20)){
+  if(DEMO){ simulatePush(); updateUI(); return; }
+  try{
+    const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${readAPIKey}&results=${limit}`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('Network error');
+    const data = await res.json();
+    const feeds = data.feeds || [];
+    const bpm = feeds.map(f => f.field1 ? Number(f.field1) : NaN);
+    const temp = feeds.map(f => f.field2 ? Number(f.field2) : NaN);
+    const hum = feeds.map(f => f.field3 ? Number(f.field3) : NaN);
+    localStorage.setItem('iot_cache', JSON.stringify({ts:Date.now(),bpm,temp,hum,labels:feeds.map(f=>f.created_at)}));
+    window._bpm=bpm; window._temp=temp; window._hum=hum; window._labels=feeds.map(f=>f.created_at);
+    updateUI();
+  }catch(err){
+    console.warn('Fetch failed, trying cache',err);
+    const cache = JSON.parse(localStorage.getItem('iot_cache') || 'null');
+    if(cache){ window._bpm = cache.bpm; window._temp = cache.temp; window._hum = cache.hum; window._labels = cache.labels; updateUI(true); } else { console.error('No cached data'); }
+  }
+}
+function startPolling(){ if(pollingInterval) clearInterval(pollingInterval); fetchThingSpeak(); pollingInterval = setInterval(fetchThingSpeak,15000); }
+startPolling();
+
+/* ================ DEMO SIMULATION ================ */
+function seedSimulatedData(){ window._bpm=[]; window._temp=[]; window._hum=[]; window._labels=[]; let b=74,t=36.6,h=45; for(let i=0;i<40;i++){ b += Math.round(Math.random()*2-1); t += (Math.random()*0.2-0.1); h += Math.round(Math.random()*2-1); window._bpm.push(Math.max(40, Math.round(b + (Math.random()*4-2)))); window._temp.push(parseFloat((t + (Math.random()*0.2-0.1)).toFixed(1))); window._hum.push(Math.max(10, Math.round(h + (Math.random()*3-1)))); window._labels.push(new Date(Date.now() - (40-i)*60000).toISOString()); } }
+function simulatePush(){ if(!window._bpm||window._bpm.length===0) seedSimulatedData(); const lb = window._bpm[window._bpm.length-1]||72; window._bpm.push(Math.max(35, lb + Math.round(Math.random()*6-3))); window._temp.push(parseFloat(((window._temp[window._temp.length-1]||36.6) + (Math.random()*0.2-0.1)).toFixed(1))); window._hum.push(Math.max(10, (window._hum[window._hum.length-1]||45) + Math.round(Math.random()*2-1))); window._labels.push(new Date().toISOString()); if(window._bpm.length>200){window._bpm.shift();window._temp.shift();window._hum.shift();window._labels.shift();} }
+
+/* ================ UI Update & Chart ================ */
+function updateUI(offline=false){
+  const bpm = (window._bpm && window._bpm.length) ? window._bpm[window._bpm.length-1] : '--';
+  const temp = (window._temp && window._temp.length) ? window._temp[window._temp.length-1] : '--';
+  const hum = (window._hum && window._hum.length) ? window._hum[window._hum.length-1] : '--';
+  document.getElementById('bpmVal').textContent = isNaN(bpm)?'-- BPM': (bpm + ' BPM');
+  document.getElementById('tempVal').textContent = isNaN(temp)?'-- °C': (temp + ' °C');
+  document.getElementById('humVal').textContent = isNaN(hum)?'-- %': (hum + ' %');
+  document.getElementById('lastUpdate').textContent = 'Last update: ' + (offline ? 'Offline (cached)' : new Date().toLocaleString());
+
+  // update icons shadow & heartbeat speed
+  const heartIcon = document.querySelector('.stat .icon') || null;
+  // Chart
+  const labels = (window._labels || []).map(l=>{ try{ const d=new Date(l); return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}` }catch(e){return l} });
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  if(chartInstance) chartInstance.destroy();
+  chartInstance = new Chart(ctx, {
+    type:'line',
+    data:{ labels, datasets:[
+      { label:'BPM', data:window._bpm || [], borderColor:'#ff6b6b', fill:false, tension:0.25, pointRadius:1 },
+      { label:'Temp (°C)', data:window._temp || [], borderColor:'#ff9f43', fill:false, tension:0.25, pointRadius:1 },
+      { label:'Humidity (%)', data:window._hum || [], borderColor:'#36a2eb', fill:false, tension:0.25, pointRadius:1 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom'}} , scales:{ x:{ display:true }, y:{ display:true } } }
+  });
+
+  handleAlerts(bpm,temp,hum);
+  renderPatientTable();
+}
+
+/* ================ Alerts ================ */
+function handleAlerts(bpm,temp,hum){
+  const area = document.getElementById('alertArea'); area.innerHTML = '';
+  const alerts = [];
+  if(!isNaN(bpm) && bpm > 120) alerts.push({type:'critical',text:'Critical: Heart rate very high!'});
+  else if(!isNaN(bpm) && bpm > 100) alerts.push({type:'warn',text:'Warning: Elevated heart rate.'});
+  if(!isNaN(temp) && temp > 38) alerts.push({type:'critical',text:'Critical: High temperature (fever).'});
+  if(!isNaN(hum) && hum < 20) alerts.push({type:'warn',text:'Warning: Very low humidity.'});
+  if(alerts.length){
+    alerts.forEach(a=>{ const div=document.createElement('div'); div.className='card'; div.style.padding='10px'; div.style.marginBottom='8px'; div.style.borderLeft = a.type==='critical' ? '6px solid var(--danger)' : '6px solid var(--warning)'; div.innerHTML = `<strong>${a.type==='critical'?'⚠️': '⚠'}</strong> ${a.text}`; area.appendChild(div); });
+    if(alerts.some(a=>a.type==='critical')){ if(Notification && Notification.permission==='granted'){ new Notification('Critical health alert',{body:'A critical reading was detected.'}); } }
+  } else {
+    area.innerHTML = '<div style="color:#0b2f55;padding:10px 0">All vitals within expected ranges ✅</div>';
+  }
+}
+
+/* ================ AI SUMMARY ================ */
+function generateAISummary(){
+  if(!window._bpm || window._bpm.length===0){ document.getElementById('aiInsight').textContent='No data to analyze.'; return; }
+  const recent = window._bpm.slice(-12);
+  const avg = Math.round(recent.reduce((s,v)=>s+(isNaN(v)?0:v),0)/recent.length || 0);
+  const trend = (recent[recent.length-1] > recent[0]) ? 'rising' : (recent[recent.length-1] < recent[0] ? 'falling' : 'stable');
+  const lastTemp = window._temp[window._temp.length-1];
+  const recs = [];
+  if(avg > 100) recs.push('Elevated heart rate — rest and consider contacting doctor if symptomatic.');
+  else recs.push('Heart rate average in normal range.');
+  if(lastTemp > 37.5) recs.push('Temperature slightly high — monitor for fever.');
+  document.getElementById('aiInsight').innerHTML = `<strong>Summary:</strong> Avg BPM (last ${recent.length}): ${avg} — trend: ${trend}.<br><strong>Recommendations:</strong><ul>${recs.map(r=>'<li>'+r+'</li>').join('')}</ul>`;
+}
+
+/* ================ CSV & Share ================ */
+function exportCSV(){
+  if(!window._labels || window._labels.length===0){ alert('No data to export'); return; }
+  let csv = 'time,bpm,temp,hum\n';
+  for(let i=0;i<window._labels.length;i++){ csv += `${window._labels[i]},${window._bpm[i]||''},${window._temp[i]||''},${window._hum[i]||''}\n`; }
+  const blob = new Blob([csv],{type:'text/csv'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='health_data.csv'; a.click();
+}
+function shareWithDoctor(){ alert('Simulated: shared current readings with assigned doctor (demo).'); }
+
+/* ================ Patients & Doctor UI ================ */
+function renderPatientTable(){
+  const table = document.getElementById('patientTable');
+  if(!table) return;
+  const patients = JSON.parse(localStorage.getItem('demo_patients') || '["John Doe","Jane Smith","Amaka N."]');
+  table.innerHTML='';
+  const lastBpm = (window._bpm && window._bpm.length)?window._bpm[window._bpm.length-1]:'--';
+  patients.forEach(p => { const tr=document.createElement('tr'); const status = (lastBpm==='--') ? '—' : (lastBpm>120 ? 'Critical' : (lastBpm>100 ? 'Warning' : 'Normal')); tr.innerHTML = `<td>${p}</td><td>${lastBpm}</td><td>${status}</td><td><button class="btn" onclick="selectPatient('${p}')">View</button></td>`; table.appendChild(tr); });
+}
+function filterPatients(){ const q=document.getElementById('patientSearch').value.toLowerCase(); const tbody=document.getElementById('patientTable'); Array.from(tbody.children).forEach(row=>{ const name=row.children[0].innerText.toLowerCase(); row.style.display = name.includes(q) ? '' : 'none'; }); }
+function selectPatient(name){ document.getElementById('selPatient').textContent = name; const lastBpm=(window._bpm&&window._bpm.length)?window._bpm[window._bpm.length-1]:'--'; const lastTemp=(window._temp&&window._temp.length)?window._temp[window._temp.length-1]:'--'; const lastHum=(window._hum&&window._hum.length)?window._hum[window._hum.length-1]:'--'; document.getElementById('selBpm').textContent=lastBpm; document.getElementById('selTemp').textContent=lastTemp; document.getElementById('selHum').textContent=lastHum; document.getElementById('doctorAISummary').textContent = `Patient ${name}: Latest BPM ${lastBpm}, Temp ${lastTemp}°C, Hum ${lastHum}%.`; }
+
+/* ================ Doctor Notes & Tools ================ */
+function saveDoctorNotes(){ const name = document.getElementById('selPatient').textContent || 'general'; const notes=document.getElementById('doctorNotes').value; localStorage.setItem('notes_'+name,notes); alert('Notes saved (demo).'); }
+function startTeamsMeeting(){ const appts = JSON.parse(localStorage.getItem('iot_appts')||'[]'); if(appts.length) window.open(appts[0].teams,'_blank'); else window.open(document.getElementById('teamsJoin').href,'_blank'); }
+function sendAlertToSelected(){ alert('Simulated: alert sent to patient (demo).'); }
+function downloadAllReports(){ alert('Simulated: Downloading reports (demo).'); }
+
+/* ================ Appointments ================ */
+document.getElementById('apptForm')?.addEventListener('submit', function(e){ e.preventDefault(); const name=document.getElementById('apptName').value.trim(); const email=document.getElementById('apptEmail').value.trim(); const dt=document.getElementById('apptDate').value; const reason=document.getElementById('apptReason').value.trim(); if(!name||!email||!dt){ alert('Complete all fields'); return; } const appts=JSON.parse(localStorage.getItem('iot_appts')||'[]'); const id='a'+Date.now(); const teams='https://teams.microsoft.com/l/meetup-join/19%3ameeting_dummy_link_2025@thread.v2'; appts.push({id,name,email,dt,reason,teams}); localStorage.setItem('iot_appts',JSON.stringify(appts)); alert('Appointment scheduled (demo).'); this.reset(); viewAppointments(); });
+function viewAppointments(){ const appts = JSON.parse(localStorage.getItem('iot_appts')||'[]'); const el=document.getElementById('appointmentsList'); el.innerHTML=''; if(appts.length===0){ el.innerHTML='<div class="small-muted">No appointments scheduled.</div>'; return; } appts.forEach(a=>{ const div=document.createElement('div'); div.className='card'; div.style.marginTop='10px'; div.innerHTML = `<strong>${a.name}</strong> • ${new Date(a.dt).toLocaleString()}<div class="small-muted">Reason: ${a.reason}</div><div style="margin-top:8px"><a href="${a.teams}" target="_blank" class="btn">Join Meeting</a> <button class="ghost" onclick='cancelAppt("${a.id}")'>Cancel</button></div>`; el.appendChild(div); }); }
+function cancelAppt(id){ let a = JSON.parse(localStorage.getItem('iot_appts')||'[]'); a = a.filter(x=>x.id!==id); localStorage.setItem('iot_appts',JSON.stringify(a)); viewAppointments(); }
+function copyTeams(){ navigator.clipboard.writeText(document.getElementById('teamsJoin').href).then(()=>alert('Teams link copied')); }
+
+/* ================ Auth (demo) ================ */
+document.getElementById('regForm')?.addEventListener('submit', function(e){ e.preventDefault(); const name=document.getElementById('regName').value.trim(); const email=document.getElementById('regEmail').value.trim(); const phone=document.getElementById('regPhone').value.trim(); const role=document.getElementById('regRole').value; const pwd=document.getElementById('regPwd').value; if(!name||!email||!pwd){ alert('Fill required'); return; } const users = JSON.parse(localStorage.getItem('iot_users')||'{}'); if(users[email]){ alert('Email already registered'); return; } users[email]={name,email,phone,role,pwd}; localStorage.setItem('iot_users',JSON.stringify(users)); alert('Registered (demo). You can now log in.'); });
+document.getElementById('loginForm')?.addEventListener('submit', function(e){ e.preventDefault(); const email=document.getElementById('loginEmail').value.trim(); const pwd=document.getElementById('loginPwd').value; const role = document.getElementById('loginRole').value; const users = JSON.parse(localStorage.getItem('iot_users')||'{}'); if(!users[email]||users[email].pwd!==pwd){ alert('Invalid credentials (demo)'); return; } localStorage.setItem('iot_current_user',JSON.stringify(users[email])); alert('Logged in as '+users[email].name); if(users[email].role==='Doctor') navigate('doctor'); else navigate('dashboard'); });
+function demoLogin(){ const users = JSON.parse(localStorage.getItem('iot_users')||'{}'); if(!users['demo_patient@demo']) users['demo_patient@demo']={name:'Demo Patient',email:'demo_patient@demo',phone:'0791409847',role:'Patient',pwd:'demo'}; if(!users['demo_doctor@demo']) users['demo_doctor@demo']={name:'Demo Doctor',email:'demo_doctor@demo',phone:'0791409847',role:'Doctor',pwd:'demo'}; localStorage.setItem('iot_users',JSON.stringify(users)); const pick=prompt('Login as "patient" or "doctor"?','patient')||'patient'; const cred = pick.toLowerCase().includes('doctor') ? users['demo_doctor@demo'] : users['demo_patient@demo']; localStorage.setItem('iot_current_user',JSON.stringify(cred)); alert('Demo logged in as '+cred.name); if(cred.role==='Doctor') navigate('doctor'); else navigate('dashboard'); }
+function clearReg(){ document.getElementById('regForm').reset(); }
+
+/* ================ CHATBOT (professional) ================ */
+
+const chatWindow = document.getElementById('chatWindow');
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatBoxInput');
+
+function toggleChat(){
+  const win = document.getElementById('chatWindow');
+  if(win.classList.contains('show')) { win.classList.remove('show'); document.getElementById('chatBubble').style.display='flex'; }
+  else { win.classList.add('show'); document.getElementById('chatBubble').style.display='none'; setTimeout(()=>chatInput.focus(),280); greetIfNeeded(); }
+}
+function closeChat(){ document.getElementById('chatWindow').classList.remove('show'); document.getElementById('chatBubble').style.display='flex'; }
+
+function postUser(text){
+  const el = document.createElement('div'); el.className='msg user'; el.innerText = text;
+  const ts = document.createElement('div'); ts.style.fontSize='11px'; ts.style.opacity=0.6; ts.style.marginTop='4px'; ts.innerText = (new Date()).toLocaleTimeString();
+  chatMessages.appendChild(el); chatMessages.appendChild(ts); chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+function postBot(text){
+  // remove typing if any
+  const typingEl = document.querySelector('.msg.typing');
+  if(typingEl) typingEl.parentElement.removeChild(typingEl);
+  const el = document.createElement('div'); el.className='msg bot'; el.innerHTML = `<strong>AI:</strong> ${text}`;
+  const ts = document.createElement('div'); ts.style.fontSize='11px'; ts.style.opacity=0.6; ts.style.marginTop='4px'; ts.innerText = (new Date()).toLocaleTimeString();
+  chatMessages.appendChild(el); chatMessages.appendChild(ts); chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+function showTyping(){
+  const wrap = document.createElement('div'); wrap.className='msg typing'; wrap.innerHTML = `<div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+  chatMessages.appendChild(wrap); chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Rule-based smarter responses and name-capture
+let awaitingConsultationConfirmation = false;
+
+function sendChat() {
+    const txt = chatInput.value.trim();
+    if (!txt) return;
+
+    postUser(txt);
+    chatInput.value = '';
+
+    handleMessage(txt);
+}
+
+function handleMessage(txt) {
+    const q = txt.toLowerCase();
+    showTyping();
+
+    setTimeout(() => {
+        const typingEl = document.querySelector('.msg.typing');
+        if (typingEl) typingEl.parentElement.removeChild(typingEl);
+
+        // 1️⃣ Consultation confirmation
+        if (awaitingConsultationConfirmation) {
+            postBotWithButtons(
+                "Would you like me to open the consultation page for you?",
+                [
+                    { text: "Yes", action: () => { window.location.href = "http://127.0.0.1:5500/Project/index.html#consult"; postBot("Redirecting..."); } },
+                    { text: "No", action: () => postBot("No problem! You can book anytime via the Consultation page.") }
+                ]
+            );
+            awaitingConsultationConfirmation = false;
+            return;
+        }
+
+        // 2️⃣ Health readings
+        if (q.includes('bpm') || q.includes('heart') || q.includes('pulse')) {
+            const last = (window._bpm && window._bpm.length) ? window._bpm[window._bpm.length-1] : null;
+            if (last) postBot(`💓 Latest BPM: ${last}. ${last>100 ? 'Elevated — consider resting.' : 'Normal.'}`);
+            else postBot("I don't have BPM data right now.");
+            return;
+        }
+        if (q.includes('temp') || q.includes('fever')) {
+            const last = (window._temp && window._temp.length) ? window._temp[window._temp.length-1] : null;
+            if (last) postBot(`🌡️ Temperature: ${last}°C. ${last>37.5 ? 'Possible fever.' : 'Normal.'}`);
+            else postBot("No temperature data available now.");
+            return;
+        }
+
+        // 3️⃣ Default / unknown question
+        postBotWithButtons(
+            "I can help with health tips, readings, or booking a consultation. What would you like to do?",
+            [
+                { text: "Check BPM", action: () => sendChatWithText("bpm") },
+                { text: "Check Temperature", action: () => sendChatWithText("temp") },
+                { text: "Book Consultation", action: () => { awaitingConsultationConfirmation = true; handleMessage("consult"); } },
+                { text: "Other Questions", action: () => postBot("Ask me anything else about your health or fitness!") }
+            ]
+        );
+
+    }, 700);
+}
+
+// Helper to simulate typing for buttons too
+function postBotWithButtons(text, buttons) {
+    const el = document.createElement('div'); 
+    el.className = 'msg bot';
+    el.innerHTML = `<strong>AI:</strong> ${text}`;
+
+    const ts = document.createElement('div'); 
+    ts.style.fontSize='11px'; ts.style.opacity=0.6; ts.style.marginTop='4px'; 
+    ts.innerText = (new Date()).toLocaleTimeString();
+
+    const btnWrap = document.createElement('div'); 
+    btnWrap.style.marginTop = '6px';
+    buttons.forEach(b => {
+        const btn = document.createElement('button');
+        btn.innerText = b.text;
+        btn.style.marginRight = '6px';
+        btn.style.cursor = 'pointer';
+        btn.style.padding = '4px 10px';
+        btn.style.borderRadius = '5px';
+        btn.style.border = 'none';
+        btn.style.background = '#007bff';
+        btn.style.color = '#fff';
+        btn.onclick = b.action;
+        btnWrap.appendChild(btn);
+    });
+
+    chatMessages.appendChild(el);
+    chatMessages.appendChild(ts);
+    chatMessages.appendChild(btnWrap);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Helper to trigger a "fake" user input from a button
+function sendChatWithText(text) {
+    chatInput.value = text;
+    sendChat();
+}
+
+// Show typing indicator
+function showTyping() {
+    const wrap = document.createElement('div'); 
+    wrap.className='msg typing'; 
+    wrap.innerHTML = `<div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+    chatMessages.appendChild(wrap); 
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+
+
+/* ================ Utilities ================ */
+function copyToClipboard(txt){ navigator.clipboard.writeText(txt).then(()=>alert('Copied')); }
+
+/* ================ In it ================ */
+(function init(){ 
+  if(!localStorage.getItem('demo_patients')) localStorage.setItem('demo_patients', JSON.stringify(['John Doe','Jane Smith','Amaka N.']));
+  renderPatientTable();
+  viewAppointments();
+  // initial fetch already scheduled
+})();
+
+
+</script>
 
 </body>
 </html>
